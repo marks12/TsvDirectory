@@ -1,0 +1,46 @@
+{
+    "name": "marks12/tsvdir",
+    "description": "Directory manager",
+    "type":         "library",
+    "license":      "BSD-3-Clause",
+    "homepage": 	"https://github.com/marks12/Tsvdir",
+    "keywords": [
+        "Directory",
+        "Data Manager",
+        "zf2"
+    ],
+    "authors": [
+        {
+            "name":      "Vladimir Tsarevnikov",
+            "email":     "tsarevnikov.v@gmail.com",
+            "homepage":  "http://serveon.ru/",
+            "role":      "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zend-cache":           "~2.1"
+    },
+    "require-dev": {
+        "zf-commons/zfc-user":                "0.*",
+	"zf-commons/zfc-admin":		      "0.*",
+	"bjyoungblood/bjy-authorize": 	      "1.4.*"
+    },
+    "suggests": {
+        "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
+        "zf-commons/zfc-user":                "zfc-user provides a good default setup to get started with bjyauthorize",
+        "zf-commons/zfc-user-doctrine-orm":   "If you want to use BjyAuthorize with Doctrine ORM"
+    },
+    "autoload": {
+        "psr-0": {
+            "Tsvdir\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.4-dev"
+        }
+    }
+}
+
