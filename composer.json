@@ -34,13 +34,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Tsvdir\\": "src/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.4-dev"
+            "TsvDirectory\\": "src/"
         }
     }
 }
-
