@@ -24,7 +24,7 @@
         "zf-commons/zfc-user":				"0.*",
 		"zf-commons/zfc-admin":				"0.*",
 		"bjyoungblood/bjy-authorize":		"1.4.*",
-		"bjyoungblood/bjy-profiler":		"dev-master",
+		"bjyoungblood/bjy-profiler": 		"dev-master",
 		"doctrine/doctrine-orm-module":		"0.*"
     },
     "suggests": {
