@@ -1,7 +1,5 @@
 <?php
 
-echo "<h1>It work!</h1>";
-
 return array(
     'controllers' => array(
         'invokables' => array(
