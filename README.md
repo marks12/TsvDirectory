@@ -11,10 +11,12 @@
 * Theme based on [Twitter Bootstrap](http://twitter.github.com/bootstrap/)
 
 ## Installation
- 1. Add `"marks12/tsv-directory": "dev-master"` to your `composer.json` file and run `php composer.phar update`.
- 2. Add `Tsvdir` to your `config/application.config.php` file under the `modules` key after `ZfcAdmin`.
- 3. Copy or create a symlink of public/css, public/js and public/images to your website root directory
 
-## Configuration
+ -. Add `"marks12/tsv-directory": "dev-master"` to your `composer.json` file and run `php composer.phar update`.
+ -. Add 'DoctrineModule','DoctrineORMModule','ZfcAdmin','Tsvdir to your `config/application.config.php` file under the `modules` key after `ZfcAdmin`.
+ -. Create directory  data/DoctrineORMModule/Proxy  and make sure your application has write access to it.
+ -. Copy or create a symlink of public/css, public/js and public/images to your website root directory
+
+## Configuration 
 
 Tsvdir - Модуль управления справочниками приложения
