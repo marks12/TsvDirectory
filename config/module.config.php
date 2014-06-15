@@ -42,6 +42,54 @@ return array(
 									),
 								),
 							),
+							'paginator' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/:action[/:page]',
+										'constraints' => array(
+											'page' => '[0-9]*',
+											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'sections',
+										),
+								),
+							),
+							'editor' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/:action/edit/:id',
+										'constraints' => array(
+											'id' => '[0-9]*',
+											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'editSection',
+										),
+								),
+							),
+							'remover' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/:action/remove/:id',
+										'constraints' => array(
+											'id' => '[0-9]*',
+											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'removeSection',
+										),
+								),
+							),
 						),
 					),
     			),

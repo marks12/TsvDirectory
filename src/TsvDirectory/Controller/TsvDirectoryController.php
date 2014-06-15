@@ -40,16 +40,17 @@ class TsvDirectoryController extends AbstractActionController
     	$repository = $entityManager->getRepository('TsvDirectory\Entity\Section');
     	$adapter = new DoctrineAdapter(new ORMPaginator($repository->createQueryBuilder('Section')));
     	$paginator = new Paginator($adapter);
-    	$paginator->setDefaultItemCountPerPage(1);
+    	$paginator->setDefaultItemCountPerPage(10);
     	 
-    	$page = (int)$this->params()->fromQuery('page');
+    	$page = (int)$this->getEvent()->getRouteMatch()->getParam('page');
+    	
     	if($page) $paginator->setCurrentPageNumber($page);
     	
     	$vm->setVariable('paginator',$paginator);
     	   	
-    	
     	return $vm;
     }
+    
     public function addSectionAction()
     {
         $request = $this->getRequest();
@@ -72,9 +73,72 @@ class TsvDirectoryController extends AbstractActionController
     		
     	}
     	
-    	
     	// This shows the :controller and :action parameters in default route
         // are working when you browse to /tsvDirectory/tsv-directory/foo
         return array();
     }
+    
+    public function editSectionAction()
+    {
+    	$request = $this->getRequest();
+    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    	
+    	if ($request->isPost()) {
+    	
+    		if(isset($request->getPost()->secName) && $request->getPost()->secDescription)
+    		{
+	    		$section = $objectManager
+	    		->getRepository('TsvDirectory\Entity\Section')
+	    		->findOneBy(
+	    					array(
+	    							'id' => (int)$this->getEvent()->getRouteMatch()->getParam('id') 
+	    					)
+	    		);
+	    		$section->__set('secName',$request->getPost()->secName);
+	    		$section->__set('secDescription',$request->getPost()->secDescription);
+    			$objectManager->flush();
+    	
+    			return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/sections");
+    		}
+    	
+    	}
+    	else
+    	{
+//     		$section = $objectManager->find('TsvDirectory\Entity\Section', $request->getPost()->id);
+    		
+    		$section = $objectManager
+    		->getRepository('TsvDirectory\Entity\Section')
+    		->findOneBy(
+    					array(
+    							'id' => (int)$this->getEvent()->getRouteMatch()->getParam('id') 
+    					)
+    		);
+
+    		return array(	
+    						"id"=>$section->__get('id'),
+    						"secName"=>$section->__get('secName'),
+    						"secDescription"=>$section->__get('secDescription'),
+    				);
+    		
+    	}
+    }
+    
+    public function removeSectionAction()
+    {
+    	$request = $this->getRequest();
+    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    	 
+    	$section = $objectManager
+    	->getRepository('TsvDirectory\Entity\Section')
+    	->findOneBy(
+    			array(
+    					'id' => (int)$this->getEvent()->getRouteMatch()->getParam('id')
+    			)
+    	);
+    	
+    	$objectManager->remove($section);
+    	$objectManager->flush();
+    	return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/sections");
+    }
+    
 }

@@ -6,7 +6,7 @@
 // exit(__DIR__);
 
 Zend\Paginator\Paginator::setDefaultScrollingStyle('Sliding');
-Zend\View\Helper\PaginationControl::setDefaultViewPartial(__DIR__.'/tsv_searchpagination.phtml');
+Zend\View\Helper\PaginationControl::setDefaultViewPartial('partials/tsv_searchpagination.phtml');
 
 ?>
 
@@ -18,12 +18,49 @@ Zend\View\Helper\PaginationControl::setDefaultViewPartial(__DIR__.'/tsv_searchpa
 <br>
 <div class="row">
   <div class="span12">
+  
+  <table class="table table-bordered">
+  	<thead>
+  		<tr>
+          <th>Наименование раздела</th>
+          <th>Описание</th>
+          <th>#</th>
+         </tr>
+  	</thead>
+  	<tbody>
+
+
+      </tbody>
 		<?php 
+		
 		foreach ($paginator as $row)
 		{
-			echo $row->__get('secName');
+			?>
+        <tr>
+          <td><?php echo $row->__get('secName');?></td>
+          <td><?php echo $row->__get('secDescription');?></td>
+          <td>
+          
+          	<div class="btn-group">
+			  <div class="btn-group">
+			    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			      Управление
+			      <span class="caret"></span>
+			    </button>
+			    <ul class="dropdown-menu">
+			      <li><a href="<?php echo $this->url('zfcadmin/tsv-directory/editor', array('action'=>'editSection','id'=>$row->__get('id'))) ?>">Редактировать</a></li>
+			      <li><a onclick="if(!confirm('Вы действительно хотите удлаить данный раздел данных')) return false;" href="<?php echo $this->url('zfcadmin/tsv-directory/remover', array('action'=>'removeSection','id'=>$row->__get('id'))) ?>">Удалить</a></li>
+			    </ul>
+			  </div>
+			</div>
+          
+          </td>
+        </tr>			
+			
+			<?php 
 		}
 		?>
+  </table>
 		
 <?php 
 	echo $this->paginationcontrol($paginator); 
