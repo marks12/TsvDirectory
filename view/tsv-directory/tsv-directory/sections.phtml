@@ -1,0 +1,34 @@
+<?php 
+
+// echo __DIR__ . '/../../partials/tsv_searchpagination.phtml';
+// exit();
+
+// exit(__DIR__);
+
+Zend\Paginator\Paginator::setDefaultScrollingStyle('Sliding');
+Zend\View\Helper\PaginationControl::setDefaultViewPartial(__DIR__.'/tsv_searchpagination.phtml');
+
+?>
+
+<div class="row">
+  <div class="span4">
+		<a class="btn btn-success" href="/admin/tsvDirectory/TsvDirectory/addSection">Добавить раздел</a>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="span12">
+		<?php 
+		foreach ($paginator as $row)
+		{
+			echo $row->__get('secName');
+		}
+		?>
+		
+<?php 
+	echo $this->paginationcontrol($paginator); 
+
+?>
+		
+  </div>
+</div>

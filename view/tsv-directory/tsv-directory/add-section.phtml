@@ -1,0 +1,29 @@
+<form method="post" action="/admin/tsvDirectory/TsvDirectory/addSection">
+	<div class="row">
+	  <div class="span12">
+			<h1>Добавление нового раздела</h1>
+	  </div>
+	</div>
+	<br>
+	<div class="row">
+	  <div class="span2">
+			Название раздела
+	  </div>
+	  <div class="span10">
+			<input type="text" class="input-xxlarge" placeholder="Введите название нового раздела" name="secName">
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="span2">
+			Описание раздела
+	  </div>
+	  <div class="span10">
+			<textarea rows="5" class="input-xxlarge" cols="80"  name="secDescription" placeholder="Пожалуйста укажите краткую информацию по использованию данных в данном разделе. Например: структура данных, формат, объем текста, частота обновления и т.д."></textarea>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="span12">
+			<button type="submit" class="btn btn-success" href="/admin/tsvDirectory/TsvDirectory/addSection">Сохранить</button>
+	  </div>
+	</div>
+</form>

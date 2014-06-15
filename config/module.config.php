@@ -1,5 +1,6 @@
 <?php
 
+
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -59,5 +60,25 @@ return array(
 						'route' => 'zfcadmin/tsv-directory',
 				),
 			),
+			'submenu' => array(
+					'directory' => array(
+							'label' => 'Управление разделами',
+							'route' => 'zfcadmin/tsv-directory/section',
+					),
+			),
+	),
+	'doctrine' => array(
+		'driver' => array(
+			'tsvdirectory_entities' => array(
+				'class' =>'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+					'cache' => 'array',
+					'paths' => array(__DIR__ . '/../src/TsvDirectory/Entity'),
+			),
+			'orm_default' => array(
+				'drivers' => array(
+					'TsvDirectory\Entity' => 'tsvdirectory_entities',
+				),
+			),
+		),
 	),
 );
