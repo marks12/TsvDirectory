@@ -10,6 +10,9 @@ Zend\View\Helper\PaginationControl::setDefaultViewPartial('partials/tsv_searchpa
 
 ?>
 
+<?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
+
+
 <div class="row">
   <div class="span4">
 		<a class="btn btn-success" href="/admin/tsvDirectory/TsvDirectory/addSection">Добавить раздел</a>

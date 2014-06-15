@@ -90,6 +90,21 @@ return array(
 										),
 								),
 							),
+							'section-view' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/section/view/:id',
+										'constraints' => array(
+											'id' => '[0-9]*',
+											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'viewSection',
+										),
+								),
+							),
 						),
 					),
     			),
@@ -99,6 +114,9 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             'TsvDirectory' => __DIR__ . '/../view',
+        ),
+    	'template_map' => array(
+        	'partials/section-list'		=> __DIR__ . '/../view/tsv-directory/partials/section-list.phtml',
         ),
     ),
 	'navigation' => array(

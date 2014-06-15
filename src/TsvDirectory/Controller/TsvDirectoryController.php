@@ -16,18 +16,44 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
+use Zend\Session\Container;
 
 class TsvDirectoryController extends AbstractActionController
 {
     public function indexAction()
     {
-        return array();
+    	$session = new Container('tsv');
+   	
+   		$session->offsetSet('selectedSession','manage');
+    	
+        return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections());
     }
 
-    public function fooAction()
+    private function getSections()
+    {
+    	$objectManager = $this
+    	->getServiceLocator()
+    	->get('Doctrine\ORM\EntityManager');
+    	
+    	$section = $objectManager
+    	->getRepository('TsvDirectory\Entity\Section')
+    	->findAll();
+    	
+    	return $section;
+    }
+
+    public function viewSectionAction()
     {
     	
+    	$session = new Container('tsv');
+   	
+   		$session->offsetSet('selectedSession',(int)$this->getEvent()->getRouteMatch()->getParam('id'));
     	
+        return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections());
+    }
+    
+    public function fooAction()
+    {
         // This shows the :controller and :action parameters in default route
         // are working when you browse to /tsvDirectory/tsv-directory/foo
         return array();
@@ -47,6 +73,7 @@ class TsvDirectoryController extends AbstractActionController
     	if($page) $paginator->setCurrentPageNumber($page);
     	
     	$vm->setVariable('paginator',$paginator);
+    	$vm->setVariable('sections',$this->getSections());
     	   	
     	return $vm;
     }

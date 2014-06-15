@@ -1,0 +1,8 @@
+<ul class="nav nav-pills">
+  <li <?php if($this->selectedSection==''){?> class="active"<?php }?>>
+    <a href="/admin/tsvDirectory/TsvDirectory/sections">Управление разделами</a>
+  </li>
+<?php foreach ($this->sections as $row){?>
+  <li <?php if($this->selectedSection==$row->__get('id')){?> class="active"<?php }?>><a href="<?php echo $this->url('zfcadmin/tsv-directory/section-view', array('action'=>'viewSection','id'=>$row->__get('id'))) ?>"><?php echo $row->__get('secName');?></a></li>
+<?php }?>
+</ul>

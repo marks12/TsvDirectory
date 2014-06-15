@@ -24,6 +24,7 @@
 	<div class="row">
 	  <div class="span12">
 			<button type="submit" class="btn btn-success" href="/admin/tsvDirectory/TsvDirectory/addSection">Сохранить</button>
+			<button type="button" onclick="if(confirm('Хотите отменить сохранение?')) window.location.href='<?php echo $this->url('zfcadmin/tsv-directory/paginator',array('action'=>'sections')) ?>';" class="btn btn-warning">Отмена</button>
 	  </div>
 	</div>
 </form>
