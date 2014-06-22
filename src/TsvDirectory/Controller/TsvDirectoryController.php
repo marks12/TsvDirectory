@@ -11,12 +11,15 @@ namespace TsvDirectory\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use TsvDirectory\Entity\Section;
+use TsvDirectory\Entity\TsvText;
+use TsvDirectory\Entity\Content;
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class TsvDirectoryController extends AbstractActionController
 {
@@ -44,12 +47,89 @@ class TsvDirectoryController extends AbstractActionController
 
     public function viewSectionAction()
     {
+    	$objectManager = $this
+    	->getServiceLocator()
+    	->get('Doctrine\ORM\EntityManager');
+    	
+    	
+    	$section = $objectManager->find('TsvDirectory\Entity\Section', (int)$this->getEvent()->getRouteMatch()->getParam('id'));
     	
     	$session = new Container('tsv');
    	
    		$session->offsetSet('selectedSession',(int)$this->getEvent()->getRouteMatch()->getParam('id'));
     	
-        return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections());
+        return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections(),"section"=>$section);
+    }
+    
+    public function addContentAction()
+    {
+    	$request = $this->getRequest();
+    	$objectManager = $this
+    	->getServiceLocator()
+    	->get('Doctrine\ORM\EntityManager');
+    	
+    	$section_id = (int)$this->getEvent()->getRouteMatch()->getParam('section_id');
+    	$content_type = $this->getEvent()->getRouteMatch()->getParam('content_type');
+    	$section = $objectManager->find('TsvDirectory\Entity\Section', $section_id);
+    	
+    	$vm = new ViewModel();
+
+    	
+    	if ($request->isPost()) {
+    	
+    		switch ($content_type)
+    		{
+    			case "TsvText":
+    				$content = new TsvText();
+    			break;
+    			
+    			default:
+    				exit("Unsupported content type in ".__FILE__.":".__LINE__);
+    			break;
+    		}
+
+    		if(isset($request->getPost()->TsvKey) && $content->check_input($request->getPost()))
+    		{
+    			foreach ($content->get_vars() as $k=>$v)
+    			{
+    				$content->__set($v,$request->getPost()->$v);
+    			}
+    		}
+    		$objectManager->persist($content);
+    		
+    		
+//     		$rsm = new ResultSetMapping();
+//     		$query = $entityManager->createNativeQuery('SELECT max(C.order_num) max_order_num FROM Content C 
+//     				LEFT JOIN section_content SC on SC.content_id = C.id
+//     				WHERE SC.section_id = ?', $rsm);
+//     		$query->setParameter(1, $section_id);
+//     		$max_order_num = $query->getResult();
+    		
+    		
+    		$content_entity = new Content();
+    		$content_entity->__set('content_type',$content_type);
+    		$content_entity->__set('order_num',$section->__get('Content')->count()+1);// next num
+    		$content_entity->__get($content_type)->add($content);
+    		$objectManager->persist($content_entity);
+    		
+     		$section->__get('Content')->add($content_entity);
+    		$objectManager->flush();
+    		
+    		return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/".$section_id);
+    	
+    	}
+    	else {
+    		
+    	}
+    	
+    	$vm->setVariable("secName", $section->__get('secName'));
+    	$vm->setVariable("secId", $section->__get('id'));
+    	$vm->setVariable("content_type", $content_type);
+    	 
+    	// This shows the :controller and :action parameters in default route
+    	// are working when you browse to /tsvDirectory/tsv-directory/foo
+    	
+    	return $vm;
     }
     
     public function fooAction()

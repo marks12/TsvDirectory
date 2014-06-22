@@ -105,6 +105,22 @@ return array(
 										),
 								),
 							),
+							'section-add-content' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/section/content/add/:section_id/:content_type',
+										'constraints' => array(
+											'section_id' => '[0-9]*',
+											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'content_type' => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'addContent',
+										),
+								),
+							),
 						),
 					),
     			),
@@ -117,6 +133,7 @@ return array(
         ),
     	'template_map' => array(
         	'partials/section-list'		=> __DIR__ . '/../view/tsv-directory/partials/section-list.phtml',
+        	'partials/TsvText'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-text.phtml',
         ),
     ),
 	'navigation' => array(

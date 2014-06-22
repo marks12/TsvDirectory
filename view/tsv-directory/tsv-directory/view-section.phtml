@@ -1,1 +1,17 @@
 <?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
+<div class="row">
+  <div class="col-md-12" style="float:right;">
+	  <div class="btn-group">
+        <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+          Добавить контент <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvText"));?>">Текст</a></li>
+          <li><a href="#">Галерея изображений</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Separated link</a></li>
+        </ul>
+      </div>
+</div>
+<div style="clear:both;"></div>
