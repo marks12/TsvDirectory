@@ -1,0 +1,20 @@
+<!--
+See http{//developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
+-->
+
+<?php 
+
+if ($this->pageCount)	{ ?>
+
+<div class="pagination">
+  <ul>
+    <li <?php if (!isset($this->previous)){ ?>class="disabled"<?php }?>><a href="<?php echo $this->url($this->route, array('page' => $this->previous)); ?>"><</a></li>
+	<!-- Numbered page links -->
+	<?php foreach ($this->pagesInRange as $page){ ?>
+	    <li  <?php if ($page == $this->current){ ?>class="active"<?php }?>><a href="<?php echo $this->url($this->route, array('page' => $page)); ?>"><?php echo $page; ?></a></li>
+	<?php } ?>
+    <li <?php if (!isset($this->next)){ ?>class="disabled"<?php }?>><a href="<?php echo $this->url($this->route, array('page' => $this->next)); ?>">></a></li>
+	</ul>
+</div>
+
+<?php }?>
