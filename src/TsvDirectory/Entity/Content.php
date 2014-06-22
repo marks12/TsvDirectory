@@ -21,6 +21,10 @@ class Content {
 	/** @ORM\Column(type="string") */
 	protected $content_type;
 	
+	/** @ORM\Column(type="string") */
+	protected $TsvKey;
+	
+	
     /**
      * Magic getter
      * @param $property

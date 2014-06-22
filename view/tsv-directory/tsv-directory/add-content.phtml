@@ -1,5 +1,7 @@
-
-<h1>Добавить контент в раздел "<?php echo $secName;?>"</h1>
+<?php if(!isset($content_arr)) $content_arr = array();?>
+<h1><?if (!isset($content_arr['TsvKey'])) echo "Добавить"; else echo "Редактировать"?> контент 
+<?php if(!isset($content_arr['TsvKey'])) $content_arr['TsvKey'] = null;?>
+<?php echo $content_arr['TsvKey'];?> в разделе "<?php echo $secName;?>"</h1>
 
 <form method="post" style="margin: 30px 0px 20px 0px;">
 
@@ -9,10 +11,10 @@
 	</div>
 	<div>
     	<input class="input" id="disabledInput" type="text" placeholder="<?php echo $secName;?>" disabled> / <input class="input-xlarge"
-    	 type="text" id="TsvKey" name="TsvKey" placeholder="Имя для использования в шаблонах" required>
+    	 type="text" id="TsvKey" name="TsvKey" placeholder="Имя для использования в шаблонах" value="<?php echo $content_arr['TsvKey'];?>" required>
 	</div>
 </div>
-<?php echo $this->partial('partials/'.$content_type, array('sections' => $this->sections,'selectedSection'=>$secId));?>
+<?php echo $this->partial('partials/'.$content_type, array('sections' => $this->sections,'selectedSection'=>$secId,'content_arr'=>$content_arr));?>
 <div class="row" style="margin-top:30px;">
 	<div class="span4">
 		<input type="submit" class="btn btn-success" value="Сохранить">

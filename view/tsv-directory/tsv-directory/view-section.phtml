@@ -1,17 +1,46 @@
 <?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
-<div class="row">
-  <div class="col-md-12" style="float:right;">
-	  <div class="btn-group">
-        <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+	  <div class="btn-group" style="float:right;">
+        <button class="btn btn-default btn-lg btn-success dropdown-toggle" type="button" data-toggle="dropdown">
           Добавить контент <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvText"));?>">Текст</a></li>
-          <li><a href="#">Галерея изображений</a></li>
-          <li><a href="#">Something else here</a></li>
-          <li class="divider"></li>
-          <li><a href="#">Separated link</a></li>
+<!--           <li><a href="#">Галерея изображений</a></li> -->
+<!--           <li><a href="#">Something else here</a></li> -->
+<!--           <li class="divider"></li> -->
+<!--           <li><a href="#">Separated link</a></li> -->
         </ul>
       </div>
-</div>
-<div style="clear:both;"></div>
+<div style="clear:both;"><br></div>
+
+<?php 
+foreach($section->__get('Content') as $row){
+
+	foreach ($row->{$row->content_type} as $content)
+	{
+		echo "<hr>";
+
+		?>
+		
+		<div class="row">
+			  <div class="span10">
+				<h1> <?php echo $row->__get('TsvKey');?></h1>
+			  </div>
+			  <div class="span2">
+			  	  <div class="btn-group" style="float:right;margin-top:17px;">
+			        <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+			          Операции <span class="caret"></span>
+			        </button>
+			        <ul class="dropdown-menu" role="menu">
+			          <li><a href="<?php echo $this->url("zfcadmin/tsv-directory/section-edit-content",array("section_id"=>$section->__get('id'),"content_entity_id"=>$row->__get('id'),"content_id"=>$content->__get('id'),"content_type"=>$row->content_type))?>">Править</a></li>
+			          <li><a href="<?php echo $this->url("zfcadmin/tsv-directory/section-remove-content",array("section_id"=>$section->__get('id'),"content_id"=>$content->__get('id'),"content_type"=>$row->content_type))?>">Удалить</a></li>
+			        </ul>
+			      </div>
+			  </div>
+		</div>
+		
+		<?php echo $this->partial('partials/View'.$row->content_type, array('content' => $content));?>
+		<?php 
+	}
+
+}?>

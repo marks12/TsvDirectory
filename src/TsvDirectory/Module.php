@@ -24,5 +24,21 @@ class Module
 			)
 		);		
 	}
+	
+	public function getServiceConfig()
+	{
+		return array(
+				'invokables' => array(
+				    'TsvDirectory\Content' => 'TsvDirectory\Content',
+				),
+				'factories' => array(
+				//     					'zfcuser_module_options'                        => 'ZfcUser\Factory\ModuleOptionsFactory',
+	
+				),
+				//     			'aliases' => array(
+						//     					'zfcuser_register_form_hydrator' => 'zfcuser_user_hydrator'
+						//     			),
+		);
+	}
 
 }

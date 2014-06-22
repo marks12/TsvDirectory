@@ -9,9 +9,6 @@ class TsvText {
 	 */
 	protected $id;
 
-	/** @ORM\Column(type="string") */
-	protected $TsvKey;
-
 	/** @ORM\Column(type="text") */
 	protected $TsvText;
 
@@ -21,7 +18,7 @@ class TsvText {
 	 */
 	public function get_vars()
 	{
-		return array("TsvKey","TsvText");
+		return array("TsvText");
 	}
     /**
      * Magic getter

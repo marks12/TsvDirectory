@@ -1,0 +1,16 @@
+<?php if(!isset($TsvKey)) $TsvKey = null;?>
+
+<?php 
+
+echo $this->partial('tsv-directory/add-content', array(
+		'secName'			=>	$secName,
+		'TsvKey'			=>	$TsvKey,
+		'sections'			=>	$this->sections,
+		'selectedSection'	=>	$secId,
+		'content_type'		=>	$content_type,
+		'secId'				=>	$secId,
+		'content_arr'		=>	$content_arr,
+));
+
+
+?>

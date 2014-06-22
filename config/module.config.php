@@ -5,6 +5,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'TsvDirectory\Controller\TsvDirectory' => 'TsvDirectory\Controller\TsvDirectoryController',
+            'TsvDirectory\Controller\ContentProvider' => 'TsvDirectory\Controller\ContentProvider',
         ),
     ),
     'router' => array(
@@ -121,6 +122,41 @@ return array(
 										),
 								),
 							),
+							'section-edit-content' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/section/content/edit/:content_type/:section_id/:content_entity_id/:content_id',
+										'constraints' => array(
+											'content_id' => '[0-9]*',
+											'section_id' => '[0-9]*',
+											'content_entity_id' => '[0-9]*',
+											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'content_type' => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'editContent',
+										),
+								),
+							),
+							'section-remove-content' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/section/content/remove/:content_type/:section_id/:content_id',
+										'constraints' => array(
+											'content_id' => '[0-9]*',
+											'section_id' => '[0-9]*',
+											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'content_type' => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'removeContent',
+										),
+								),
+							),
 						),
 					),
     			),
@@ -134,6 +170,8 @@ return array(
     	'template_map' => array(
         	'partials/section-list'		=> __DIR__ . '/../view/tsv-directory/partials/section-list.phtml',
         	'partials/TsvText'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-text.phtml',
+        	'partials/ViewTsvText'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-text.phtml',
+        	'tsv-directory/add-content'		=> __DIR__ . '/../view/tsv-directory/tsv-directory/add-content.phtml',
         ),
     ),
 	'navigation' => array(
