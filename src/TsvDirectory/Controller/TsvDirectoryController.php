@@ -337,6 +337,11 @@ class TsvDirectoryController extends AbstractActionController
     	return array();
     }
     
+    /**
+     * 	Add data to views in Front-End modules
+     * @param string $name
+     * @return mixed
+     */
     public function findSection($name)
     {
     	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
