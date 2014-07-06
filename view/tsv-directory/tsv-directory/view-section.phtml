@@ -1,6 +1,6 @@
 <?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
 	  <div class="btn-group" style="float:right;">
-        <button class="btn btn-default btn-lg btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+        <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
           Добавить контент <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -23,12 +23,12 @@ foreach($section->__get('Content') as $row){
 		?>
 		
 		<div class="row">
-			  <div class="span10">
+			  <div class="col-md-10">
 				<h1> <?php echo $row->__get('TsvKey');?></h1>
 			  </div>
-			  <div class="span2">
+			  <div class="col-md-2">
 			  	  <div class="btn-group" style="float:right;margin-top:17px;">
-			        <button class="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+			        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
 			          Операции <span class="caret"></span>
 			        </button>
 			        <ul class="dropdown-menu" role="menu">

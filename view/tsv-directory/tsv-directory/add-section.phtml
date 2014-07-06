@@ -1,26 +1,28 @@
 <form method="post" action="/admin/tsvDirectory/TsvDirectory/addSection">
 	<div class="row">
-	  <div class="span12">
+	  <div class="col-md-12">
 			<h1>Добавление нового раздела</h1>
 	  </div>
 	</div>
 	<br>
 	<div class="row">
-	  <div class="span2">
-			Название раздела
+	  <div class="col-md-2">
+			<strong>Название раздела</strong>
 	  </div>
-	  <div class="span10">
-			<input type="text" class="input-xxlarge" placeholder="Введите название нового раздела" name="secName">
+	  <div class="col-md-10">
+			<input type="text" class="form-control" placeholder="Введите название нового раздела" name="secName">
 	  </div>
 	</div>
+	<br>
 	<div class="row">
-	  <div class="span2">
-			Описание раздела
+	  <div class="col-md-2">
+			<strong>Описание раздела</strong>
 	  </div>
-	  <div class="span10">
-			<textarea rows="5" class="input-xxlarge" cols="80"  name="secDescription" placeholder="Пожалуйста укажите краткую информацию по использованию данных в данном разделе. Например: структура данных, формат, объем текста, частота обновления и т.д."></textarea>
+	  <div class="col-md-10">
+			<textarea rows="5" class="form-control" cols="80"  name="secDescription" placeholder="Пожалуйста укажите краткую информацию по использованию данных в данном разделе. Например: структура данных, формат, объем текста, частота обновления и т.д."></textarea>
 	  </div>
 	</div>
+	<br>
 	<div class="row">
 	  <div class="span12">
 			<button type="submit" class="btn btn-success" href="/admin/tsvDirectory/TsvDirectory/addSection">Сохранить</button>

@@ -1,30 +1,32 @@
 <form method="post" action="<?php echo $this->url('zfcadmin/tsv-directory/editor', array('action'=>'editSection','id'=>$this->id)) ?>">
 	<div class="row">
-	  <div class="span12">
+	  <div class="col-md-12">
 			<h1>Редактировать раздел <?php echo $this->secName;?></h1>
 	  </div>
 	</div>
 	<br>
 	<div class="row">
-	  <div class="span2">
+	  <div class="col-md-2">
 			Название раздела
 	  </div>
-	  <div class="span10">
-			<input type="text" class="input-xxlarge" placeholder="Введите название нового раздела" name="secName" value="<?=$this->secName?>">
+	  <div class="col-md-10">
+			<input type="text" class="form-control" placeholder="Введите название нового раздела" name="secName" value="<?=$this->secName?>">
 	  </div>
 	</div>
+	<br>
 	<div class="row">
-	  <div class="span2">
+	  <div class="col-md-2">
 			Описание раздела
 	  </div>
-	  <div class="span10">
-			<textarea rows="5" class="input-xxlarge" cols="80"  name="secDescription" 
+	  <div class="col-md-10">
+			<textarea rows="5" class="form-control" cols="80"  name="secDescription" 
 			placeholder="Пожалуйста укажите краткую информацию по использованию данных в данном разделе. 
  Например: структура данных, формат, объем текста, частота обновления и т.д."><?=$this->secDescription?></textarea>
 	  </div>
 	</div>
+	<br>
 	<div class="row">
-	  <div class="span12">
+	  <div class="col-md-12" style="text-align: center;">
 			<button type="submit" class="btn btn-success">Сохранить</button>
 			<button type="button" onclick="if(confirm('Хотите отменить редактирование?')) window.history.back();" class="btn btn-info">Отмена</button>
 	  </div>

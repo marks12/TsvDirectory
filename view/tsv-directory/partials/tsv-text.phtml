@@ -1,10 +1,12 @@
-<script src="//cdn.ckeditor.com/4.4.1/standard/ckeditor.js"></script>
-<script>
-	CKEDITOR.replace( 'TsvText' );
-</script>
+<script src="//cdn.ckeditor.com/4.4.2/full/ckeditor.js"></script>
 
 <div class="row" style="margin-top: 40px;">
-	<div class="span12">
-		<textarea class="ckeditor" name="TsvText"><?php if(isset($content_arr['TsvText'])) echo $content_arr['TsvText'];?></textarea>
+	<div class="col-md-12">
+		<textarea name="TsvText" id="TsvText"><?php if(isset($content_arr['TsvText'])) echo $content_arr['TsvText'];?></textarea>
 	</div>
 </div>
+
+<script>
+CKEDITOR.replace( 'TsvText', {allowedContent : true
+});
+</script>
