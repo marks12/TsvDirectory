@@ -166,7 +166,9 @@ class TsvDirectoryController extends AbstractActionController
     			$objectManager->persist($section);
     			$objectManager->flush();
 
-    			return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/sections");
+    			$section_id = $section->__get('id');
+    			
+    			return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/$section_id");
     		}
     		
     	}

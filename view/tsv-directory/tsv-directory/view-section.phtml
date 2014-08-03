@@ -13,18 +13,53 @@
       </div>
 <div style="clear:both;"><br></div>
 
-<?php 
-foreach($section->__get('Content') as $row){
+<style>
+<!--
+.carousel-control.left, .carousel-control.right  {
+	background-image: none;
+	width: 30px;
+}
+.carousel-control.left {
+	margin-left: -40px;
+}
+.carousel-control.right {
+	margin-right: -40px;
+}
+.glyphicon-chevron-left, .glyphicon-chevron-right {
+	color: black;
+}
+#carousel-example-generic .item{
+	height: 600px;
+	overflow-y: scroll;
+}
 
-	foreach ($row->{$row->content_type} as $content)
-	{
-		echo "<hr>";
+-->
+</style>
 
-		?>
-		
-		<div class="row">
+
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+  <?php 
+  $i=0;
+  foreach($section->__get('Content') as $row){?>
+    <li data-target="#carousel-example-generic" data-slide-to="<?php echo $i;?>" <?php if($i==0){?>class="active"<?php }?>></li>
+  <?php $i++;}?>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+  <?php 
+  $i=0;
+  foreach($section->__get('Content') as $row){
+	foreach ($row->{$row->content_type} as $content){
+
+?>
+  	<div class="item<?php if($i==0){?> active<?php }?>">
+	  	<div class="container-fluid">
+	  		<div class="row">
 			  <div class="col-md-10">
-				<h1> <?php echo $row->__get('TsvKey');?></h1>
+				 <h1 style="font-weight: bold;size: 32px;"><?php echo $row->__get('TsvKey');?></h1>
 			  </div>
 			  <div class="col-md-2">
 			  	  <div class="btn-group" style="float:right;margin-top:17px;">
@@ -37,10 +72,44 @@ foreach($section->__get('Content') as $row){
 			        </ul>
 			      </div>
 			  </div>
+			</div>
 		</div>
-		
-		<?php echo $this->partial('partials/View'.$row->content_type, array('content' => $content));?>
-		<?php 
-	}
+		<p>&nbsp;</p>
+		<div class="container-fluid">
+	  		<div class="row">
+		  		<div class="col-md-12">
+					<?php echo $this->partial('partials/View'.$row->content_type, array('content' => $content));?>
+		  		</div>
+	  		</div>
+		</div>
+    </div>
+  <?php $i++;}}?>
+  </div>
 
-}?>
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>
+
+<script type="text/javascript">
+<!--
+$('.carousel').carousel({
+	  interval: 99999999
+	})
+//-->
+</script>
+
+<?php 
+// foreach($section->__get('Content') as $row){
+
+// 	foreach ($row->{$row->content_type} as $content)
+// 	{
+// 		echo "<hr>";
+
+// 	}
+
+// }?>

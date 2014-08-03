@@ -1,8 +1,10 @@
 <ul class="nav nav-pills">
   <li <?php if($this->selectedSection==''){?> class="active"<?php }?>>
-    <a href="/admin/tsvDirectory/TsvDirectory/sections">Управление разделами</a>
+<!--     <a href="/admin/tsvDirectory/TsvDirectory/sections">Управление разделами</a> -->
+    <a href="<?php echo $this->url("zfcadmin/tsv-directory/default", array("action"=>"addSection","controller"=>"tsvDirectory"));?>"><span class="glyphicon glyphicon-plus" title="Добавить новый раздел"></span></a>
   </li>
 <?php foreach ($this->sections as $row){?>
   <li <?php if($this->selectedSection==$row->__get('id')){?> class="active"<?php }?>><a href="<?php echo $this->url('zfcadmin/tsv-directory/section-view', array('action'=>'viewSection','id'=>$row->__get('id'))) ?>"><?php echo $row->__get('secName');?></a></li>
 <?php }?>
+  <li class="disabled"><a href="<?php echo $this->url('zfcadmin/tsv-directory/paginator', array('action'=>'sections'))?>" style="cursor:pointer;font-size:10px;margin-top:4px;">Править/Удалить</a></li>
 </ul>
