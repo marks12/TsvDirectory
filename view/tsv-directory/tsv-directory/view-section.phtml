@@ -5,6 +5,7 @@
         </button>
         <ul class="dropdown-menu" role="menu">
           <li><a href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvText"));?>">Текст</a></li>
+          <li><a href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvPhoto"));?>">Фотогалерея</a></li>
 <!--           <li><a href="#">Галерея изображений</a></li> -->
 <!--           <li><a href="#">Something else here</a></li> -->
 <!--           <li class="divider"></li> -->
@@ -30,22 +31,66 @@
 }
 #carousel-example-generic .item{
 	height: 600px;
-	overflow-y: scroll;
+	overflow-y: auto;
+	border:1px solid #ddd;
+	border-radius-left:17px;
+	padding: 10px;
+}
+
+
+.carousel-indicators {
+	position:absolute;
+	bottom:10px;
+	left:50%;
+	z-index:15;
+	width:60%;
+	padding-left:0;
+	margin-left:-30%;
+	text-align:center;
+	height: 40px;
+	top: -80px;
+	list-style-type: decimal;
+}
+.carousel-indicators li{
+	display:inline-block;
+	width:34px;
+	height:34px;
+	margin:1px;
+	margin-left: 10px;
+	cursor:pointer;
+	background-color:#428bca;
+	color: #fff;
+	border:1px solid #aaa;
+	border-radius:17px;
+	padding-top: 5px;
+	text-indent: 0px;
+}
+.carousel-indicators .active{
+	width:34px;
+	height:34px;
+	margin:0;
+	background-color:#FFAA00;
+	color: #fff;
+	border-radius:17px;
+	margin-left: 10px;
 }
 
 -->
 </style>
 
-
+<br>
+<br>
+<br>
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
-  <ol class="carousel-indicators">
+  <ul class="carousel-indicators">
   <?php 
   $i=0;
-  foreach($section->__get('Content') as $row){?>
-    <li data-target="#carousel-example-generic" data-slide-to="<?php echo $i;?>" <?php if($i==0){?>class="active"<?php }?>></li>
+  foreach($section->__get('Content') as $row)
+	foreach ($row->{$row->content_type} as $content){?>
+    <li  data-toggle="tooltip" data-placement="bottom" title="<?php echo $row->__get('TsvKey');?>" data-target="#carousel-example-generic" data-slide-to="<?php echo $i;?>" class="tooltips <?php if($i==0){?>active<?php }?>"><?php echo mb_substr($row->__get('TsvKey'), 0, 1, 'utf-8');?></li>
   <?php $i++;}?>
-  </ol>
+  </ul>
 
   <!-- Wrapper for slides -->
   <div class="carousel-inner">
@@ -99,7 +144,8 @@
 <!--
 $('.carousel').carousel({
 	  interval: 99999999
-	})
+	});
+$('.tooltips').tooltip({});
 //-->
 </script>
 

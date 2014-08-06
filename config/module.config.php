@@ -170,7 +170,9 @@ return array(
     	'template_map' => array(
         	'partials/section-list'		=> __DIR__ . '/../view/tsv-directory/partials/section-list.phtml',
         	'partials/TsvText'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-text.phtml',
+        	'partials/TsvPhoto'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-photo.phtml',
         	'partials/ViewTsvText'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-text.phtml',
+        	'partials/ViewTsvPhoto'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-photo.phtml',
         	'tsv-directory/add-content'		=> __DIR__ . '/../view/tsv-directory/tsv-directory/add-content.phtml',
         ),
     ),

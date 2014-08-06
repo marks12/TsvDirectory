@@ -12,6 +12,7 @@ namespace TsvDirectory\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use TsvDirectory\Entity\Section;
 use TsvDirectory\Entity\TsvText;
+use TsvDirectory\Entity\TsvPhoto;
 use TsvDirectory\Entity\Content;
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -80,6 +81,10 @@ class TsvDirectoryController extends AbstractActionController
     		{
     			case "TsvText":
     				$content = new TsvText();
+    			break;
+
+    			case "TsvPhoto":
+    				$content = new TsvPhoto();
     			break;
     			
     			default:

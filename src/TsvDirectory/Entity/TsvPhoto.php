@@ -2,32 +2,33 @@
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
-use TsvDirectory\Entity\Section;
 
 /** @ORM\Entity */
-class Content {
+class TsvPhoto {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
-	
-	/** @ORM\Column(type="integer") */
-	protected $order_num;
 
-	/** @ORM\ManyToMany(targetEntity="TsvText") */
-	protected $TsvText;	
-
-	/** @ORM\ManyToMany(targetEntity="TsvPhoto") */
+	/** @ORM\Column(type="text") */
 	protected $TsvPhoto;
+
+	/** @ORM\ManyToMany(targetEntity="TsvPhotoElement") */
+	protected $Elements;
 	
-	/** @ORM\Column(type="string") */
-	protected $content_type;
+	public function __construct() {
+		$this->Elements = new \Doctrine\Common\Collections\ArrayCollection();
+	}
 	
-	/** @ORM\Column(type="string") */
-	protected $TsvKey;
-	
-	
+	/**
+	 * Return array of data fields
+	 * @return multitype:string
+	 */
+	public function get_vars()
+	{
+		return array("TsvPhoto");
+	}
     /**
      * Magic getter
      * @param $property
@@ -53,9 +54,20 @@ class Content {
     	else
     	die("Requested property {$key} not exists");
     }
-
-    public function __construct() {
-    	$this->TsvText = new \Doctrine\Common\Collections\ArrayCollection();
-    	$this->TsvPhoto = new \Doctrine\Common\Collections\ArrayCollection();
+    
+    /**
+     * Check required variables
+     * @param object $input_object
+     * @return boolean
+     */
+    public function check_input($input_object)
+    {
+    	if(isset($input_object->TsvKey))
+    		if(isset($input_object->TsvPhoto) && $input_object->TsvPhoto!='')
+    			return true;
+    		
+    	return false;
     }
+
+    
 }
