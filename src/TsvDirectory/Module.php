@@ -32,12 +32,14 @@ class Module
 				    'TsvDirectory\Content' => 'TsvDirectory\Content',
 				),
 				'factories' => array(
-				//     					'zfcuser_module_options'                        => 'ZfcUser\Factory\ModuleOptionsFactory',
-	
+//     					'zfcuser_module_options'                        => 'ZfcUser\Factory\ModuleOptionsFactory',
+						'TsvDirectory\Service\ContentViewModel' => function ($sm) {
+							return new \TsvDirectory\Service\ContentViewModel($sm);
+						},
 				),
-				//     			'aliases' => array(
-						//     					'zfcuser_register_form_hydrator' => 'zfcuser_user_hydrator'
-						//     			),
+//     			'aliases' => array(
+//     					'zfcuser_register_form_hydrator' => 'zfcuser_user_hydrator'
+//     			),
 		);
 	}
 

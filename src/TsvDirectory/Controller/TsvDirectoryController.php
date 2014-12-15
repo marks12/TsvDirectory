@@ -349,9 +349,12 @@ class TsvDirectoryController extends AbstractActionController
      * @param string $name
      * @return mixed
      */
-    public function findSection($name)
+    public function findSection($name, $em = null)
     {
-    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    	if(!$em)
+	    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    	else 
+    		$objectManager = $em;
     	
     	$section = $objectManager
     	->getRepository('TsvDirectory\Entity\Section')
@@ -378,6 +381,23 @@ class TsvDirectoryController extends AbstractActionController
     	
     	return $content->__get($content->__get('content_type'))[0]->__get('TsvText');
     
+    }
+    
+    public function getAllSections($em)
+    {
+    	$arr = array();
+    	
+    	$sections = $em
+    	->getRepository('TsvDirectory\Entity\Section')->findAll();
+
+    	if($sections)
+   		foreach ($sections as $sec)
+    		foreach ($sec->__get('Content') as $cont)
+    			foreach ($cont->__get($cont->__get('content_type')) as $fin)
+	    			$arr[$sec->__get('secName')."/".$cont->__get('TsvKey')] = $fin->__get($cont->__get('content_type'));
+    	
+    	return $arr;
+    	
     }
     
 }
