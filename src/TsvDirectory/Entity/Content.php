@@ -21,6 +21,9 @@ class Content {
 	/** @ORM\ManyToMany(targetEntity="TsvPhoto") */
 	protected $TsvPhoto;
 	
+	/** @ORM\ManyToMany(targetEntity="TsvStext") */
+	protected $TsvStext;
+	
 	/** @ORM\Column(type="string") */
 	protected $content_type;
 	
@@ -38,7 +41,7 @@ class Content {
     	if(property_exists($this, $key))
     	return $this->{$key};
     	else
-    	die("Requested property {$key} not exists");
+    	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
     /**
@@ -51,11 +54,12 @@ class Content {
     	if(property_exists($this, $key))
     	$this->{$key} = $value;
     	else
-    	die("Requested property {$key} not exists");
+    	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
 
     public function __construct() {
     	$this->TsvText = new \Doctrine\Common\Collections\ArrayCollection();
     	$this->TsvPhoto = new \Doctrine\Common\Collections\ArrayCollection();
+    	$this->TsvStext = new \Doctrine\Common\Collections\ArrayCollection();
     }
 }

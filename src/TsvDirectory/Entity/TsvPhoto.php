@@ -39,7 +39,7 @@ class TsvPhoto {
     	if(property_exists($this, $key))
     	return $this->{$key};
     	else
-    	die("Requested property {$key} not exists");
+    	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
     /**
@@ -52,7 +52,7 @@ class TsvPhoto {
     	if(property_exists($this, $key))
     	$this->{$key} = $value;
     	else
-    	die("Requested property {$key} not exists");
+    	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
     /**

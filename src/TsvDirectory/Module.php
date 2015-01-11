@@ -32,15 +32,23 @@ class Module
 				    'TsvDirectory\Content' => 'TsvDirectory\Content',
 				),
 				'factories' => array(
-//     					'zfcuser_module_options'                        => 'ZfcUser\Factory\ModuleOptionsFactory',
-						'TsvDirectory\Service\ContentViewModel' => function ($sm) {
-							return new \TsvDirectory\Service\ContentViewModel($sm);
-						},
+						'TsvDirectory\Service\Uploader' => function ($sm) {
+							return new \TsvDirectory\Service\Uploader($sm);
+						}
 				),
-//     			'aliases' => array(
-//     					'zfcuser_register_form_hydrator' => 'zfcuser_user_hydrator'
-//     			),
 		);
 	}
-
+// 	public function init(\Zend\ModuleManager\ModuleManager $manager)
+// 	{
+// 		$events = $manager->getEventManager();
+// 		$sharedEvents = $events->getSharedManager();
+// 		$sharedEvents->attach(__NAMESPACE__, 'dispatch', function($e) {
+// 			/* @var $e \Zend\Mvc\MvcEvent */
+// 			// fired when an ActionController under the namespace is dispatched.
+// 			$controller = $e->getTarget();
+// 			$routeMatch = $e->getRouteMatch();
+// 			/* @var $routeMatch \Zend\Mvc\Router\RouteMatch */
+// 			$routeName = $routeMatch->getMatchedRouteName();
+// 		}, 100);
+// 	}
 }

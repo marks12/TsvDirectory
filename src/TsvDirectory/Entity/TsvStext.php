@@ -4,15 +4,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /** @ORM\Entity */
-class TsvText {
+class TsvStext {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
 
-	/** @ORM\Column(type="text") */
-	protected $TsvText;
+	/** @ORM\Column(type="string") */
+	protected $TsvStext;
 
 	/**
 	 * Return array of data fields
@@ -20,7 +20,7 @@ class TsvText {
 	 */
 	public function get_vars()
 	{
-		return array("TsvText");
+		return array("TsvStext");
 	}
     /**
      * Magic getter
@@ -32,7 +32,7 @@ class TsvText {
     	if(property_exists($this, $key))
     	return $this->{$key};
     	else
-    	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
+    	die("Requested property {$key} not exists2 in ".__FUNCTION__." ".__CLASS__);
     }
     
     /**
@@ -56,7 +56,7 @@ class TsvText {
     public function check_input($input_object)
     {
     	if(isset($input_object->TsvKey))
-    		if(isset($input_object->TsvText) && $input_object->TsvText!='')
+    		if(isset($input_object->TsvStext) && $input_object->TsvStext!='')
     			return true;
     		
     	return false;

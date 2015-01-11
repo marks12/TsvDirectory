@@ -75,6 +75,22 @@ return array(
 										),
 								),
 							),
+							'uploader' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/uploader',
+										'constraints' => array(
+// 											'id' => '[0-9]*',
+// 											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+// 											'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvDirectory',
+											'action'		=>	'uploader',
+										),
+								),
+							),
 							'remover' => array(
 								'type'    => 'Segment',
 								'options' => array(
@@ -171,9 +187,11 @@ return array(
         	'partials/section-list'		=> __DIR__ . '/../view/tsv-directory/partials/section-list.phtml',
         	'partials/TsvText'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-text.phtml',
         	'partials/TsvPhoto'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-photo.phtml',
+        	'partials/TsvStext'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-stext.phtml',
         	'partials/ViewTsvText'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-text.phtml',
+        	'partials/ViewTsvStext'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-stext.phtml',
         	'partials/ViewTsvPhoto'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-photo.phtml',
-        	'tsv-directory/add-content'		=> __DIR__ . '/../view/tsv-directory/tsv-directory/add-content.phtml',
+        	'tsv-directory/add-content'	=> __DIR__ . '/../view/tsv-directory/tsv-directory/add-content.phtml',
         ),
     ),
 	'navigation' => array(

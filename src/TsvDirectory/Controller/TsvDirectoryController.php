@@ -12,6 +12,7 @@ namespace TsvDirectory\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use TsvDirectory\Entity\Section;
 use TsvDirectory\Entity\TsvText;
+use TsvDirectory\Entity\TsvStext;
 use TsvDirectory\Entity\TsvPhoto;
 use TsvDirectory\Entity\Content;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,6 +21,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
+use TsvDirectory\Service\Uploader;
 
 class TsvDirectoryController extends AbstractActionController
 {
@@ -74,7 +76,6 @@ class TsvDirectoryController extends AbstractActionController
     	
     	$vm = new ViewModel();
 
-    	
     	if ($request->isPost()) {
     	
     		switch ($content_type)
@@ -85,6 +86,10 @@ class TsvDirectoryController extends AbstractActionController
 
     			case "TsvPhoto":
     				$content = new TsvPhoto();
+    			break;
+    			
+    			case "TsvStext":
+    				$content = new TsvStext();
     			break;
     			
     			default:
@@ -349,12 +354,9 @@ class TsvDirectoryController extends AbstractActionController
      * @param string $name
      * @return mixed
      */
-    public function findSection($name, $em = null)
+    public function findSection($name)
     {
-    	if(!$em)
-	    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-    	else 
-    		$objectManager = $em;
+    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     	
     	$section = $objectManager
     	->getRepository('TsvDirectory\Entity\Section')
@@ -382,22 +384,122 @@ class TsvDirectoryController extends AbstractActionController
     	return $content->__get($content->__get('content_type'))[0]->__get('TsvText');
     
     }
-    
-    public function getAllSections($em)
-    {
-    	$arr = array();
-    	
-    	$sections = $em
-    	->getRepository('TsvDirectory\Entity\Section')->findAll();
 
-    	if($sections)
-   		foreach ($sections as $sec)
-    		foreach ($sec->__get('Content') as $cont)
-    			foreach ($cont->__get($cont->__get('content_type')) as $fin)
-	    			$arr[$sec->__get('secName')."/".$cont->__get('TsvKey')] = $fin->__get($cont->__get('content_type'));
+    private function updateFolder($upload_url,$upload_dir,$id,$entity)
+    {
+    	$entity_class = 'TsvDirectory\Entity'.'\\'.$entity;
+    	$entity_base_class = 'TsvDirectory\Entity'.'\\'.$entity;
     	
-    	return $arr;
+    	$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+    	$images = $em->getRepository($entity_class)->find($id);
     	
+    	$ent = $em->getRepository($entity_base_class)->findOneBy(array('id'=>$id));
+    	
+    	if($images)
+    	foreach ($images as $image)
+    	{
+    		$em->remove($image);
+    	}
+    	
+    	if(!file_exists($upload_dir))
+    	{
+    		$created = mkdir($upload_dir);
+    		if(!$created)
+    			exit("folder $upload_dir dos not exists and Program cant create it.");
+    	}
+    	
+    	$dir = opendir($upload_dir);
+    	
+    	while ($file = readdir($dir))
+    	{
+    		if(in_array($file, array(".","..","thumbnail")))
+    			continue;
+    	
+    		switch ($entity)
+    		{
+    			case "Flat":
+    				$image = new Flatimage();
+    			break;
+    			case "House":
+    				$image = new Houseimage();
+    			break;
+    			case "Complex":
+    				$image = new Compleximage();
+    			break;
+    			default:
+    				exit("Entity not correctly set");
+    			break;
+    		}
+    		
+    		
+
+    		$image->__set('url',$upload_url.$file);
+    		$image->__set(strtolower($entity),$ent);
+    		$image->__set('main', 0);
+    	
+    		$em->persist($image);
+    	
+    	}
+    	$em->flush();
+    	
+    	closedir($dir);
     }
     
+    protected function get_server_var($id) {
+    	return isset($_SERVER[$id]) ? $_SERVER[$id] : '';
+    }
+    
+    protected function get_full_url() {
+    	$https = !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'on') === 0 ||
+    	!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+    	strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0;
+    	return
+    	($https ? 'https://' : 'http://').
+    	(!empty($_SERVER['REMOTE_USER']) ? $_SERVER['REMOTE_USER'].'@' : '').
+    	(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : ($_SERVER['SERVER_NAME'].
+    			($https && $_SERVER['SERVER_PORT'] === 443 ||
+    					$_SERVER['SERVER_PORT'] === 80 ? '' : ':'.$_SERVER['SERVER_PORT']))).
+    					substr($_SERVER['SCRIPT_NAME'],0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
+    }
+    
+    public function uploaderAction()
+    {
+    	$vm = new ViewModel();
+    	
+//     	$entity = $this->getEvent()->getRouteMatch()->getParam('entity');
+    	$entity = 'TsvPhoto';
+    	
+    	$dir_name = dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/';
+    	
+    	if(!file_exists($dir_name))
+    	{
+    		$created = mkdir($dir_name);
+    		if(!$created)
+    			exit("folder $dir_name dos not exists and Program cant create it.");
+    	}
+    	
+    	if(!file_exists($dir_name.strtolower($entity)))
+    	{
+    		$created = mkdir($dir_name.strtolower($entity));
+    		if(!$created)
+    			exit("folder ".$dir_name.strtolower($entity)." dos not exists and Program cant create it.");
+    	}
+    	
+    	$upload_dir = $dir_name.strtolower($entity).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
+    	$upload_url = $this->get_full_url().'/files/'.strtolower($entity).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
+
+   		$upload_handler = new \TsvDirectory\Service\Uploader(
+   				array(
+   						"script_url"	=>	$this->getRequest()->getUri()->getPath(),
+   						'upload_dir' 	=> 	$upload_dir,
+   						'upload_url'	=>	$upload_url,
+   				)
+   		);
+   		
+   		$this->updateFolder($upload_url,$upload_dir,(int)$this->getEvent()->getRouteMatch()->getParam('id'),$entity);
+
+   		$vm->setTerminal(true);
+   		return $vm;
+   		
+    }
 }
