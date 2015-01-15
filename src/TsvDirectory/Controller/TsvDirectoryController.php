@@ -384,6 +384,23 @@ class TsvDirectoryController extends AbstractActionController
     	return $content->__get($content->__get('content_type'))[0]->__get('TsvText');
     
     }
+    
+    public function getAllSections($em)
+    {
+    	$arr = array();
+    	 
+    	$sections = $em
+    	->getRepository('TsvDirectory\Entity\Section')->findAll();
+    
+    	if($sections)
+    	foreach ($sections as $sec)
+    	foreach ($sec->__get('Content') as $cont)
+    	foreach ($cont->__get($cont->__get('content_type')) as $fin)
+    		$arr[$sec->__get('secName')."/".$cont->__get('TsvKey')] = $fin->__get($cont->__get('content_type'));
+    	 
+    	return $arr;
+    	 
+    }
 
     private function updateFolder($upload_url,$upload_dir,$id,$entity)
     {
