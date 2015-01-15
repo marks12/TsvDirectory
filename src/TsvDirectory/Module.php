@@ -34,7 +34,10 @@ class Module
 				'factories' => array(
 						'TsvDirectory\Service\Uploader' => function ($sm) {
 							return new \TsvDirectory\Service\Uploader($sm);
-						}
+						},
+						'TsvDirectory\Service\ContentViewModel' => function ($sm) {
+							return new \TsvDirectory\Service\ContentViewModel($sm);
+						},
 				),
 		);
 	}
