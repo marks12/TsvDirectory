@@ -1,7 +1,7 @@
 <?php
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
 
 /** @ORM\Entity */
 class TsvFile {
@@ -18,7 +18,7 @@ class TsvFile {
 	private $TsvFileElements; // Привязка к файлам
 	
 	public function __construct() {
-		$this->TsvFileElements = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->TsvFileElements = new ArrayCollection();
 	}
 	
 	/**

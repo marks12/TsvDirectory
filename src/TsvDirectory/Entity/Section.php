@@ -3,6 +3,7 @@ namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use TsvDirectory\Entity\Content;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /** @ORM\Entity */
 class Section {
@@ -36,7 +37,7 @@ class Section {
     }
 
     public function __construct() {
-    	$this->Content = new \Doctrine\Common\Collections\ArrayCollection();
+    	$this->Content = new ArrayCollection();
     }
     
     /**

@@ -393,6 +393,7 @@ class TsvDirectoryController extends AbstractActionController
     	$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	$parent = $em->getRepository($entity_class_parent)->find($parent_id);
     	
+    	
     	$request = $this->getRequest();
     	
     	if(!file_exists($upload_dir))
@@ -402,18 +403,21 @@ class TsvDirectoryController extends AbstractActionController
     			exit("folder $upload_dir dos not exists and Program cant create it.");
     	}
     	
+    	 
     	$files = $parent->__get('TsvFileElements');
     	
-    	if($files)
-    	foreach ($files as $file)
+    	if($parent->__get('TsvFileElements'))
     	{
-    		$files->removeElement($file);
+    		foreach ($parent->__get('TsvFileElements') as $file)
+	    	{
+	    		$em->remove($file);
+	    	}
+//     		$em->persist($parent);
+    		$em->flush();
     	}
-    	$em->persist($files);
-    	$em->flush();
-    	
+    	    	
     	$dir = opendir($upload_dir);
-    	
+
     	while ($file_name = readdir($dir))
     	{
     		if(in_array($file_name, array(".","..","thumbnail")))
@@ -490,7 +494,10 @@ class TsvDirectoryController extends AbstractActionController
    				)
    		);
 
-   		$this->updateFolder($upload_url,$upload_dir,$tsvfile_id,$entity_parent);
+   		$request = $this->getRequest();
+   		
+   		if ($request->isPost() || $request->isDelete())
+	   		$this->updateFolder($upload_url,$upload_dir,$tsvfile_id,$entity_parent);
 
    		return $vm;
    		

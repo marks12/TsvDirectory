@@ -1,8 +1,7 @@
 <?php
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
-
-use TsvDirectory\Entity\TsvFile;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /** @ORM\Entity */
 class TsvFileElement {
@@ -17,6 +16,11 @@ class TsvFileElement {
 	
 	/** @ORM\ManyToOne(targetEntity="TsvFile", inversedBy="TsvFileElements")*/
 	private $TsvFile; // Привязка к галереям файлов
+	
+	function __construct()
+	{
+		$this->TsvFile = new ArrayCollection();
+	}
 	
     /**
      * Magic getter
