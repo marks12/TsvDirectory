@@ -59,8 +59,8 @@ class Content {
     }
 
     public function __construct() {
-    	$this->TsvText = ArrayCollection();
-    	$this->TsvFile = ArrayCollection();
-    	$this->TsvStext = ArrayCollection();
+    	$this->TsvText = new ArrayCollection();
+    	$this->TsvFile = new ArrayCollection();
+    	$this->TsvStext = new ArrayCollection();
     }
 }

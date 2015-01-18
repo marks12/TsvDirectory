@@ -334,11 +334,21 @@ class TsvDirectoryController extends AbstractActionController
 
     	$content_type = $this->getEvent()->getRouteMatch()->getParam('content_type');
     	
+//     	var_dump($content_type);
+//     	exit();
+
+    	$class_name = 'TsvDirectory\Entity\\'.$content_type;
+    	
+    	$id = (int)$this->getEvent()->getRouteMatch()->getParam('content_id');
+    	
+		if(class_exists($class_name) && method_exists($class_name,'onDelete'))
+			$class_name::onDelete($id);
+    	
     	$content = $objectManager
-    	->getRepository('TsvDirectory\Entity\\'.$content_type)
+    	->getRepository($class_name)
     	->findOneBy(
     			array(
-    					'id' => (int)$this->getEvent()->getRouteMatch()->getParam('content_id')
+    					'id' => $id
     			)
     	);
     	
@@ -381,8 +391,12 @@ class TsvDirectoryController extends AbstractActionController
 
     	if(!is_object($content) || !method_exists($content, '__get'))
     		return false;
+
     	
-    	return $content->__get($content->__get('content_type'))[0]->__get('TsvText');
+    	$obj = $content->__get($content->__get('content_type'));
+
+    	if(isset($obj[0]))
+    	return $obj[0]->__get($content->__get('content_type'));
     
     }
 
@@ -451,6 +465,11 @@ class TsvDirectoryController extends AbstractActionController
     					substr($_SERVER['SCRIPT_NAME'],0, strrpos($_SERVER['SCRIPT_NAME'], '/'));
     }
     
+    public function get_dir_name()
+    {
+    	return dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/';
+    }
+    
     public function uploaderAction()
     {
     	$vm = new ViewModel();
@@ -459,7 +478,7 @@ class TsvDirectoryController extends AbstractActionController
     	$entity_parent = 'TsvFile';
     	$entity_store = 'TsvFileElement';
     	
-    	$dir_name = dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/';
+    	$dir_name = $this->get_dir_name();
     	
     	if(!file_exists($dir_name))
     	{

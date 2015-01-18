@@ -2,6 +2,8 @@
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use TsvFunctions;
+use TsvDirectory;
 
 /** @ORM\Entity */
 class TsvFile {
@@ -14,7 +16,7 @@ class TsvFile {
 	/** @ORM\Column(type="text") */
 	protected $TsvFile;
 
-	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile")*/
+	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile", cascade={"remove"})*/
 	private $TsvFileElements; // Привязка к файлам
 	
 	public function __construct() {
@@ -53,6 +55,20 @@ class TsvFile {
     	$this->{$key} = $value;
     	else
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
+    }
+    
+    public function onDelete($id)
+    {
+    	$dir = TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvFile').'/'.(int)$id;
+    	
+    	if(file_exists($dir) && is_dir($dir))
+    		if(TsvFunctions\Controller\TsvFunctionsController::deleteDir($dir))
+    			return true;
+    		else 
+    			return false;
+    	else 
+	    	return null;
+//   		exit('Dir '.$dir.' deleted');
     }
     
     /**
