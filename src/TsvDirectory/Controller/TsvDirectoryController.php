@@ -13,7 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use TsvDirectory\Entity\Section;
 use TsvDirectory\Entity\TsvText;
 use TsvDirectory\Entity\TsvStext;
-use TsvDirectory\Entity\TsvPhoto;
+use TsvDirectory\Entity\TsvFile;
 use TsvDirectory\Entity\Content;
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -22,6 +22,7 @@ use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 use TsvDirectory\Service\Uploader;
+use TsvDirectory\Entity\TsvFileElement;
 
 class TsvDirectoryController extends AbstractActionController
 {
@@ -84,8 +85,8 @@ class TsvDirectoryController extends AbstractActionController
     				$content = new TsvText();
     			break;
 
-    			case "TsvPhoto":
-    				$content = new TsvPhoto();
+    			case "TsvFile":
+    				$content = new TsvFile();
     			break;
     			
     			case "TsvStext":
@@ -384,39 +385,15 @@ class TsvDirectoryController extends AbstractActionController
     	return $content->__get($content->__get('content_type'))[0]->__get('TsvText');
     
     }
-    
-    public function getAllSections($em)
-    {
-    	$arr = array();
-    	 
-    	$sections = $em
-    	->getRepository('TsvDirectory\Entity\Section')->findAll();
-    
-    	if($sections)
-    	foreach ($sections as $sec)
-    	foreach ($sec->__get('Content') as $cont)
-    	foreach ($cont->__get($cont->__get('content_type')) as $fin)
-    		$arr[$sec->__get('secName')."/".$cont->__get('TsvKey')] = $fin->__get($cont->__get('content_type'));
-    	 
-    	return $arr;
-    	 
-    }
 
-    private function updateFolder($upload_url,$upload_dir,$id,$entity)
+    private function updateFolder($upload_url,$upload_dir,$parent_id,$entity_parent)
     {
-    	$entity_class = 'TsvDirectory\Entity'.'\\'.$entity;
-    	$entity_base_class = 'TsvDirectory\Entity'.'\\'.$entity;
+    	$entity_class_parent	= 'TsvDirectory\Entity'.'\\'.$entity_parent;
     	
     	$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-    	$images = $em->getRepository($entity_class)->find($id);
+    	$parent = $em->getRepository($entity_class_parent)->find($parent_id);
     	
-    	$ent = $em->getRepository($entity_base_class)->findOneBy(array('id'=>$id));
-    	
-    	if($images)
-    	foreach ($images as $image)
-    	{
-    		$em->remove($image);
-    	}
+    	$request = $this->getRequest();
     	
     	if(!file_exists($upload_dir))
     	{
@@ -425,37 +402,28 @@ class TsvDirectoryController extends AbstractActionController
     			exit("folder $upload_dir dos not exists and Program cant create it.");
     	}
     	
+    	$files = $parent->__get('TsvFileElements');
+    	
+    	if($files)
+    	foreach ($files as $file)
+    	{
+    		$files->removeElement($file);
+    	}
+    	$em->persist($files);
+    	$em->flush();
+    	
     	$dir = opendir($upload_dir);
     	
-    	while ($file = readdir($dir))
+    	while ($file_name = readdir($dir))
     	{
-    		if(in_array($file, array(".","..","thumbnail")))
+    		if(in_array($file_name, array(".","..","thumbnail")))
     			continue;
-    	
-    		switch ($entity)
-    		{
-    			case "Flat":
-    				$image = new Flatimage();
-    			break;
-    			case "House":
-    				$image = new Houseimage();
-    			break;
-    			case "Complex":
-    				$image = new Compleximage();
-    			break;
-    			default:
-    				exit("Entity not correctly set");
-    			break;
-    		}
-    		
-    		
 
-    		$image->__set('url',$upload_url.$file);
-    		$image->__set(strtolower($entity),$ent);
-    		$image->__set('main', 0);
-    	
-    		$em->persist($image);
-    	
+    		$file = new TsvFileElement();    				
+    		
+    		$file->__set('TsvFile',$parent);
+    		$file->__set('url',$upload_url.$file_name);
+    		$em->persist($file);
     	}
     	$em->flush();
     	
@@ -484,7 +452,8 @@ class TsvDirectoryController extends AbstractActionController
     	$vm = new ViewModel();
     	
 //     	$entity = $this->getEvent()->getRouteMatch()->getParam('entity');
-    	$entity = 'TsvPhoto';
+    	$entity_parent = 'TsvFile';
+    	$entity_store = 'TsvFileElement';
     	
     	$dir_name = dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/';
     	
@@ -495,15 +464,23 @@ class TsvDirectoryController extends AbstractActionController
     			exit("folder $dir_name dos not exists and Program cant create it.");
     	}
     	
-    	if(!file_exists($dir_name.strtolower($entity)))
+    	if(!file_exists($dir_name.strtolower($entity_parent)))
     	{
-    		$created = mkdir($dir_name.strtolower($entity));
+    		$created = mkdir($dir_name.strtolower($entity_parent));
     		if(!$created)
-    			exit("folder ".$dir_name.strtolower($entity)." dos not exists and Program cant create it.");
+    			exit("folder ".$dir_name.strtolower($entity_parent)." dos not exists and Program cant create it.");
     	}
     	
-    	$upload_dir = $dir_name.strtolower($entity).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
-    	$upload_url = $this->get_full_url().'/files/'.strtolower($entity).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
+    	$vm->setTerminal(true);
+    	 
+    	$tsvfile_id = (int)$this->getEvent()->getRouteMatch()->getParam('id');
+    	if(!$tsvfile_id)
+    	{
+    		exit("Error: Content id is wrong");
+    	}
+    	    	
+    	$upload_dir = $dir_name.strtolower($entity_parent).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
+    	$upload_url = $this->get_full_url().'/files/'.strtolower($entity_parent).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
 
    		$upload_handler = new \TsvDirectory\Service\Uploader(
    				array(
@@ -512,11 +489,22 @@ class TsvDirectoryController extends AbstractActionController
    						'upload_url'	=>	$upload_url,
    				)
    		);
-   		
-   		$this->updateFolder($upload_url,$upload_dir,(int)$this->getEvent()->getRouteMatch()->getParam('id'),$entity);
 
-   		$vm->setTerminal(true);
+   		$this->updateFolder($upload_url,$upload_dir,$tsvfile_id,$entity_parent);
+
    		return $vm;
    		
+    }
+    
+    public function uploaderFormAction()
+    {
+    	$vm = new ViewModel();
+    	
+    	$id  = $this->getEvent()->getRouteMatch()->getParam('id');
+    	
+    	$vm->setVariable("content_id", $id);
+    	
+    	
+    	return $vm;
     }
 }

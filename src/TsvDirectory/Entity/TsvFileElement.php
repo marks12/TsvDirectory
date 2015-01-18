@@ -2,34 +2,21 @@
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
-use TsvDirectory\Entity\Section;
+use TsvDirectory\Entity\TsvFile;
 
 /** @ORM\Entity */
-class Content {
+class TsvFileElement {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
 	
-	/** @ORM\Column(type="integer") */
-	protected $order_num;
-
-	/** @ORM\ManyToMany(targetEntity="TsvText") */
-	protected $TsvText;	
-
-	/** @ORM\ManyToMany(targetEntity="TsvFile") */
-	protected $TsvFile;
-	
-	/** @ORM\ManyToMany(targetEntity="TsvStext") */
-	protected $TsvStext;
-	
 	/** @ORM\Column(type="string") */
-	protected $content_type;
+	protected $url;
 	
-	/** @ORM\Column(type="string") */
-	protected $TsvKey;
-	
+	/** @ORM\ManyToOne(targetEntity="TsvFile", inversedBy="TsvFileElements")*/
+	private $TsvFile; // Привязка к галереям файлов
 	
     /**
      * Magic getter
@@ -57,9 +44,4 @@ class Content {
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
 
-    public function __construct() {
-    	$this->TsvText = new \Doctrine\Common\Collections\ArrayCollection();
-    	$this->TsvFile = new \Doctrine\Common\Collections\ArrayCollection();
-    	$this->TsvStext = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 }

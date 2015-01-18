@@ -2,35 +2,33 @@
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
-use TsvDirectory\Entity\Section;
 
 /** @ORM\Entity */
-class Content {
+class TsvFile {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
-	
-	/** @ORM\Column(type="integer") */
-	protected $order_num;
-
-	/** @ORM\ManyToMany(targetEntity="TsvText") */
-	protected $TsvText;	
-
-	/** @ORM\ManyToMany(targetEntity="TsvFile") */
+ 
+	/** @ORM\Column(type="text") */
 	protected $TsvFile;
+
+	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile")*/
+	private $TsvFileElements; // Привязка к файлам
 	
-	/** @ORM\ManyToMany(targetEntity="TsvStext") */
-	protected $TsvStext;
+	public function __construct() {
+		$this->TsvFileElements = new \Doctrine\Common\Collections\ArrayCollection();
+	}
 	
-	/** @ORM\Column(type="string") */
-	protected $content_type;
-	
-	/** @ORM\Column(type="string") */
-	protected $TsvKey;
-	
-	
+	/**
+	 * Return array of data fields
+	 * @return multitype:string
+	 */
+	public function get_vars()
+	{
+		return array("TsvFile");
+	}
     /**
      * Magic getter
      * @param $property
@@ -56,10 +54,20 @@ class Content {
     	else
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
-
-    public function __construct() {
-    	$this->TsvText = new \Doctrine\Common\Collections\ArrayCollection();
-    	$this->TsvFile = new \Doctrine\Common\Collections\ArrayCollection();
-    	$this->TsvStext = new \Doctrine\Common\Collections\ArrayCollection();
+    
+    /**
+     * Check required variables
+     * @param object $input_object
+     * @return boolean
+     */
+    public function check_input($input_object)
+    {
+    	if(isset($input_object->TsvKey))
+    		if(isset($input_object->TsvFile) && $input_object->TsvFile!='')
+    			return true;
+    	
+    	return false;
     }
+
+    
 }

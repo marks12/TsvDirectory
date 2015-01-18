@@ -1,17 +1,3 @@
-<!-- UPLOADER CSS START -->
-<link rel="stylesheet" href="//serveon.ru/css/uploader/style.css">
-<!-- blueimp Gallery styles -->
-<link rel="stylesheet" href="//serveon.ru/css/uploader/blueimp-gallery.min.css">
-<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-<link rel="stylesheet" href="//serveon.ru/css/uploader/jquery.fileupload.css">
-<link rel="stylesheet" href="//serveon.ru/css/uploader/jquery.fileupload-ui.css">
-<!-- CSS adjustments for browsers with JavaScript disabled -->
-<noscript><link rel="stylesheet" href="//serveon.ru/css/uploader/jquery.fileupload-noscript.css"></noscript>
-<noscript><link rel="stylesheet" href="//serveon.ru/css/uploader/jquery.fileupload-ui-noscript.css"></noscript>
-<!-- UPLOADER CSS END -->
-
-
-
 
 
 
@@ -25,7 +11,7 @@
         <ul class="dropdown-menu add-content-btns" role="menu">
           <li><a title="Простой текст или число" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvStext"));?>"><img src="http://serveon.ru/img/SimpleText.png" alt="Простой текст или число">Простой текст или число</a></li>
           <li><a title="HTML текст" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvText"));?>"><img src="http://serveon.ru/img/HtmlText.png" alt="HTML-Текст">HTML-Текст</a></li>
-          <li><a title="Галерея изображений" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvPhoto"));?>"><img src="http://serveon.ru/img/ImageGalary.png" alt="Фотогалерея">Фотогалерея</a></li>
+          <li><a title="Галерея файлов и изображений" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvFile"));?>"><img src="http://serveon.ru/img/ImageGalary.png" alt="Галерея файлов">Галерея файлов (изображений)</a></li>
         </ul>
       </div>
 <div style="clear:both;"><br></div>
@@ -159,6 +145,8 @@ $('.tooltips').tooltip({});
 //-->
 </script>
 
+
+
 <?php 
 // foreach($section->__get('Content') as $row){
 
@@ -171,120 +159,3 @@ $('.tooltips').tooltip({});
 // }?>
 
 
-<!-- UPLOADER JS START -->
-<!-- The template to display files available for upload -->
-<script id="template-upload" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-upload fade">
-        <td>
-            <span class="preview"></span>
-        </td>
-        <td>
-            <p class="name">{%=file.name%}</p>
-            <strong class="error text-danger"></strong>
-        </td>
-        <td>
-            <p class="size">Работаем ...</p>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-        </td>
-        <td>
-            {% if (!i && !o.options.autoUpload) { %}
-                <button class="btn btn-primary start" disabled>
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Старт</span>
-                </button>
-            {% } %}
-            {% if (!i) { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Отмена</span>
-                </button>
-            {% } %}
-        </td>
-    </tr>
-{% } %}
-</script>
-<!-- The template to display files available for download -->
-<script id="template-download" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-download fade">
-        <td>
-            <span class="preview">
-                {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-                {% } %}
-            </span>
-        </td>
-        <td>
-            <p class="name">
-                {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-                {% } else { %}
-                    <span>{%=file.name%}</span>
-                {% } %}
-            </p>
-            {% if (file.error) { %}
-                <div><span class="label label-danger">Ошибка</span> {%=file.error%}</div>
-            {% } %}
-        </td>
-        <td>
-            <span class="size">{%=o.formatFileSize(file.size)%}</span>
-        </td>
-        <td>
-            {% if (file.deleteUrl) { %}
-                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Удалить</span>
-                </button>
-                <input type="checkbox" name="delete" value="1" class="toggle">
-            {% } else { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
-                </button>
-            {% } %}
-        </td>
-    </tr>
-{% } %}
-</script>
-<script src="//serveon.ru/js/jquery/1.11.1/jquery.min.js"></script>
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script src="//serveon.ru/js/uploader/vendor-js/jquery.ui.widget.js"></script>
-<!-- The Templates plugin is included to render the upload/download listings -->
-<script src="//serveon.ru/js/uploader/tmpl.min.js"></script>
-<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="//serveon.ru/js/uploader/load-image.all.min.js"></script>
-<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="//serveon.ru/js/uploader/canvas-to-blob.min.js"></script>
-
-
-<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
-<!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> -->
-<!-- blueimp Gallery script -->
-<script src="//serveon.ru/js/uploader/jquery.blueimp-gallery.min.js"></script>
-<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<script src="//serveon.ru/js/uploader/jquery.iframe-transport.js"></script>
-<!-- The basic File Upload plugin -->
-
-
-
-<script src="//serveon.ru/js/uploader/jquery.fileupload.js"></script>
-<!-- The File Upload processing plugin -->
-<script src="//serveon.ru/js/uploader/jquery.fileupload-process.js"></script>
-<!-- The File Upload image preview & resize plugin -->
-<script src="//serveon.ru/js/uploader/jquery.fileupload-image.js"></script>
-<!-- The File Upload audio preview plugin -->
-<script src="//serveon.ru/js/uploader/jquery.fileupload-audio.js"></script>
-<!-- The File Upload video preview plugin -->
-<script src="//serveon.ru/js/uploader/jquery.fileupload-video.js"></script>
-<!-- The File Upload validation plugin -->
-<script src="//serveon.ru/js/uploader/jquery.fileupload-validate.js"></script>
-<!-- The File Upload user interface plugin -->
-<script src="//serveon.ru/js/uploader/jquery.fileupload-ui.js"></script>
-<!-- The main application script -->
-<script src="//serveon.tsv/js/uploader/main.js"></script>
-<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
-<!--[if (gte IE 8)&(lt IE 10)]>
-<script src="//serveon.ru/js/uploader/cors/jquery.xdr-transport.js"></script>
-<![endif]-->
-<!-- UPLOADER JS END -->
