@@ -1,39 +1,26 @@
 <?php
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
-
-use TsvDirectory\Entity\Section;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /** @ORM\Entity */
-class Content {
+class TsvCarouselImage {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
 	
-	/** @ORM\Column(type="integer") */
-	protected $order_num;
-
-	/** @ORM\ManyToMany(targetEntity="TsvText") */
-	protected $TsvText;	
-
-	/** @ORM\ManyToMany(targetEntity="TsvFile") */
-	protected $TsvFile;
-	
-	/** @ORM\ManyToMany(targetEntity="TsvStext") */
-	protected $TsvStext;
-	
-	/** @ORM\ManyToMany(targetEntity="TsvCarousel") */
-	protected $TsvCarousel;
-	
 	/** @ORM\Column(type="string") */
-	protected $content_type;
+	protected $url;
 	
-	/** @ORM\Column(type="string") */
-	protected $TsvKey;
+	/** @ORM\ManyToOne(targetEntity="TsvCarousel", inversedBy="TsvCarouselImages")*/
+	private $TsvCarousel; // Привязка к карусели
 	
+	function __construct()
+	{
+		$this->TsvCarousel = new ArrayCollection();
+	}
 	
     /**
      * Magic getter
@@ -61,10 +48,4 @@ class Content {
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
 
-    public function __construct() {
-    	$this->TsvText = new ArrayCollection();
-    	$this->TsvFile = new ArrayCollection();
-    	$this->TsvStext = new ArrayCollection();
-    	$this->TsvCarousel = new ArrayCollection();
-    }
 }

@@ -1,39 +1,30 @@
 <?php
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
-
-use TsvDirectory\Entity\Section;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /** @ORM\Entity */
-class Content {
+class TsvCarouselElement {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
 	
-	/** @ORM\Column(type="integer") */
-	protected $order_num;
-
-	/** @ORM\ManyToMany(targetEntity="TsvText") */
-	protected $TsvText;	
-
-	/** @ORM\ManyToMany(targetEntity="TsvFile") */
-	protected $TsvFile;
+	/** @ORM\Column(type="text") */
+	protected $content;
 	
-	/** @ORM\ManyToMany(targetEntity="TsvStext") */
-	protected $TsvStext;
+	/** @ORM\ManyToOne(targetEntity="TsvCarousel", inversedBy="TsvCarouselElements")*/
+	private $TsvCarousel; // Привязка к карусели
 	
-	/** @ORM\ManyToMany(targetEntity="TsvCarousel") */
-	protected $TsvCarousel;
+	/** @ORM\ManyToMany(targetEntity="TsvCarouselImage") */
+	protected $Background;
 	
-	/** @ORM\Column(type="string") */
-	protected $content_type;
-	
-	/** @ORM\Column(type="string") */
-	protected $TsvKey;
-	
+	function __construct()
+	{
+		$this->TsvCarousel = new ArrayCollection();
+		$this->Background = new ArrayCollection();
+	}
 	
     /**
      * Magic getter
@@ -61,10 +52,4 @@ class Content {
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
 
-    public function __construct() {
-    	$this->TsvText = new ArrayCollection();
-    	$this->TsvFile = new ArrayCollection();
-    	$this->TsvStext = new ArrayCollection();
-    	$this->TsvCarousel = new ArrayCollection();
-    }
 }

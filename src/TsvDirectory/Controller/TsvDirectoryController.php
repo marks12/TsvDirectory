@@ -14,6 +14,8 @@ use TsvDirectory\Entity\Section;
 use TsvDirectory\Entity\TsvText;
 use TsvDirectory\Entity\TsvStext;
 use TsvDirectory\Entity\TsvFile;
+use TsvDirectory\Entity\TsvCarousel;
+use TsvDirectory\Entity\TsvCarouselElement;
 use TsvDirectory\Entity\Content;
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -87,6 +89,10 @@ class TsvDirectoryController extends AbstractActionController
 
     			case "TsvFile":
     				$content = new TsvFile();
+    			break;
+    			
+    			case "TsvCarousel":
+    				$content = new TsvCarousel();
     			break;
     			
     			case "TsvStext":
@@ -408,13 +414,12 @@ class TsvDirectoryController extends AbstractActionController
     	 
     }
 
-    private function updateFolder($upload_url,$upload_dir,$parent_id,$entity_parent)
+    private function updateFolder($upload_url,$upload_dir,$parent_id,$entity_parent,$entity_store)
     {
     	$entity_class_parent	= 'TsvDirectory\Entity'.'\\'.$entity_parent;
     	
     	$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	$parent = $em->getRepository($entity_class_parent)->find($parent_id);
-    	
     	
     	$request = $this->getRequest();
     	
@@ -425,35 +430,37 @@ class TsvDirectoryController extends AbstractActionController
     			exit("folder $upload_dir dos not exists and Program cant create it.");
     	}
     	
-    	 
-    	$files = $parent->__get('TsvFileElements');
-    	
-    	if($parent->__get('TsvFileElements'))
+    	if($parent)
     	{
-    		foreach ($parent->__get('TsvFileElements') as $file)
-	    	{
-	    		$em->remove($file);
-	    	}
-//     		$em->persist($parent);
-    		$em->flush();
-    	}
-    	    	
-    	$dir = opendir($upload_dir);
-
-    	while ($file_name = readdir($dir))
-    	{
-    		if(in_array($file_name, array(".","..","thumbnail")))
-    			continue;
-
-    		$file = new TsvFileElement();    				
+    		$files = $parent->__get($entity_store."s");
+    		 
+    		if($parent->__get($entity_store."s"))
+    		{
+    			foreach ($parent->__get($entity_store."s") as $file)
+    			{
+    				$em->remove($file);
+    			}
+    			//     		$em->persist($parent);
+    			$em->flush();
+    		}
     		
-    		$file->__set('TsvFile',$parent);
-    		$file->__set('url',$upload_url.$file_name);
-    		$em->persist($file);
+    		$dir = opendir($upload_dir);
+    		
+    		while ($file_name = readdir($dir))
+    		{
+    			if(in_array($file_name, array(".","..","thumbnail")))
+    				continue;
+    		
+    			$file = new TsvFileElement();
+    		
+    			$file->__set($entity_parent,$parent);
+    			$file->__set('url',$upload_url.$file_name);
+    			$em->persist($file);
+    		}
+    		$em->flush();
+    		 
+    		closedir($dir);
     	}
-    	$em->flush();
-    	
-    	closedir($dir);
     }
     
     protected function get_server_var($id) {
@@ -482,9 +489,8 @@ class TsvDirectoryController extends AbstractActionController
     {
     	$vm = new ViewModel();
     	
-//     	$entity = $this->getEvent()->getRouteMatch()->getParam('entity');
-    	$entity_parent = 'TsvFile';
-    	$entity_store = 'TsvFileElement';
+    	$entity_parent = $this->getEvent()->getRouteMatch()->getParam('entity_parent');
+    	$entity_store = $this->getEvent()->getRouteMatch()->getParam('entity_store');
     	
     	$dir_name = $this->get_dir_name();
     	
@@ -505,10 +511,10 @@ class TsvDirectoryController extends AbstractActionController
     	$vm->setTerminal(true);
     	 
     	$tsvfile_id = (int)$this->getEvent()->getRouteMatch()->getParam('id');
-    	if(!$tsvfile_id)
-    	{
-    		exit("Error: Content id is wrong");
-    	}
+//     	if(!$tsvfile_id)
+//     	{
+//     		exit("Error: Content id is wrong");
+//     	}
     	    	
     	$upload_dir = $dir_name.strtolower($entity_parent).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
     	$upload_url = $this->get_full_url().'/files/'.strtolower($entity_parent).'/'.(int)$this->getEvent()->getRouteMatch()->getParam('id').'/';
@@ -524,7 +530,7 @@ class TsvDirectoryController extends AbstractActionController
    		$request = $this->getRequest();
    		
    		if ($request->isPost() || $request->isDelete())
-	   		$this->updateFolder($upload_url,$upload_dir,$tsvfile_id,$entity_parent);
+	   		$this->updateFolder($upload_url,$upload_dir,$tsvfile_id,$entity_parent,$entity_store);
 
    		return $vm;
    		
@@ -536,9 +542,13 @@ class TsvDirectoryController extends AbstractActionController
     	
     	$id  = $this->getEvent()->getRouteMatch()->getParam('id');
     	
+    	$entity_parent = $this->getEvent()->getRouteMatch()->getParam('entity_parent');
+    	$entity_store = $this->getEvent()->getRouteMatch()->getParam('entity_store');
+    	
     	$vm->setVariable("content_id", $id);
-    	
-    	
+    	$vm->setVariable("entity_parent", $entity_parent);
+    	$vm->setVariable("entity_store", $entity_store);
+    	    	
     	return $vm;
     }
 }

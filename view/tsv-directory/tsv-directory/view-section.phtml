@@ -12,91 +12,32 @@
           <li><a title="Простой текст или число" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvStext"));?>"><img src="http://serveon.ru/img/SimpleText.png" alt="Простой текст или число">Простой текст или число</a></li>
           <li><a title="HTML текст" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvText"));?>"><img src="http://serveon.ru/img/HtmlText.png" alt="HTML-Текст">HTML-Текст</a></li>
           <li><a title="Галерея файлов и изображений" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvFile"));?>"><img src="http://serveon.ru/img/ImageGalary.png" alt="Галерея файлов">Галерея файлов (изображений)</a></li>
+          <li><a title="Карусель" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvCarousel"));?>"><img src="http://serveon.ru/img/Carousel.png" alt="Карусель">Карусель</a></li>
         </ul>
       </div>
 <div style="clear:both;"><br></div>
 
-<style>
-<!--
-.carousel-control.left, .carousel-control.right  {
-	background-image: none;
-	width: 30px;
-}
-.carousel-control.left {
-	margin-left: -40px;
-}
-.carousel-control.right {
-	margin-right: -40px;
-}
-.glyphicon-chevron-left, .glyphicon-chevron-right {
-	color: black;
-}
-#carousel-example-generic .item{
-	height: 600px;
-	overflow-y: auto;
-	border:1px solid #ddd;
-	border-radius-left:17px;
-	padding: 10px;
-}
+<div role="tabpanel" id="mainTab">
 
-.carousel-indicators {
-	bottom:10px;
-	-left:50%;
-	z-index:15;
-	width:100%;
-	padding-left:0;
-	margin: 0px 0px 15px 0px;
-	-text-align:center;
-	list-style-type: decimal;
-	-top: -60px;
-	position: static;
-}
-.carousel-indicators li{
-	height:34px;
-	margin:1px;
-	margin-left: 10px;
-	cursor:pointer;
-	background-color:#428bca;
-	color: #fff;
-	border:1px solid #aaa;
-	border-radius:17px;
-	padding-top: 5px;
-	text-indent: 0px;
-}
-.carousel-indicators .active{
-	height:34px;
-	margin:0;
-	background-color:#FFAA00;
-	color: #fff;
-	border-radius:17px;
-	margin-left: 10px;
-}
-.carousel-indicators .active, .carousel-indicators li{
-	width: auto;
-	padding: 5px 10px 0px 10px;
-	margin-top: 7px;
-}
-
--->
-</style>
-
-<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
- <ul class="carousel-indicators">
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
   <?php 
   $i=0;
   foreach($section->__get('Content') as $row)
 	foreach ($row->{$row->content_type} as $content){?>
-    <li data-toggle="tooltip" data-placement="bottom" title="<?php echo $row->__get('TsvKey');?>" data-target="#carousel-example-generic" data-slide-to="<?php echo $i;?>" class="tooltips <?php if($i==0){?>active<?php }?>"><?php echo mb_substr($row->__get('TsvKey'), 0/*, 1, 'utf-8'*/);?></li>
+	<li role="presentation" class="<?php if($i==0){?>active<?php }?>"><a href="#tab-<?php echo $i;?>" aria-controls="#tab-<?php echo $i;?>" role="tab" data-toggle="tab"><?php echo $row->__get('TsvKey');?></a></li>
   <?php $i++;}?>
- </ul>
-    
-  <!-- Wrapper for slides -->
-  <div class="carousel-inner">
-  <?php 
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+  
+    <?php 
   $i=0;
   foreach($section->__get('Content') as $row){
 	foreach ($row->{$row->content_type} as $content){?>
-  	<div class="item<?php if($i==0){?> active<?php }?>">
+	<div role="tabpanel" class="tab-pane <?php if($i==0){?> active<?php }?>" id="<?php echo "tab-".$i;?>">
+
 	  	<div class="container-fluid">
 	  		<div class="row">
 			  <div class="col-md-10">
@@ -125,19 +66,20 @@
 		</div>
     </div>
   <?php $i++;}}?>
-  </div>
+  
 
-  <!-- Controls -->
-  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-    <span class="glyphicon glyphicon-chevron-left"></span>
-  </a>
-  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-    <span class="glyphicon glyphicon-chevron-right"></span>
-  </a>
+
 </div>
+
+
+
 
 <script type="text/javascript">
 <!--
+$(function () {
+  $('#mainTab a').tab('show')
+})
+
 $('.carousel').carousel({
 	  interval: 99999999
 	});
@@ -147,15 +89,6 @@ $('.tooltips').tooltip({});
 
 
 
-<?php 
-// foreach($section->__get('Content') as $row){
 
-// 	foreach ($row->{$row->content_type} as $content)
-// 	{
-// 		echo "<hr>";
-
-// 	}
-
-// }?>
 
 
