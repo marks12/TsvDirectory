@@ -392,12 +392,20 @@ class TsvDirectoryController extends AbstractActionController
     	if(!is_object($content) || !method_exists($content, '__get'))
     		return false;
 
-    	
-    	$obj = $content->__get($content->__get('content_type'));
+    	$prop = $content->__get('content_type');
 
-    	if(isset($obj[0]))
-    	return $obj[0]->__get($content->__get('content_type'));
-    
+    	if(count($content->__get($prop)) == 1)
+	   		foreach ($content->__get($prop) as $data)
+	   			if(isset($data))
+	   				return $data->__get($prop);
+	   			else
+	   				return false;
+		else
+			return $content->__get($prop);
+
+		return false;
+		
+    	 
     }
 
     private function updateFolder($upload_url,$upload_dir,$parent_id,$entity_parent)
