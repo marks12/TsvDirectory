@@ -1,6 +1,6 @@
 <h4><?php echo $content->__get('TsvFile');?></h4>
 
- <iframe src="<?php echo $this->url("zfcadmin/tsv-directory/uploader-form",array("id"=>$content->__get('id'))) ?>?rand=<?php echo rand(-65534, 65534)?>" width="100%" height="460">
+ <iframe src="<?php echo $this->url("zfcadmin/tsv-directory/uploader-form",array("id"=>$content->__get('Content')->__get('id'))) ?>?rand=<?php echo rand(-65534, 65534)?>" width="100%" height="460">
     Ваш браузер не поддерживает плавающие фреймы!
  </iframe>
 

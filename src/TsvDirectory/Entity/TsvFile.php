@@ -19,6 +19,9 @@ class TsvFile {
 	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile", cascade={"remove"})*/
 	private $TsvFileElements; // Привязка к файлам
 	
+	/** @ORM\ManyToOne(targetEntity="Content", inversedBy="TsvFile")*/
+	protected $Content;
+	
 	public function __construct() {
 		$this->TsvFileElements = new ArrayCollection();
 	}
@@ -57,9 +60,10 @@ class TsvFile {
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
-    public function onDelete($id)
+    public function onDelete()
     {
-    	$dir = TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvFile').'/'.(int)$id;
+
+    	$dir = TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvFile').'/'.$this->__get('Content')->__get('id');
     	
     	if(file_exists($dir) && is_dir($dir))
     		if(TsvFunctions\Controller\TsvFunctionsController::deleteDir($dir))

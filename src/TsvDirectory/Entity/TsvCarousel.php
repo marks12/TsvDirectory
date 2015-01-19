@@ -22,6 +22,9 @@ class TsvCarousel {
 	/** @ORM\OneToMany(targetEntity="TsvCarouselImage", mappedBy="TsvCarousel", cascade={"remove"})*/
 	private $TsvCarouselImages; // Привязка к картинкам
 	
+	/** @ORM\ManyToOne(targetEntity="Content", inversedBy="TsvCarousel")*/
+	protected $Content;
+	
 	public function __construct() {
 		$this->TsvCarouselElements = new ArrayCollection();
 	}
@@ -60,9 +63,10 @@ class TsvCarousel {
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
-    public function onDelete($id)
+    public function onDelete()
     {
-    	$dir = TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/'.(int)$id;
+
+    	$dir = TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/'.$this->__get('Content')->__get('id');
     	
     	if(file_exists($dir) && is_dir($dir))
     		if(TsvFunctions\Controller\TsvFunctionsController::deleteDir($dir))
@@ -91,7 +95,7 @@ class TsvCarousel {
     public function afterSave()
     {
     	$dir_source = \TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/0';
-    	$dir_destination = \TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/'.$this->id;
+    	$dir_destination = \TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/'.$this->Content->__get('id');
     	
     	rename($dir_source, $dir_destination);
     }

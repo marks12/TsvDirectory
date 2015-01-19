@@ -1,6 +1,7 @@
+<script src="//cdn.ckeditor.com/4.4.2/full/ckeditor.js"></script>
 <p><?php echo $content->__get('TsvCarousel');?></p>
 
-<input type="button" class="btn btn-success" value="Добавить страницу карусели">
+<input type="button" class="btn btn-success" value="Добавить страницу карусели" data-toggle="modal" data-target="#addCarouselPage">
 <br><br>
 
 <div id="carousel-<?php echo $content->__get('id')?>" class="carousel slide" data-ride="carousel">
@@ -43,3 +44,31 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
+
+<div class="modal fade" id="addCarouselPage">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Добавить страницу в карусель</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+			<div class="col-md-11">
+				Выбор бэкграунда
+			</div>
+      	</div>
+      	<textarea name="CarouselContent" id="CarouselContent"><?php if(isset($content_arr['CarouselContent'])) echo $content_arr['CarouselContent'];?></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary">Сохранить</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+  
+<script>
+CKEDITOR.replace( 'CarouselContent', {allowedContent : true
+});
+</script>

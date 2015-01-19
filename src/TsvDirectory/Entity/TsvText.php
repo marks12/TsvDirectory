@@ -14,6 +14,9 @@ class TsvText {
 	/** @ORM\Column(type="text") */
 	protected $TsvText;
 
+	/** @ORM\ManyToOne(targetEntity="Content", inversedBy="TsvText")*/
+	protected $Content;
+	
 	/**
 	 * Return array of data fields
 	 * @return multitype:string

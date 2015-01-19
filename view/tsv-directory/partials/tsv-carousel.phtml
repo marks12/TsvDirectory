@@ -12,7 +12,7 @@
 (вы также можете сделать это позже или не выполнять загрузку файлов вообще)
 <?php 
 
-if(isset($content_arr) && $content_arr['id'])
+if(isset($content_arr) && isset($content_arr['id']) && $content_arr['id'])
 	$id = $content_arr['id'];
 else 
 	$id = 0;

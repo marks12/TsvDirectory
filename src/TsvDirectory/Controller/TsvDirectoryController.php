@@ -110,9 +110,16 @@ class TsvDirectoryController extends AbstractActionController
     		$content_entity = new Content();
     		$content_entity->__set('content_type',$content_type);
     		$content_entity->__set('TsvKey',$request->getPost()->TsvKey);
+    		$content_entity->__set('Section',$section);
     		$content_entity->__set('order_num',$section->__get('Content')->count()+1);// next num
-    		$content_entity->__get($content_type)->add($content);
     		$objectManager->persist($content_entity);
+    		$objectManager->flush();
+    		
+    		$content->__set("Content", $content_entity);
+    		$content_entity->__get($content_type)->add($content);
+			$objectManager->persist($content_entity);
+    		$objectManager->flush();
+    		
     		
      		$section->__get('Content')->add($content_entity);
     		$objectManager->flush();
@@ -341,21 +348,20 @@ class TsvDirectoryController extends AbstractActionController
     	
     	$id = (int)$this->getEvent()->getRouteMatch()->getParam('content_id');
     	
-		if(class_exists($class_name) && method_exists($class_name,'onDelete'))
-			$class_name::onDelete($id);
     	
-    	$content = $objectManager
-    	->getRepository($class_name)
-    	->findOneBy(
-    			array(
-    					'id' => $id
-    			)
-    	);
+    	$content_type_obj = $objectManager->getRepository($class_name)->findOneBy(array('id' => $id));
     	
-    	var_dump($content->___get(''));
+    	if($content_type_obj && method_exists($content_type_obj,'onDelete'))
+    		$content_type_obj->onDelete();
+
+    	$content_id = $content_type_obj->__get('Content')->__get('id');
     	
+    	$objectManager->remove($content_type_obj);
+    	$objectManager->flush();
+    	
+    	$content = $objectManager->getRepository('TsvDirectory\Entity\Content')->find($content_id);
+    	    	
     	$objectManager->remove($content);
-    	$objectManager->persist($content);
     	$objectManager->flush();
 		
     	return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/".$this->getEvent()->getRouteMatch()->getParam('section_id'));
