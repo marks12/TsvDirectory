@@ -11,8 +11,9 @@
 <h1>Загрузите изображения для последующего использования</h1>
 (вы также можете сделать это позже или не выполнять загрузку файлов вообще)
 <?php 
-if(isset($content) && $content->__get('id'))
-	$id = $content->__get('id');
+
+if(isset($content_arr) && $content_arr['id'])
+	$id = $content_arr['id'];
 else 
 	$id = 0;
 ?>

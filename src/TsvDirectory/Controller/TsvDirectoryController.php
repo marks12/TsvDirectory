@@ -39,9 +39,7 @@ class TsvDirectoryController extends AbstractActionController
 
     private function getSections()
     {
-    	$objectManager = $this
-    	->getServiceLocator()
-    	->get('Doctrine\ORM\EntityManager');
+    	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	
     	$section = $objectManager
     	->getRepository('TsvDirectory\Entity\Section')
@@ -52,9 +50,7 @@ class TsvDirectoryController extends AbstractActionController
 
     public function viewSectionAction()
     {
-    	$objectManager = $this
-    	->getServiceLocator()
-    	->get('Doctrine\ORM\EntityManager');
+    	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	
     	
     	$section = $objectManager->find('TsvDirectory\Entity\Section', (int)$this->getEvent()->getRouteMatch()->getParam('id'));
@@ -69,9 +65,7 @@ class TsvDirectoryController extends AbstractActionController
     public function addContentAction()
     {
     	$request = $this->getRequest();
-    	$objectManager = $this
-    	->getServiceLocator()
-    	->get('Doctrine\ORM\EntityManager');
+    	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	
     	$section_id = (int)$this->getEvent()->getRouteMatch()->getParam('section_id');
     	$content_type = $this->getEvent()->getRouteMatch()->getParam('content_type');
@@ -123,6 +117,9 @@ class TsvDirectoryController extends AbstractActionController
      		$section->__get('Content')->add($content_entity);
     		$objectManager->flush();
     		
+    		if(method_exists($content, "afterSave"))
+    			$content->afterSave();
+    		
     		return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/".$section_id);
     	
     	}
@@ -173,9 +170,7 @@ class TsvDirectoryController extends AbstractActionController
     		
     		if(isset($request->getPost()->secName) && $request->getPost()->secDescription)
     		{
-    			$objectManager = $this
-    			->getServiceLocator()
-    			->get('Doctrine\ORM\EntityManager');
+    			$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     			 
     			$section = new Section();
     			$section->__set("secName", $request->getPost()->secName);
@@ -198,9 +193,7 @@ class TsvDirectoryController extends AbstractActionController
     public function editContentAction()
     {
     	$request = $this->getRequest();
-    	$objectManager = $this
-    	->getServiceLocator()
-    	->get('Doctrine\ORM\EntityManager');
+    	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	
     	$section_id = (int)$this->getEvent()->getRouteMatch()->getParam('section_id');
     	$content_id = (int)$this->getEvent()->getRouteMatch()->getParam('content_id');
@@ -260,6 +253,7 @@ class TsvDirectoryController extends AbstractActionController
     		$arr[$v] = $content->__get($v);
     	}
     	$arr['TsvKey'] = $content_entity->__get('TsvKey');
+    	$arr['id'] = $content_entity->__get('id');
     	
     	$vm->setVariable('content_arr', $arr);
     	
@@ -273,7 +267,7 @@ class TsvDirectoryController extends AbstractActionController
     public function editSectionAction()
     {
     	$request = $this->getRequest();
-    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	
     	if ($request->isPost()) {
     	
@@ -318,7 +312,7 @@ class TsvDirectoryController extends AbstractActionController
     public function removeSectionAction()
     {
     	$request = $this->getRequest();
-    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	 
     	$section = $objectManager
     	->getRepository('TsvDirectory\Entity\Section')
@@ -336,7 +330,7 @@ class TsvDirectoryController extends AbstractActionController
     public function removeContentAction()
     {
     	$request = $this->getRequest();
-    	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 
     	$content_type = $this->getEvent()->getRouteMatch()->getParam('content_type');
     	
@@ -358,7 +352,10 @@ class TsvDirectoryController extends AbstractActionController
     			)
     	);
     	
+    	var_dump($content->___get(''));
+    	
     	$objectManager->remove($content);
+    	$objectManager->persist($content);
     	$objectManager->flush();
 		
     	return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/".$this->getEvent()->getRouteMatch()->getParam('section_id'));
@@ -482,7 +479,8 @@ class TsvDirectoryController extends AbstractActionController
     
     public function get_dir_name()
     {
-    	return dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/';
+    	$class = __CLASS__;
+    	return dirname($class :: get_server_var('SCRIPT_FILENAME')).'/files/';
     }
     
     public function uploaderAction()

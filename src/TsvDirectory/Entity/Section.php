@@ -20,7 +20,7 @@ class Section {
 	/** @ORM\Column(type="text") */
 	protected $secDescription;
 
-    /** @ORM\ManyToMany(targetEntity="Content") */
+    /** @ORM\OneToMany(targetEntity="Content", mappedBy="Section", cascade={"remove"})*/
     protected $Content;
     
     /**

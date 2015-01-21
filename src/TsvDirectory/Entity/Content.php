@@ -34,6 +34,8 @@ class Content {
 	/** @ORM\Column(type="string") */
 	protected $TsvKey;
 	
+	/** @ORM\ManyToOne(targetEntity="Section", inversedBy="Content")*/
+	protected $Section;
 	
     /**
      * Magic getter
@@ -47,7 +49,7 @@ class Content {
     	else
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
-    
+
     /**
      * Magic setter
      * @param $key
@@ -66,5 +68,6 @@ class Content {
     	$this->TsvFile = new ArrayCollection();
     	$this->TsvStext = new ArrayCollection();
     	$this->TsvCarousel = new ArrayCollection();
+    	$this->Section = new ArrayCollection();
     }
 }

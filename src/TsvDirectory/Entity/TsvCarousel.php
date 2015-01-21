@@ -16,8 +16,11 @@ class TsvCarousel {
 	/** @ORM\Column(type="text") */
 	protected $TsvCarousel;
 
-	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvCarouselElement", mappedBy="TsvCarousel", cascade={"remove"})*/
 	private $TsvCarouselElements; // Привязка к страницам карусели
+
+	/** @ORM\OneToMany(targetEntity="TsvCarouselImage", mappedBy="TsvCarousel", cascade={"remove"})*/
+	private $TsvCarouselImages; // Привязка к картинкам
 	
 	public function __construct() {
 		$this->TsvCarouselElements = new ArrayCollection();
@@ -85,5 +88,12 @@ class TsvCarousel {
     	return false;
     }
 
+    public function afterSave()
+    {
+    	$dir_source = \TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/0';
+    	$dir_destination = \TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/'.$this->id;
+    	
+    	rename($dir_source, $dir_destination);
+    }
     
 }
