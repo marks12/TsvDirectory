@@ -16,16 +16,16 @@ class Content {
 	/** @ORM\Column(type="integer") */
 	protected $order_num;
 
-	/** @ORM\OneToMany(targetEntity="TsvText", mappedBy="Content", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvText", mappedBy="Content", cascade={"persist","remove"})*/
 	protected $TsvText;	
 
-	/** @ORM\OneToMany(targetEntity="TsvFile", mappedBy="Content", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvFile", mappedBy="Content", cascade={"persist","remove"})*/
 	protected $TsvFile;
 	
-	/** @ORM\OneToMany(targetEntity="TsvStext", mappedBy="Content", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvStext", mappedBy="Content", cascade={"persist","remove"})*/
 	protected $TsvStext;
 	
-	/** @ORM\OneToMany(targetEntity="TsvCarousel", mappedBy="Content", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvCarousel", mappedBy="Content", cascade={"persist","remove"})*/
 	protected $TsvCarousel;
 	
 	/** @ORM\Column(type="string") */

@@ -4,8 +4,8 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'TsvDirectory\Controller\TsvDirectory' => 'TsvDirectory\Controller\TsvDirectoryController',
-            'TsvDirectory\Controller\ContentProvider' => 'TsvDirectory\Controller\ContentProvider',
+            'TsvDirectory\Controller\TsvDirectory' 	=> 'TsvDirectory\Controller\TsvDirectoryController',
+            'TsvDirectory\Controller\Carousel' 		=> 'TsvDirectory\Controller\CarouselController',
         ),
     ),
     'router' => array(
@@ -194,6 +194,20 @@ return array(
 											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
 											'controller'	=>	'TsvDirectory',
 											'action'		=>	'removeContent',
+										),
+								),
+							),
+							'carousel-add-page' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/section/content/carousel/add/page/:carousel_id',
+										'constraints' => array(
+											'carousel_id' => '[0-9]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'Carousel',
+											'action'		=>	'carouselAddPage',
 										),
 								),
 							),

@@ -16,6 +16,7 @@ use TsvDirectory\Entity\TsvStext;
 use TsvDirectory\Entity\TsvFile;
 use TsvDirectory\Entity\TsvCarousel;
 use TsvDirectory\Entity\TsvCarouselElement;
+use TsvDirectory\Entity\TsvCarouselImage as TsvCarouselImage;
 use TsvDirectory\Entity\Content;
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -420,9 +421,10 @@ class TsvDirectoryController extends AbstractActionController
     private function updateFolder($upload_url,$upload_dir,$parent_id,$entity_parent,$entity_store)
     {
     	$entity_class_parent	= 'TsvDirectory\Entity'.'\\'.$entity_parent;
+    	$entity_class_store	= 'TsvDirectory\Entity'.'\\'.$entity_store;
     	
     	$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-    	$parent = $em->getRepository($entity_class_parent)->find($parent_id);
+    	$parent = $em->getRepository('TsvDirectory\Entity\Content')->find($parent_id);
     	
     	$request = $this->getRequest();
     	
@@ -435,11 +437,13 @@ class TsvDirectoryController extends AbstractActionController
     	
     	if($parent)
     	{
-    		$files = $parent->__get($entity_store."s");
-    		 
-    		if($parent->__get($entity_store."s"))
+    		$files = $parent->__get($entity_parent)->first()->__get($entity_store."s");
+    		
+    		$addto = $em->getRepository($entity_class_parent)->find($parent->__get($entity_parent)->first()->__get('id'));
+    		
+    		if($files)
     		{
-    			foreach ($parent->__get($entity_store."s") as $file)
+    			foreach ($files as $file)
     			{
     				$em->remove($file);
     			}
@@ -454,11 +458,11 @@ class TsvDirectoryController extends AbstractActionController
     			if(in_array($file_name, array(".","..","thumbnail")))
     				continue;
     		
-    			$file = new TsvFileElement();
-    		
-    			$file->__set($entity_parent,$parent);
+    			$file = new $entity_class_store();
     			$file->__set('url',$upload_url.$file_name);
+    			$file->__set($entity_parent,$addto);
     			$em->persist($file);
+    			 
     		}
     		$em->flush();
     		 

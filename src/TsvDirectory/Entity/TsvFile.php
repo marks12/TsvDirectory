@@ -16,7 +16,7 @@ class TsvFile {
 	/** @ORM\Column(type="text") */
 	protected $TsvFile;
 
-	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile", cascade={"persist","remove"})*/
 	private $TsvFileElements; // Привязка к файлам
 	
 	/** @ORM\ManyToOne(targetEntity="Content", inversedBy="TsvFile")*/

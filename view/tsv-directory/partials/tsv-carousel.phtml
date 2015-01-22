@@ -17,6 +17,6 @@ if(isset($content_arr) && isset($content_arr['id']) && $content_arr['id'])
 else 
 	$id = 0;
 ?>
- <iframe src="<?php echo $this->url("zfcadmin/tsv-directory/uploader-form",array("id"=>$id,"entity_parent"=>"TsvCarousel","entity_store"=>"TsvCarouselImages")) ?>?rand=<?php echo rand(-65534, 65534)?>" width="100%" height="460">
+ <iframe src="<?php echo $this->url("zfcadmin/tsv-directory/uploader-form",array("id"=>$id,"entity_parent"=>"TsvCarousel","entity_store"=>"TsvCarouselImage")) ?>?rand=<?php echo rand(-65534, 65534)?>" width="100%" height="460">
     Ваш браузер не поддерживает плавающие фреймы!
  </iframe>

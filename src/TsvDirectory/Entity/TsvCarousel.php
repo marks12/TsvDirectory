@@ -16,10 +16,10 @@ class TsvCarousel {
 	/** @ORM\Column(type="text") */
 	protected $TsvCarousel;
 
-	/** @ORM\OneToMany(targetEntity="TsvCarouselElement", mappedBy="TsvCarousel", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvCarouselElement", mappedBy="TsvCarousel", cascade={"persist","remove"})*/
 	private $TsvCarouselElements; // Привязка к страницам карусели
 
-	/** @ORM\OneToMany(targetEntity="TsvCarouselImage", mappedBy="TsvCarousel", cascade={"remove"})*/
+	/** @ORM\OneToMany(targetEntity="TsvCarouselImage", mappedBy="TsvCarousel", cascade={"persist","remove"})*/
 	private $TsvCarouselImages; // Привязка к картинкам
 	
 	/** @ORM\ManyToOne(targetEntity="Content", inversedBy="TsvCarousel")*/
