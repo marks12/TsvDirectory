@@ -17,6 +17,8 @@ class Carousel extends AbstractActionController
     	$request = $this->getRequest();
     	$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	
+//     	$carousel_id = 
+    	
     	if(!$request->isPost())
     	{
     		
