@@ -211,6 +211,36 @@ return array(
 										),
 								),
 							),
+							'carousel-edit-page' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/section/content/carousel/edit/page/:carousel_id/:page_id',
+										'constraints' => array(
+											'carousel_id' => '[0-9]*',
+											'page_id' => '[0-9]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'Carousel',
+											'action'		=>	'carouselEditPage',
+										),
+								),
+							),
+							'carousel-remove-page' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/:controller/section/content/carousel/remove/page/:carousel_id/:page_id',
+										'constraints' => array(
+											'carousel_id' => '[0-9]*',
+											'page_id' => '[0-9]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'Carousel',
+											'action'		=>	'carouselRemovePage',
+										),
+								),
+							),
 						),
 					),
     			),
@@ -261,6 +291,22 @@ return array(
 				'drivers' => array(
 					'TsvDirectory\Entity' => 'tsvdirectory_entities',
 				),
+			),
+		),
+	),
+	'bjyauthorize' => array(
+			'guards' => array(
+				'BjyAuthorize\Guard\Controller' => array(
+						
+						array(
+								'controller' => 'TsvDirectory\Controller\Carousel',
+								'roles'	=> array('admin'),
+						),
+						array(
+								'controller' => 'TsvDirectory\Controller\TsvDirectory',
+								'roles'	=> array('admin'),
+						),
+
 			),
 		),
 	),

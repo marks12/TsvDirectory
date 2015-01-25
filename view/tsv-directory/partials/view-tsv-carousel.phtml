@@ -1,37 +1,45 @@
 <script src="//cdn.ckeditor.com/4.4.2/full/ckeditor.js"></script>
 <p><?php echo $content->__get('TsvCarousel');?></p>
 
-<input type="button" class="btn btn-success" value="Добавить страницу карусели" data-toggle="modal" data-target="#addCarouselPage">
+<style>
+html,body{height:100%;}
+.carousel,.item,.active{height:100%;}
+.carousel-inner{height:100%;}
+.fill{width:100%;height:100%;background-position:center;background-size:cover;}
+#carousel-<?php echo $content->__get('id')?> {
+	height: 500px;
+}
+</style>
+
+<input type="button" id="addPageButton" class="btn btn-success" value="Добавить страницу карусели" data-toggle="modal" data-target="#addCarouselPage">
+<?php if(count($content->__get('TsvCarouselElements'))){?>
+	&nbsp; <input type="button" id="editPageButton" class="btn btn-warning" value="Редактировать текущую страницу" data-toggle="modal" data-target="#addCarouselPage">
+	&nbsp; <input type="button" id="removePageButton" class="btn btn-danger" value="Удалить текущую страницу" data-toggle="modal">
+<?php }?>
 <br><br>
+
+
 
 <div id="carousel-<?php echo $content->__get('id')?>" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
+  
   <ol class="carousel-indicators">
-    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  <?php $i=0; foreach ($content->__get('TsvCarouselElements') as $page){?>
+    <li data-target="#carousel-example-generic" data-slide-to="<?php echo $i;?>" class="<?php if($i==0) echo "active";?>"></li>
+  <?php $i++;}?>
   </ol>
 
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
-    <div class="item active">
-      <img width="100%" data-src="holder.js/900x500/auto/#666:#666" alt="900x500" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDkwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiIvPjxnPjx0ZXh0IHg9IjM0MC45OTIxODc1IiB5PSIyNTAiIHN0eWxlPSJmaWxsOiM2NjY7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6NDJwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj45MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4=" data-holder-rendered="true">
-      <div class="carousel-caption">
-        Carousel caption
+  <?php $i=0; foreach ($content->__get('TsvCarouselElements') as $page){?>
+  	<div class="item pages <?php if($i==0) echo "active";?>" page-id="<?php echo $page->__get('id');?>">
+  	  <div class="fill" style="background-image:url('<?php foreach ($page->Background as $back) {echo $back->__get('url');break;}?>');">
+        <div class="container">
+          <?php echo $page->__get('content');?>
+        </div>
       </div>
     </div>
-    <div class="item">
-      <img width="100%" data-src="holder.js/900x500/auto/#666:#666" alt="900x500" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDkwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiIvPjxnPjx0ZXh0IHg9IjM0MC45OTIxODc1IiB5PSIyNTAiIHN0eWxlPSJmaWxsOiM2NjY7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6NDJwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj45MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4=" data-holder-rendered="true">
-      <div class="carousel-caption">
-        Carousel caption
-      </div>
-    </div>
-    <div class="item">
-      <img width="100%" data-src="holder.js/900x500/auto/#666:#666" alt="900x500" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDkwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiIvPjxnPjx0ZXh0IHg9IjM0MC45OTIxODc1IiB5PSIyNTAiIHN0eWxlPSJmaWxsOiM2NjY7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6NDJwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj45MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4=" data-holder-rendered="true">
-      <div class="carousel-caption">
-        Carousel caption
-      </div>
-    </div>
+  <?php $i++;}?>
   </div>
 
   <!-- Controls -->
@@ -45,9 +53,39 @@
   </a>
 </div>
 
+<script>
+
+	var addPageUrl = '<?php echo $this->url('zfcadmin/tsv-directory/carousel-add-page',array("carousel_id"=>$content->__get('id')));?>';
+
+	$('#addPageButton').click(function(){
+		$('#PageForm').prop('action',addPageUrl);
+		$('#edited-item').html('');
+		$('.modal-title').html('Добавить страницу в карусель');
+		CKEDITOR.instances.CarouselContent.editable().setHtml('');
+		unsetBack('#edit-carousel-<?php echo $content->__get('id')?>');
+	});
+	$('#editPageButton').click(function(){
+
+		html = $(".pages.active .fill .container").html();
+		
+		$('#PageForm').prop('action',addPageUrl.replace(/add\/page/,"edit/page")+'/'+$(".pages.active").attr('page-id'));
+		$('#edited-item').html(html);
+		CKEDITOR.instances.CarouselContent.editable().setHtml(html);
+		$('#CarouselContent').val(html);
+		var url = $(".pages.active .fill").css('background-image').replace(/url/,"");
+		$(".back_check[src='"+url.substring(1, url.length-1)+"']").click();
+		$('.modal-title').html('Изменить страницу');
+	});
+
+	$('#removePageButton').click(function(){
+		if(confirm('Вы действительно хотите удалить текущую страницу?'))
+			window.location.href=addPageUrl.replace(/add\/page/,"remove/page")+'/'+$(".pages.active").attr('page-id');
+	});
+</script>
+
 <div class="modal fade" id="addCarouselPage">
   <div class="modal-dialog">
-<form action="<?php echo $this->url('zfcadmin/tsv-directory/carousel-add-page',array("carousel_id"=>$content->__get('id')));?>" method="POST">
+<form id="PageForm" action="<?php echo $this->url('zfcadmin/tsv-directory/carousel-add-page',array("carousel_id"=>$content->__get('id')));?>" method="POST">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -63,7 +101,7 @@
 					onclick="setBack(this.src,'#edit-carousel-<?php echo $content->__get('id')?>',<?php echo $image->__get('id');?>)">
 				<?php }?>
 				
-				<input type="text" id="selected_back">
+				<input type="text" id="selected_back" name="selected_back">
 			</div>
       	</div>
       	<br>
@@ -81,7 +119,7 @@
 				  <!-- Wrapper for slides -->
 				  <div class="carousel-inner" role="listbox">
 				    <div class="item active" id="edited-item">
-				      <img width="100%" 1data-src="holder.js/900x500/auto/#666:#666" alt="900x500" 1src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDkwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiIvPjxnPjx0ZXh0IHg9IjM0MC45OTIxODc1IiB5PSIyNTAiIHN0eWxlPSJmaWxsOiM2NjY7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6NDJwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj45MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4=" data-holder-rendered="true">
+				      <img width="100%" data-src="holder.js/900x500/auto/#666:#666" alt="900x500" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDkwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiIvPjxnPjx0ZXh0IHg9IjM0MC45OTIxODc1IiB5PSIyNTAiIHN0eWxlPSJmaWxsOiM2NjY7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6NDJwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj45MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4=" data-holder-rendered="true">
 				      <div class="carousel-caption">
 				        Carousel caption
 				      </div>
@@ -122,6 +160,10 @@ body .modal {
 
 .back_check {
 	cursor: pointer;
+}
+.transparent25 {
+    filter: alpha(Opacity=25);
+    opacity: 0.25; 
 }
 -->
 </style>
@@ -164,6 +206,13 @@ function setBack(src,id,image_id)
 	$(id).css('background', 'url('+src+')');
 	$(id).css('background-size', '100% auto');
 	$('#selected_back').val(image_id);
+}
+
+function unsetBack(id)
+{
+	$(id).css('background-image', 'none');
+	$('#selected_back').val('');
+	$('#edited-item').html('<img class="transparent25" width="100%" data-src="holder.js/900x500/auto/#666:#666" alt="900x500" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDkwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iOTAwIiBoZWlnaHQ9IjUwMCIgZmlsbD0iIzY2NiIvPjxnPjx0ZXh0IHg9IjM0MC45OTIxODc1IiB5PSIyNTAiIHN0eWxlPSJmaWxsOiM2NjY7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6NDJwdDtkb21pbmFudC1iYXNlbGluZTpjZW50cmFsIj45MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4=" data-holder-rendered="true"><div class="carousel-caption">Carousel caption</div>');
 }
 
 </script>

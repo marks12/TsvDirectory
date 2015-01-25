@@ -20,12 +20,12 @@
 <div role="tabpanel" id="mainTab">
 
   <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
+  <ul id="tab-nav" class="nav nav-tabs" role="tablist">
   <?php 
   $i=0;
   foreach($section->__get('Content') as $row)
 	foreach ($row->{$row->content_type} as $content){?>
-	<li role="presentation" class="<?php if($i==0){?>active<?php }?>"><a href="#tab-<?php echo $i;?>" aria-controls="#tab-<?php echo $i;?>" role="tab" data-toggle="tab"><?php echo $row->__get('TsvKey');?></a></li>
+	<li role="presentation" class="<?php if($i==0){?>active1<?php }?>"><a href="#tab-<?php echo $row->__get('id');?>" aria-controls="#tab-<?php echo $row->__get('id');?>" role="tab" data-toggle="tab"><?php echo $row->__get('TsvKey');?></a></li>
   <?php $i++;}?>
   </ul>
 
@@ -36,7 +36,7 @@
   $i=0;
   foreach($section->__get('Content') as $row){
 	foreach ($row->{$row->content_type} as $content){?>
-	<div role="tabpanel" class="tab-pane <?php if($i==0){?> active<?php }?>" id="<?php echo "tab-".$i;?>">
+	<div role="tabpanel" class="tab-pane <?php if($i==0){?> active1<?php }?>" id="<?php echo "tab-".$row->__get('id');?>">
 
 	  	<div class="container-fluid">
 	  		<div class="row">
@@ -77,8 +77,14 @@
 <script type="text/javascript">
 <!--
 $(function () {
-  $('#mainTab a').tab('show')
+	var selected = window.location.hash.substr(1);
+	if(selected!='')
+		$('#tab-nav a[href="#'+selected+'"]').tab('show');
+	else
+		$('#mainTab a').tab('show');
 })
+
+
 
 $('.carousel').carousel({
 	  interval: 99999999
