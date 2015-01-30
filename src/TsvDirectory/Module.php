@@ -9,6 +9,8 @@ namespace TsvDirectory;
 
 class Module 
 {
+
+	
 	public function getConfig()
 	{
 		return include __DIR__ . '/../../config/module.config.php';
@@ -38,8 +40,33 @@ class Module
 						'TsvDirectory\Service\ContentViewModel' => function ($sm) {
 							return new \TsvDirectory\Service\ContentViewModel($sm);
 						},
+						'TsvDirectory\Service\GetEM' => function ($sm) {
+							return new \TsvDirectory\Service\GetEM($sm);
+						},
+
 				),
 		);
+	}
+	
+	public function getViewHelperConfig()
+	{
+		return array(
+				'factories' => array(
+						'TsvdContent' => function($sm) {
+							$helper = new View\Helper\TsvdContent($sm);
+							return $helper;
+						}
+				)
+		);
+	}
+
+	public function onBootstrap($e)
+	{
+		$serviceManager = $e->getApplication()->getServiceManager();
+	
+// 		$serviceManager->get('viewhelpermanager')->setFactory('GetEM', function ($sm) use ($e) {
+// 			return new \TsvDirectory\Service\GetEM($sm);
+// 		});
 	}
 // 	public function init(\Zend\ModuleManager\ModuleManager $manager)
 // 	{

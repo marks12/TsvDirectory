@@ -26,6 +26,7 @@ use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 use TsvDirectory\Service\Uploader;
 use TsvDirectory\Entity\TsvFileElement;
+use TsvDirectory\View\Helper\TsvdContent;
 
 class TsvDirectoryController extends AbstractActionController
 {
@@ -35,9 +36,85 @@ class TsvDirectoryController extends AbstractActionController
    	
    		$session->offsetSet('selectedSession','manage');
     	
+   		$this->scanTemplates(); 		
+   		
         return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections());
     }
 
+    private function scanTemplates()
+    {
+    	$config = $this->getServiceLocator()->get('Config');
+    	
+    	$template_vars = array();
+    	
+    	if($config)
+    		foreach ($config as $k=>$v)
+	    	{
+	    		if(is_array($v))
+	    			foreach ($v as $kk=>$vv)
+		    		{
+		    			if(preg_match("/template/is", $kk))
+		    				$template_vars = array_merge($template_vars, $this->scanTemplateArr($vv));
+		    		}
+	    	}
+	    	
+	    var_dump($template_vars);
+    }
+    
+    private function scanTemplateArr($arr)
+    {
+    	if(is_array($arr))
+    		foreach ($arr as $k=>$v)
+	    	{
+	    		if(file_exists($v) && is_dir($v))
+	    			$this->scanTemplateDir($v);
+	    		elseif(file_exists($v) && is_file($v))
+	    			$this->scanTemplateFile($v);
+	    	}
+    }
+    
+    public function scanTemplateDir($dir)
+    {
+    	if(file_exists($dir) && is_dir($dir))
+    	{
+    		$d = opendir($dir);
+    		while ($file = readdir($d))
+    		{
+    			if(!in_array($file, array(".","..")))
+    				$this->scanTemplateFile($dir."/".$file);
+    		}
+    		closedir($d);
+    	}
+    }
+    
+    public function scanTemplateFile($file)
+    {
+    	$content_search = array();
+    	
+    	if(file_exists($file) && is_file($file))
+    	{
+    		$fp = fopen($file,"r");
+    		while (!feof($fp))
+    		{
+    			$str = fgets($fp);
+    			if(preg_match("#TsvdContent\((.*)\)#", $str,$match))
+    			{
+    				if(isset($match[1]))
+    				{
+    					$var = trim(htmlspecialchars(str_replace(array("'",'"'), '' , $match[1])));
+    					if(mb_strlen($var))
+    						$content_search[] = $var;
+    				}
+    			}
+    		}
+    		fclose($fp);
+    		
+    		var_dump($content_search);
+    		
+    	}
+    	
+    }
+    
     private function getSections()
     {
     	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');

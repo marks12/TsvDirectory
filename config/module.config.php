@@ -294,6 +294,11 @@ return array(
 			),
 		),
 	),
+	'view_helpers' => array(
+			'invokables'=> array(
+// 					'TsvdContent' => 'TsvDirectory\View\Helper\TsvdContent',
+			)
+	),
 	'bjyauthorize' => array(
 			'guards' => array(
 				'BjyAuthorize\Guard\Controller' => array(
