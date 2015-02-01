@@ -149,11 +149,12 @@ return array(
 							'section-add-content' => array(
 								'type'    => 'Segment',
 								'options' => array(
-										'route'    => '/:controller/section/content/add/:section_id/:content_type',
+										'route'    => '/:controller/section/content/add/:section_id/:content_type/:b64TsvKey',
 										'constraints' => array(
 											'section_id' => '[0-9]*',
 											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
 											'content_type' => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'b64TsvKey' => '[a-zA-Z0-9=_-]*',
 										),
 										'defaults' => array(
 											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
@@ -264,6 +265,7 @@ return array(
         	'partials/ViewTsvCarousel'	=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-carousel.phtml',
         	'tsv-directory/add-content'	=> __DIR__ . '/../view/tsv-directory/tsv-directory/add-content.phtml',
         	'layout/empty'				=> __DIR__ . '/../view/tsv-directory/layout/empty.phtml',
+   			'partials/add-content-btn'	=> __DIR__ . '/../view/tsv-directory/partials/add-content-btn.phtml',
         ),
     ),
 	'navigation' => array(

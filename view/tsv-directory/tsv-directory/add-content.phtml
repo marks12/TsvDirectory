@@ -5,6 +5,9 @@
 
 <form method="post" style="margin: 30px 0px 20px 0px;">
 
+<?php if(isset($this->b64TsvKey))
+	$content_arr['TsvKey'] = $this->b64TsvKey;?>
+
 <div class="row">
 	<div class="col-md-1" style="font-size:18px;margin-top:5px;">
     	Имя

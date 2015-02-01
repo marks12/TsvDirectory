@@ -2,12 +2,13 @@
 namespace TsvDirectory\Service;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Model\ViewModel;
+
 
 class GetEM implements ServiceLocatorAwareInterface
 {
 	protected $services;
-	public $em;
+	protected $em;
+	protected $sm;
 	
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
@@ -19,10 +20,18 @@ class GetEM implements ServiceLocatorAwareInterface
     	return $this->services;
     }
     
+    public function GetEM()
+    {
+    	$this->em = $this->sm->get('doctrine.entitymanager.orm_default');
+    	
+    	return $this->em;
+    }
+    
     function __construct($sm) {
 
-    	$this->em = $sm->get('doctrine.entitymanager.orm_default');
-    	return $this->em;
+    	$this->sm = $sm;
+    	
+    	return array();
     }
 
 }

@@ -4,17 +4,7 @@
 
 <link href="//serveon.ru/css/admin.css" media="screen" rel="stylesheet" type="text/css">
 <?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
-	  <div class="btn-group pull-right">
-        <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
-          Добавить контент <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu add-content-btns" role="menu">
-          <li><a title="Простой текст или число" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvStext"));?>"><img src="http://serveon.ru/img/SimpleText.png" alt="Простой текст или число">Простой текст или число</a></li>
-          <li><a title="HTML текст" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvText"));?>"><img src="http://serveon.ru/img/HtmlText.png" alt="HTML-Текст">HTML-Текст</a></li>
-          <li><a title="Галерея файлов и изображений" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvFile"));?>"><img src="http://serveon.ru/img/ImageGalary.png" alt="Галерея файлов">Галерея файлов (изображений)</a></li>
-          <li><a title="Карусель" href="<?php echo $this->url("zfcadmin/tsv-directory/section-add-content", array("section_id"=>$this->selectedSection,"content_type"=>"TsvCarousel"));?>"><img src="http://serveon.ru/img/Carousel.png" alt="Карусель">Карусель</a></li>
-        </ul>
-      </div>
+<?php echo $this->partial('partials/add-content-btn', array('section_id' => $this->selectedSection));?>
 <div style="clear:both;"><br></div>
 
 <div role="tabpanel" id="mainTab">

@@ -1,1 +1,75 @@
 <?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
+
+<?php if(isset($this->need_db_vars) && count($this->need_db_vars)){?>
+<h3>Добавить в БД</h3>
+
+В шаблонах приложения присутствуют следующие значения, которые не определены в БД:
+<br>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Раздел</th>
+			<th>Имя переменной</th>
+			<th>Операции</th>
+		</tr>
+	</thead>	
+	<tbody>
+	<?php foreach ($this->need_db_vars as $k=>$v){
+		$by_sec = explode("/", $v);
+		?>
+		<tr>
+			<td><?php if(isset($by_sec[0]) || mb_strlen($by_sec[0])) echo $by_sec[0]; else echo "!Ошибка установления группы";?></td>
+			<td><?php echo $by_sec[1];?></td>
+			<td>
+				<?php if(count($by_sec)==2 && isset($arr_sec_by_name[$by_sec[0]])){
+					echo $this->partial('partials/add-content-btn', array('section_id' => $arr_sec_by_name[$by_sec[0]],"TsvKey"=>$by_sec[1]));?>
+				<?php }elseif(count($by_sec)!=2){?>
+					Ошибка установления переменной. Используйте формат: &lt?php echo $this->TsvdContent("Имя группы/Имя переменной");?&gt
+				<?php }elseif(!isset($arr_sec_by_name[$by_sec[0]])){?>
+					Необходмо создать раздел "<?php echo $by_sec[0]?>" для добавления переменной "<?php echo $by_sec[1]?>"
+					<form action="/admin/tsvDirectory/TsvDirectory/addSection" method="POST" style="float:right;clear:both;">
+						<input type="hidden" value="<?php echo $by_sec[0]?>" name="secName">
+						<input type="hidden" value="Раздел добавлен автоматически, необходимо скорректировать описание." name="secDescription">
+						<input type="hidden" value="/admin/tsvDirectory" name="back">
+						<input type="submit" value="Создать <?php echo $by_sec[0]?>" class="btn btn-success">
+					</form>
+					
+					
+				<?php }?>
+			</td>
+		</tr>
+	<?php }?>
+	</tbody>
+</table>
+
+<?php }?>
+
+<?php if(isset($this->need_tepmlate_vars) && count($this->need_tepmlate_vars)){?>
+<h3>Добавить в шаблоны</h3>
+
+В БД приложения присутствуют следующие переименные, которые не определены в шаблонах:
+<br>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Раздел</th>
+			<th>Имя переменной</th>
+			<th>Код для вставки в шаблон</th>
+		</tr>
+	</thead>	
+	<tbody>
+	<?php foreach ($this->need_tepmlate_vars as $var){
+		$by_sec = explode("/", $v);
+		?>
+		<tr>
+			<td><?php echo $var->__get('Section')->__get('secName');?></td>
+			<td><?php echo $var->__get('TsvKey');?></td>
+			<td>
+				Используйте формат: &lt?php echo $this->TsvdContent("<?php echo $var->__get('Section')->__get('secName');?>/<?php echo $var->__get('TsvKey');?>");?&gt
+			</td>
+		</tr>
+	<?php }?>
+	</tbody>
+</table>
+
+<?php }?>

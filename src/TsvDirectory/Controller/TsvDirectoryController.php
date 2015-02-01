@@ -27,92 +27,57 @@ use Zend\Session\Container;
 use TsvDirectory\Service\Uploader;
 use TsvDirectory\Entity\TsvFileElement;
 use TsvDirectory\View\Helper\TsvdContent;
+use TsvDirectory\Service\ScanTemplates;
 
 class TsvDirectoryController extends AbstractActionController
 {
     public function indexAction()
     {
+    	$vm = new ViewModel();
+    	
+    	$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+    	
     	$session = new Container('tsv');
    	
    		$session->offsetSet('selectedSession','manage');
     	
-   		$this->scanTemplates(); 		
-   		
-        return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections());
-    }
+   		$templates_vars = $this->getServiceLocator()->get("TsvDirectory\Service\ScanTemplates")->ScanTemplates();
 
-    private function scanTemplates()
-    {
-    	$config = $this->getServiceLocator()->get('Config');
-    	
-    	$template_vars = array();
-    	
-    	if($config)
-    		foreach ($config as $k=>$v)
-	    	{
-	    		if(is_array($v))
-	    			foreach ($v as $kk=>$vv)
-		    		{
-		    			if(preg_match("/template/is", $kk))
-		    				$template_vars = array_merge($template_vars, $this->scanTemplateArr($vv));
-		    		}
-	    	}
-	    	
-	    var_dump($template_vars);
-    }
-    
-    private function scanTemplateArr($arr)
-    {
-    	if(is_array($arr))
-    		foreach ($arr as $k=>$v)
-	    	{
-	    		if(file_exists($v) && is_dir($v))
-	    			$this->scanTemplateDir($v);
-	    		elseif(file_exists($v) && is_file($v))
-	    			$this->scanTemplateFile($v);
-	    	}
-    }
-    
-    public function scanTemplateDir($dir)
-    {
-    	if(file_exists($dir) && is_dir($dir))
-    	{
-    		$d = opendir($dir);
-    		while ($file = readdir($d))
-    		{
-    			if(!in_array($file, array(".","..")))
-    				$this->scanTemplateFile($dir."/".$file);
-    		}
-    		closedir($d);
-    	}
-    }
-    
-    public function scanTemplateFile($file)
-    {
-    	$content_search = array();
-    	
-    	if(file_exists($file) && is_file($file))
-    	{
-    		$fp = fopen($file,"r");
-    		while (!feof($fp))
-    		{
-    			$str = fgets($fp);
-    			if(preg_match("#TsvdContent\((.*)\)#", $str,$match))
-    			{
-    				if(isset($match[1]))
-    				{
-    					$var = trim(htmlspecialchars(str_replace(array("'",'"'), '' , $match[1])));
-    					if(mb_strlen($var))
-    						$content_search[] = $var;
-    				}
-    			}
-    		}
-    		fclose($fp);
-    		
-    		var_dump($content_search);
-    		
-    	}
-    	
+   		$db_vars = $em->getRepository('TsvDirectory\Entity\Content')->findAll();
+   		
+   		$need_tepmlate_vars = array();
+   		$all_db_vars = array();
+   		$need_db_vars = array();
+   		
+   		foreach ($db_vars as $var)
+   		{
+   			if(!in_array($var->__get('Section')->__get('secName')."/".$var->__get('TsvKey'), $templates_vars))
+   				$need_tepmlate_vars[] = $var;
+   			
+   			$all_db_vars[] = $var->__get('Section')->__get('secName')."/".$var->__get('TsvKey');
+   		}
+   			
+   		foreach ($templates_vars as $k=>$var)
+   			if(!in_array($var, $all_db_vars))
+   				$need_db_vars[$var] = $var;
+
+   		$vm = new ViewModel();
+   		
+   		$sections = $this->getSections();
+   		
+   		$arr_sec_by_name = array();
+   		foreach ($sections as $sec)
+   		{
+   			$arr_sec_by_name[$sec->__get('secName')] = $sec->__get('id');
+   		}
+   		
+   		$vm->setVariable("selectedSection", $session->offsetGet('selectedSession'));
+   		$vm->setVariable("sections",$sections);
+   		$vm->setVariable("need_tepmlate_vars", $need_tepmlate_vars);
+   		$vm->setVariable("need_db_vars", $need_db_vars);
+   		$vm->setVariable("arr_sec_by_name", $arr_sec_by_name);
+   		
+        return $vm;
     }
     
     private function getSections()
@@ -203,13 +168,15 @@ class TsvDirectoryController extends AbstractActionController
     		$objectManager->flush();
     		
     		if(method_exists($content, "afterSave"))
-    			$content->afterSave();
+    			$content->afterSave($objectManager);
     		
     		return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/".$section_id);
     	
     	}
     	else {
-    		
+    		$b64TsvKey = trim(base64_decode($this->getEvent()->getRouteMatch()->getParam('b64TsvKey')));
+    		if(mb_strlen($b64TsvKey))
+    			$vm->setVariable("b64TsvKey", $b64TsvKey);
     	}
     	
     	$vm->setVariable("secName", $section->__get('secName'));
@@ -265,7 +232,10 @@ class TsvDirectoryController extends AbstractActionController
 
     			$section_id = $section->__get('id');
     			
-    			return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/$section_id");
+    			if(isset($request->getPost()->back))
+	   				return $this->redirect()->toUrl($request->getPost()->back);
+   				else
+	    			return $this->redirect()->toUrl("/admin/tsvDirectory/TsvDirectory/section/view/$section_id");
     		}
     		
     	}
@@ -551,7 +521,7 @@ class TsvDirectoryController extends AbstractActionController
     	return isset($_SERVER[$id]) ? $_SERVER[$id] : '';
     }
     
-    protected function get_full_url() {
+    public function get_full_url() {
     	$https = !empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'on') === 0 ||
     	!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
     	strcasecmp($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') === 0;

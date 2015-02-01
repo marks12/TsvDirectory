@@ -43,6 +43,9 @@ class Module
 						'TsvDirectory\Service\GetEM' => function ($sm) {
 							return new \TsvDirectory\Service\GetEM($sm);
 						},
+						'TsvDirectory\Service\ScanTemplates' => function ($sm) {
+							return new \TsvDirectory\Service\ScanTemplates($sm);
+						},
 
 				),
 		);

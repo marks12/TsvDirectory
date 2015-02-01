@@ -18,8 +18,20 @@ class TsvdContent extends AbstractHelper
 		
 		if(!mb_strlen($str))
 		{
-			exit("Var have 0 length ");
+			throw new \Exception(sprintf(
+					'%s Var value have 0 length. Please use call helper like this: <?php echo $this->TsvdContent("Pain page/Main content 1");?>',
+					get_class($this) . '::' . __FUNCTION__,
+					$str
+			));
 		}
+		
+		$str_arr = explode("/", $str);
+		if(count($str_arr)!=2 || !mb_strlen($str_arr[0]) || !mb_strlen($str_arr[1]))
+			throw new \Exception(sprintf(
+					'%s Var value dont have two necessarily parts: Group name/Name. Please use call helper like this: <?php echo $this->TsvdContent("Group name/Var name");?>',
+					get_class($this) . '::' . __FUNCTION__,
+					$str
+			));
 		
 		$content = $em->getRepository('TsvDirectory\Entity\ContentData')->findOneBy(array("contentName"=>$str));
 		

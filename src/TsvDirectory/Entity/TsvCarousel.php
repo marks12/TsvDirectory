@@ -92,12 +92,32 @@ class TsvCarousel {
     	return false;
     }
 
-    public function afterSave()
+    public function afterSave($em)
     {
     	$dir_source = \TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/0';
     	$dir_destination = \TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvCarousel').'/'.$this->Content->__get('id');
-    	
+    	   	
     	rename($dir_source, $dir_destination);
+    	
+    	$upload_url = \TsvDirectory\Controller\TsvDirectoryController::get_full_url().'/files/'.strtolower('TsvCarousel').'/'.(int)$this->Content->__get('id').'/';
+    	
+    	$dir = opendir($dir_destination);
+    	
+    	while ($file_name = readdir($dir))
+    	{
+    		if(in_array($file_name, array(".","..","thumbnail")))
+    			continue;
+    	
+    		$file = new TsvCarouselImage();
+    		$file->__set('url',$upload_url.$file_name);
+    		$file->__set('TsvCarousel',$this);
+    		$em->persist($file);
+    	
+    	}
+    	$em->flush();
+    	 
+    	closedir($dir);
+
     }
     
 }
