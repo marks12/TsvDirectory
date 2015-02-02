@@ -154,7 +154,7 @@ return array(
 											'section_id' => '[0-9]*',
 											'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
 											'content_type' => '[a-zA-Z][a-zA-Z0-9_-]*',
-											'b64TsvKey' => '[a-zA-Z0-9=_-]*',
+											'b64TsvKey' => '[a-zA-Z0-9=%_-]*',
 										),
 										'defaults' => array(
 											'__NAMESPACE__'	=>	'TsvDirectory\Controller',

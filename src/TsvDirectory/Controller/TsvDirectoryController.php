@@ -174,7 +174,7 @@ class TsvDirectoryController extends AbstractActionController
     	
     	}
     	else {
-    		$b64TsvKey = trim(base64_decode($this->getEvent()->getRouteMatch()->getParam('b64TsvKey')));
+    		$b64TsvKey = trim(base64_decode(urldecode($this->getEvent()->getRouteMatch()->getParam('b64TsvKey'))));
     		if(mb_strlen($b64TsvKey))
     			$vm->setVariable("b64TsvKey", $b64TsvKey);
     	}
