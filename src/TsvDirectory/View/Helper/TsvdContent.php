@@ -4,10 +4,13 @@ namespace TsvDirectory\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 use TsvDirectory\Entity\ContentData;
 
+
 class TsvdContent extends AbstractHelper
 {
 	protected $em;
 	protected $sm;
+	
+
 	
 	public function __invoke($str)
 	{
@@ -33,20 +36,41 @@ class TsvdContent extends AbstractHelper
 					$str
 			));
 		
-		$content = $em->getRepository('TsvDirectory\Entity\ContentData')->findOneBy(array("contentName"=>$str));
+		$qb = $em->createQueryBuilder();
 		
-		if($content && $content->__get('Content'))
-			return $content->__get('Content');
-		elseif($content)
-			return '#'.$content->__get('id');
-		else 
-			return '#U#';
+		$qb->select('C')
+			->from('TsvDirectory\Entity\Content', 'C')
+			->innerJoin('C.Section','S','WITH','S.secName = :section')
+			->where('C.TsvKey = :tsvkey');
+			
+		$qb->setParameters(array(
+				'section' => $str_arr[0],
+				'tsvkey' => $str_arr[1],
+		));
+		$query = $qb->getQuery();
+		$content = $query->getResult();
+
+		$html = '';
+		
+		$viewHM = $this->sm->getServiceLocator()->get('ViewHelperManager');
+		
+		if($content)
+			foreach ($content as $k=>$v)
+			{
+				$partial = $viewHM->get('partial');
+				$html .= $partial->__invoke("partials/helper/".$v->__get('content_type'),array("content"=>$v->__get($v->__get('content_type')))); 
+			}
+		else
+			$html .= "#U#";
+
+		return $html;
+
 	}
-	
-	
+		
 	public function __construct($sm) {
 		
 		$this->sm = $sm;
 	
 	}
+	
 }

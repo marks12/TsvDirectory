@@ -1,0 +1,31 @@
+<?php
+foreach ($this->content as $i=>$cont) {
+?>
+<div id="carousel-<?php echo $i?>" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+  	<?php foreach ($cont->__get('TsvCarouselElements') as $j=>$el){?>
+    <li data-target="#carousel-example-generic" data-slide-to="<?php echo $j;?>"<?php if($j==0) echo "class='active'";?>></li>
+    <?php }?>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+ 	<?php foreach ($cont->__get('TsvCarouselElements') as $j=>$el){?>
+    <div class="item<?php if($j==0) echo " active";?>" style="background: url('<?php echo $el->__get('Background')[0]->__get('url');?>');background-size:cover;">
+      <?php echo $el->__get('content')?>
+    </div>
+    <?php }?>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-<?php echo $i?>" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Предыдущая</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-<?php echo $i?>" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Следующая</span>
+  </a>
+</div>
+<?php }?>

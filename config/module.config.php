@@ -255,17 +255,29 @@ return array(
     	'template_map' => array(
         	'partials/uploader-form'	=> __DIR__ . '/../view/tsv-directory/partials/uploader-form.phtml',
     		'partials/section-list'		=> __DIR__ . '/../view/tsv-directory/partials/section-list.phtml',
-        	'partials/TsvText'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-text.phtml',
-        	'partials/TsvFile'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-file.phtml',
-        	'partials/TsvStext'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-stext.phtml',
-        	'partials/TsvCarousel'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-carousel.phtml',
-        	'partials/ViewTsvText'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-text.phtml',
-        	'partials/ViewTsvStext'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-stext.phtml',
-        	'partials/ViewTsvFile'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-file.phtml',
-        	'partials/ViewTsvCarousel'	=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-carousel.phtml',
         	'tsv-directory/add-content'	=> __DIR__ . '/../view/tsv-directory/tsv-directory/add-content.phtml',
         	'layout/empty'				=> __DIR__ . '/../view/tsv-directory/layout/empty.phtml',
    			'partials/add-content-btn'	=> __DIR__ . '/../view/tsv-directory/partials/add-content-btn.phtml',
+
+    		//templates for view in admin
+    		'partials/ViewTsvText'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-text.phtml',
+   			'partials/ViewTsvStext'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-stext.phtml',
+   			'partials/ViewTsvFile'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-file.phtml',
+   			'partials/ViewTsvCarousel'	=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-carousel.phtml',
+    			 
+    			
+    		//templates for edit in admin
+   			'partials/TsvText'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-text.phtml',
+   			'partials/TsvFile'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-file.phtml',
+   			'partials/TsvStext'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-stext.phtml',
+   			'partials/TsvCarousel'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-carousel.phtml',
+    			
+    		// templates for view in FRONT END
+    		'partials/helper/TsvStext'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-stext.phtml',
+    		'partials/helper/TsvCarousel'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-carousel.phtml',
+    		'partials/helper/TsvText'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-text.phtml',
+    		'partials/helper/TsvFile'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-file.phtml',
+    			
         ),
     ),
 	'navigation' => array(
