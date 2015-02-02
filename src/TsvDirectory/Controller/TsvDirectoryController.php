@@ -51,7 +51,7 @@ class TsvDirectoryController extends AbstractActionController
    		
    		foreach ($db_vars as $var)
    		{
-   			if(!in_array($var->__get('Section')->__get('secName')."/".$var->__get('TsvKey'), $templates_vars))
+   			if(!$var || !$var->__get('Section') || !in_array($var->__get('Section')->__get('secName')."/".$var->__get('TsvKey'), $templates_vars))
    				$need_tepmlate_vars[] = $var;
    			
    			$all_db_vars[] = $var->__get('Section')->__get('secName')."/".$var->__get('TsvKey');
