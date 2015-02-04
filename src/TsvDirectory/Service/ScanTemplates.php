@@ -88,7 +88,11 @@ class ScanTemplates implements ServiceLocatorAwareInterface
     			{
     				if(isset($match[1]))
     				{
+    					
     					$var = trim(htmlspecialchars(str_replace(array("'",'"'), '' , $match[1])));
+    					
+    					$var = preg_replace("/[\s]{0,},[\s]{0,}array[\s]{0,}(.*)/i",'', $var);
+    					
     					if(mb_strlen($var))
     						$content_search[] = $var;
     				}
