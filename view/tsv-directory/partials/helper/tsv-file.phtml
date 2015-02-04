@@ -1,5 +1,35 @@
 <?php
 
+if(isset($this->params['class']) && $this->params['class'])
+	$class = $this->params['class'];
+else
+	$class = '';
 
+if(isset($this->params['FirstOnly']) && $this->params['FirstOnly'])
+{
+	foreach ($this->content as $cont)
+	{
+		foreach ($cont->__get('TsvFileElements') as $file)
+		{
+			$ext = strtolower(pathinfo($file->__get('url'), PATHINFO_EXTENSION));
+			
+			switch ($ext)
+			{
+				case "png":
+				case "jpeg":
+				case "jpg":
+				case "gif":
+					?><img src="<?php echo $file->__get('url')?>" class="<?php echo $class;?>"><?php 
+				break;
+				
+				default:
+						?><a href="<?php echo $file->__get('url')?>"><?php echo $cont->__get('TsvFile')?></a><?php 					
+				break;
+			}
+			
+			break;
+		}
+	}
+}
 
 ?>

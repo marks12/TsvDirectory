@@ -73,3 +73,21 @@
 </table>
 
 <?php }?>
+
+<div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Параметры использования функции автоматического форматирования контента <strong>TsvdContent</strong> в представлениях.</h3>
+        </div>
+        <div class="panel-body">
+            <ul>
+            	<li>
+	            	<strong>Галерея файлов</strong>
+            		<ul>
+            			<li>FirstOnly - [true|false] - при указании в качестве параметра First=>true, отображается только 1 ссылка на файл. И если это изображение - отображается как изображение. </li>
+            			<li>ClassName - имя класса - при указании в качестве параметра class=>ClassName, Значение параметра class будет добавлено в атрибут class. Например: class="ClassName" </li>
+            			<li>Пример использования: <code>&lt;?php echo $this->TsvdContent('О компании/Фото директора', array('FirstOnly'=>true,"class"=>"ClassName"));?&gt;</code>
+            		</ul>
+            	</li>
+            </ul>
+        </div>
+    </div>

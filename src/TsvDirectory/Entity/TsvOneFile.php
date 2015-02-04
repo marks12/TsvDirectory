@@ -1,29 +1,24 @@
 <?php
 namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use TsvFunctions;
-use TsvDirectory;
+
 
 /** @ORM\Entity */
-class TsvFile {
+class TsvOneFile {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
- 
-	/** @ORM\Column(type="string") */
-	protected $TsvFile;
 
-	/** @ORM\OneToMany(targetEntity="TsvFileElement", mappedBy="TsvFile", cascade={"persist","remove"})*/
-	private $TsvFileElements; // Привязка к файлам
-	
-	/** @ORM\ManyToOne(targetEntity="Content", inversedBy="TsvFile")*/
-	protected $Content;
+	/** @ORM\Column(type="string") */
+	protected $TsvOneFile;
+
+	/** @ORM\OneToOne(targetEntity="TsvOnefileElement", orphanRemoval=true) */
+	protected $File;
 	
 	public function __construct() {
-		$this->TsvFileElements = new ArrayCollection();
+// 		$this->Elements = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
 	/**
@@ -32,7 +27,7 @@ class TsvFile {
 	 */
 	public function get_vars()
 	{
-		return array("TsvFile");
+		return array("TsvOneFile");
 	}
     /**
      * Magic getter
@@ -60,21 +55,6 @@ class TsvFile {
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
-    public function onDelete()
-    {
-
-    	$dir = TsvDirectory\Controller\TsvDirectoryController::get_dir_name().strtolower('TsvFile').'/'.$this->__get('Content')->__get('id');
-    	
-    	if(file_exists($dir) && is_dir($dir))
-    		if(TsvFunctions\Controller\TsvFunctionsController::deleteDir($dir))
-    			return true;
-    		else 
-    			return false;
-    	else 
-	    	return null;
-//   		exit('Dir '.$dir.' deleted');
-    }
-    
     /**
      * Check required variables
      * @param object $input_object
@@ -83,9 +63,9 @@ class TsvFile {
     public function check_input($input_object)
     {
     	if(isset($input_object->TsvKey))
-    		if(isset($input_object->TsvFile) && $input_object->TsvFile!='')
+    		if(isset($input_object->TsvOneFile) && $input_object->TsvOneFile!='')
     			return true;
-    	
+    		
     	return false;
     }
 

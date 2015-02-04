@@ -263,6 +263,7 @@ return array(
     		'partials/ViewTsvText'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-text.phtml',
    			'partials/ViewTsvStext'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-stext.phtml',
    			'partials/ViewTsvFile'		=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-file.phtml',
+   			'partials/ViewTsvOneFile'	=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-onefile.phtml',
    			'partials/ViewTsvCarousel'	=> __DIR__ . '/../view/tsv-directory/partials/view-tsv-carousel.phtml',
     			 
     			
@@ -271,12 +272,14 @@ return array(
    			'partials/TsvFile'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-file.phtml',
    			'partials/TsvStext'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-stext.phtml',
    			'partials/TsvCarousel'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-carousel.phtml',
-    			
+    		'partials/TsvOneFile'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-onefile.phtml',
+    			 
     		// templates for view in FRONT END
     		'partials/helper/TsvStext'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-stext.phtml',
-    		'partials/helper/TsvCarousel'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-carousel.phtml',
+    		'partials/helper/TsvCarousel'	=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-carousel.phtml',
     		'partials/helper/TsvText'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-text.phtml',
     		'partials/helper/TsvFile'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-file.phtml',
+    		'partials/helper/TsvOneFile'	=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-onefile.phtml',
     			
         ),
     ),

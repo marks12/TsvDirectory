@@ -14,6 +14,7 @@ use TsvDirectory\Entity\Section;
 use TsvDirectory\Entity\TsvText;
 use TsvDirectory\Entity\TsvStext;
 use TsvDirectory\Entity\TsvFile;
+use TsvDirectory\Entity\TsvOneFile;
 use TsvDirectory\Entity\TsvCarousel;
 use TsvDirectory\Entity\TsvCarouselElement;
 use TsvDirectory\Entity\TsvCarouselImage as TsvCarouselImage;
@@ -126,6 +127,10 @@ class TsvDirectoryController extends AbstractActionController
 
     			case "TsvFile":
     				$content = new TsvFile();
+    			break;
+
+    			case "TsvOneFile":
+    				$content = new TsvOneFile();
     			break;
     			
     			case "TsvCarousel":

@@ -10,9 +10,7 @@ class TsvdContent extends AbstractHelper
 	protected $em;
 	protected $sm;
 	
-
-	
-	public function __invoke($str)
+	public function __invoke($str, array $params = array())
 	{
 		$getEM =   $this->sm->getServiceLocator()->get('TsvDirectory\Service\GetEM');
 		$em = $getEM->GetEM();
@@ -58,7 +56,7 @@ class TsvdContent extends AbstractHelper
 			foreach ($content as $k=>$v)
 			{
 				$partial = $viewHM->get('partial');
-				$html .= $partial->__invoke("partials/helper/".$v->__get('content_type'),array("content"=>$v->__get($v->__get('content_type')))); 
+				$html .= $partial->__invoke("partials/helper/".$v->__get('content_type'),array("params"=>$params, "content"=>$v->__get($v->__get('content_type')))); 
 			}
 		else
 			$html .= "#U#";
