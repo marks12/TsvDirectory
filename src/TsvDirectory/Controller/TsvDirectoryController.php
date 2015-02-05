@@ -493,15 +493,15 @@ class TsvDirectoryController extends AbstractActionController
     		
     		$addto = $em->getRepository($entity_class_parent)->find($parent->__get($entity_parent)->first()->__get('id'));
     		
-    		if($files)
-    		{
-    			foreach ($files as $file)
-    			{
-    				$em->remove($file);
-    			}
-    			//     		$em->persist($parent);
-    			$em->flush();
-    		}
+//     		if($files)
+//     		{
+//     			foreach ($files as $file)
+//     			{
+//     				$em->remove($file);
+//     			}
+//     			//     		$em->persist($parent);
+//     			$em->flush();
+//     		}
     		
     		$dir = opendir($upload_dir);
     		
@@ -509,15 +509,18 @@ class TsvDirectoryController extends AbstractActionController
     		{
     			if(in_array($file_name, array(".","..","thumbnail")))
     				continue;
-    		
-    			$file = new $entity_class_store();
-    			$file->__set('url',$upload_url.$file_name);
-    			$file->__set($entity_parent,$addto);
-    			$em->persist($file);
-    			 
+    			
+    			$exists_files [] = $file_name;
     		}
-    		$em->flush();
-    		 
+    		
+    		
+//     		$file = new $entity_class_store();
+//     		$file->__set('url',$upload_url.$file_name);
+//     		$file->__set($entity_parent,$addto);
+//     		$em->persist($file);
+//     		$em->flush();
+    		
+    		
     		closedir($dir);
     	}
     }
