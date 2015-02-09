@@ -15,10 +15,17 @@ html,body{height:100%;}
 <?php if(count($content->__get('TsvCarouselElements'))){?>
 	&nbsp; <input type="button" id="editPageButton" class="btn btn-warning" value="Редактировать текущую страницу" data-toggle="modal" data-target="#addCarouselPage">
 	&nbsp; <input type="button" id="removePageButton" class="btn btn-danger" value="Удалить текущую страницу" data-toggle="modal">
+	&nbsp; <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#bgs" aria-expanded="false" aria-controls="bgs">Фоновые изображения</button>
 <?php }?>
 <br><br>
 
+<div class="collapse" id="bgs">
+  <div class="well">
+   <iframe src="<?php echo $this->url("zfcadmin/tsv-directory/uploader-form",array("id"=>$content->__get('Content')->__get('id'),"entity_parent"=>"TsvCarousel","entity_store"=>"TsvCarouselImage")) ?>?rand=<?php echo rand(-65534, 65534)?>" width="100%" height="460">Ваш браузер не поддерживает плавающие фреймы!</iframe>
+  </div>
+</div>
 
+ 
 
 <div id="carousel-<?php echo $content->__get('id')?>" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
@@ -101,7 +108,7 @@ html,body{height:100%;}
 					onclick="setBack(this.src,'#edit-carousel-<?php echo $content->__get('id')?>',<?php echo $image->__get('id');?>)">
 				<?php }?>
 				
-				<input type="text" id="selected_back" name="selected_back">
+				<input type="hidden" id="selected_back" name="selected_back">
 			</div>
       	</div>
       	<br>
@@ -187,6 +194,9 @@ body .modal {
 //     }
 // });
 
+$('.collapse').collapse({
+  toggle: false
+});
 
 CKEDITOR.replace( 'CarouselContent', {
 	allowedContent : true //, extraPlugins: 'timestamp'
