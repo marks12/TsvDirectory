@@ -31,12 +31,6 @@ class ContentViewModel implements ServiceLocatorAwareInterface
     	
     	$this->vm = $vm;
     	
-    	$em = $sm->get('doctrine.entitymanager.orm_default');
-    	 
-   		$content_helper = \TsvDirectory\Controller\TsvDirectoryController::getAllSections($em);
-
-    	$this->vm->setVariable("content_helper", $content_helper);
-    	
     	return $this->vm;
     }
 

@@ -1,3 +1,6 @@
 <div class="jumbotron text-center" style="margin: auto auto">
-  <h1><?php echo $content->__get('TsvStext');?></h1>
+	<?php $echo = $content->__get('TsvStext'); if(strlen($echo)<220){?><h1><?php echo $echo;?></h1>
+	<?php }else{?>
+		<h2><?php echo $echo;?></h2>
+	<?php }?>
 </div>

@@ -24,7 +24,7 @@
 				<?php if(count($by_sec)==2 && isset($arr_sec_by_name[$by_sec[0]])){
 					echo $this->partial('partials/add-content-btn', array('section_id' => $arr_sec_by_name[$by_sec[0]],"TsvKey"=>$by_sec[1]));?>
 				<?php }elseif(count($by_sec)!=2){?>
-					Ошибка установления переменной. Используйте формат: &lt?php echo $this->TsvdContent("Имя группы/Имя переменной");?&gt
+					Ошибка установления переменной. Используйте формат: &lt;?php echo $this->TsvdContent("Имя группы/Имя переменной");?&gt
 				<?php }elseif(!isset($arr_sec_by_name[$by_sec[0]])){?>
 					Необходмо создать раздел "<?php echo $by_sec[0]?>" для добавления переменной "<?php echo $by_sec[1]?>"
 					<form action="/admin/tsvDirectory/TsvDirectory/addSection" method="POST" style="float:right;clear:both;">
@@ -60,26 +60,90 @@
 	<tbody>
 	<?php foreach ($this->need_tepmlate_vars as $var){
 		$by_sec = explode("/", $v);
+		if($var->__get('Section')) {
 		?>
 		<tr>
 			<td><?php echo $var->__get('Section')->__get('secName');?></td>
 			<td><?php echo $var->__get('TsvKey');?></td>
 			<td>
-				Используйте формат: &lt?php echo $this->TsvdContent("<?php echo $var->__get('Section')->__get('secName');?>/<?php echo $var->__get('TsvKey');?>");?&gt
+				Используйте формат: &lt;?php echo $this->TsvdContent("<?php echo $var->__get('Section')->__get('secName');?>/<?php echo $var->__get('TsvKey');?>");?&gt
 			</td>
 		</tr>
-	<?php }?>
+	<?php }}?>
 	</tbody>
 </table>
 
 <?php }?>
+<br>
+<style>
+.jumbotron {
+	background-color: transparent;
+	background-image: url(http://serveon.ru/img/backgrounds/black70.png);
+	margin-bottom: 100px;
+}
 
+</style>
+
+<div id="carousel-help" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-help" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-help" data-slide-to="1"></li>
+    <li data-target="#carousel-help" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+      <img src="http://serveon.ru/img/backgrounds/background1.jpg" alt="Начало работы" style="height:597px;width:100%;">
+      <div class="carousel-caption">
+        <div class="jumbotron">
+		  <h1>Начало работы!</h1>
+		  <p>...</p>
+		  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+		</div>
+      </div>
+    </div>
+<!--     <div class="item">
+      <img src="http://serveon.ru/img/backgrounds/background3.jpg" alt="Выполнение операций" style="height:597px;width:100%;">
+<!--       <div class="carousel-caption"> -->
+<!--         Выполненение несложных операций -->
+<!--       </div> -->
+<!--     </div> -->
+<!--     <div class="item">
+      <img src="http://serveon.ru/img/backgrounds/background5.jpg" alt="Все готово" style="height:597px;width:100%;">
+<!--       <div class="carousel-caption"> -->
+<!--         Все готово -->
+<!--       </div> -->
+<!--     </div> -->
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-help" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Назад</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-help" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Следующий</span>
+  </a>
+</div>
+
+
+<br>
+<br>
 <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Параметры использования функции автоматического форматирования контента <strong>TsvdContent</strong> в представлениях.</h3>
         </div>
         <div class="panel-body">
             <ul>
+            	<li>
+	            	<strong>Для всех типов данных</strong>
+            		<ul>
+            			<li>alt - string - при указании в качестве параметра alt=>"some text", Some text отобразится если отсутствует соответствующее значение БД. Если alt не указан отображается #U#. </li>
+            		</ul>
+            	</li>
             	<li>
 	            	<strong>Галерея файлов</strong>
             		<ul>
@@ -90,4 +154,4 @@
             	</li>
             </ul>
         </div>
-    </div>
+</div>

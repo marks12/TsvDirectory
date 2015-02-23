@@ -47,7 +47,7 @@ class TsvdContent extends AbstractHelper
 		));
 		$query = $qb->getQuery();
 		$content = $query->getResult();
-
+		
 		$html = '';
 		
 		$viewHM = $this->sm->getServiceLocator()->get('ViewHelperManager');
@@ -58,6 +58,8 @@ class TsvdContent extends AbstractHelper
 				$partial = $viewHM->get('partial');
 				$html .= $partial->__invoke("partials/helper/".$v->__get('content_type'),array("params"=>$params, "content"=>$v->__get($v->__get('content_type')))); 
 			}
+		elseif(isset($params['alt']))
+			$html .= $params['alt'];
 		else
 			$html .= "#U#";
 

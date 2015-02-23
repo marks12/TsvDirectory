@@ -1,5 +1,9 @@
 <div class="row" style="margin-top: 40px;">
 	<div class="col-md-12">
+		<?php if(mb_strlen(@$content_arr['TsvStext'])<220) {?>
 		<input type="text" class="form-control" name="TsvStext" placeholder="Введите короткий текст или числовое значение" id="TsvStext" value="<?php if(isset($content_arr['TsvStext'])) echo $content_arr['TsvStext'];?>">
+		<?php }else{?>
+		<textarea rows="7" class="form-control" name="TsvStext" placeholder="Введите короткий текст или числовое значение" id="TsvStext"><?php if(isset($content_arr['TsvStext'])) echo $content_arr['TsvStext'];?></textarea>
+		<?php }?>
 	</div>
 </div>

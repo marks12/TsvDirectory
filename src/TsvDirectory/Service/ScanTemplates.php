@@ -70,6 +70,8 @@ class ScanTemplates implements ServiceLocatorAwareInterface
     		}
     		closedir($d);
     	}
+    	else
+    		$content_search = array_merge($content_search,$this->scanTemplateFile($dir."/".$file));
     	 
     	return $content_search;
     }
@@ -77,21 +79,22 @@ class ScanTemplates implements ServiceLocatorAwareInterface
     public function scanTemplateFile($file)
     {
     	$content_search = array();
-    	 
+    	
     	if(file_exists($file) && is_file($file))
     	{
     		$fp = fopen($file,"r");
     		while (!feof($fp))
     		{
     			$str = fgets($fp);
-    			if(preg_match("#TsvdContent\((.*)\)#", $str,$match))
+    			if(preg_match("#TsvdContent\((.*)[,\)]#", $str,$match))
     			{
-    				if(isset($match[1]))
+    				if(!preg_match("/&lt;\?php/", $str) && isset($match[1]))
     				{
     					
     					$var = trim(htmlspecialchars(str_replace(array("'",'"'), '' , $match[1])));
     					
     					$var = preg_replace("/[\s]{0,},[\s]{0,}array[\s]{0,}(.*)/i",'', $var);
+    					$var = preg_replace("/\)$/i",'', $var);
     					
     					if(mb_strlen($var))
     						$content_search[] = $var;
@@ -100,6 +103,8 @@ class ScanTemplates implements ServiceLocatorAwareInterface
     		}
     		fclose($fp);
     	}
+    	else 
+    		$content_search = array_merge($content_search,$this->scanTemplateDir($file));
     	 
     	return $content_search;
     	 
