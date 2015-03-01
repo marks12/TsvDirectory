@@ -20,6 +20,11 @@ class ContentViewModel implements ServiceLocatorAwareInterface
     	return $this->services;
     }
     
+    public function getVariable($name, $default = null)
+    {
+    	return $this->vm->getVariable($name, $default);
+    }
+    
     public function setVariable($name, $val)
     {
     	return $this->vm->setVariable($name, $val);
