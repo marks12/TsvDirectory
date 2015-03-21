@@ -529,7 +529,6 @@ class TsvDirectoryController extends AbstractActionController
 	    		$em->flush();
     		}
 
-    		closedir($dir);
     	}
     }
     
