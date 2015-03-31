@@ -25,6 +25,13 @@ class TsvCarousel {
 	/** @ORM\ManyToOne(targetEntity="Content", inversedBy="TsvCarousel")*/
 	protected $Content;
 	
+	/** @ORM\Column(type="integer") */
+	private $strategy = 1;	// 1 - стратегия элементов карусели с HTML текстом. На фоне используется картинка.
+						// 2 - стратегия использования картинок как элементов каресули.
+						
+	/** @ORM\Column(type="integer") */
+	private $height = 0;	// высота карусели в px, 0 - авто
+	
 	public function __construct() {
 		$this->TsvCarouselElements = new ArrayCollection();
 	}
