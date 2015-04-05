@@ -56,14 +56,14 @@ foreach ($cont->__get('TsvCarouselImages') as $page){
     text-align: center; 
     margin: 1em 0;
 }
-#carousel-<?php echo $cont->__get('id')?> .strategy-line .carousel-indicators {
+.carousel-indicators-spec {
 	bottom: -30px;
 }
-#carousel-<?php echo $cont->__get('id')?> .strategy-line .carousel-indicators li{
+#carousel-<?php echo $cont->__get('id')?> .carousel-indicators li{
  	border: 1px solid #000;
 	background-color: #fff;
 }
-#carousel-<?php echo $cont->__get('id')?> .strategy-line .carousel-indicators li.active{
+#carousel-<?php echo $cont->__get('id')?> .carousel-indicators li.active{
  	border: 1px solid #fff;
 	background-color: #000;
 }
@@ -74,7 +74,7 @@ foreach ($cont->__get('TsvCarouselImages') as $page){
 <div id="carousel-<?php echo $cont->__get('id')?>" class="carousel slide strategy-line" data-ride="carousel">
   <!-- Indicators -->
   
-  <ol class="carousel-indicators">
+  <ol class="carousel-indicators carousel-indicators-spec">
   <?php $i=0; foreach ($elements as $page){?>
     <li data-target="#carousel-<?php echo $cont->__get('id')?>" data-slide-to="<?php echo $i;?>" class="<?php if($i==0) echo "active";?>"></li>
   <?php $i++;}?>
