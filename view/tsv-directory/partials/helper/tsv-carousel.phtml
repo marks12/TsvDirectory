@@ -1,6 +1,120 @@
 <?php
 foreach ($this->content as $i=>$cont) {
 ?>
+
+<?php if($cont->__get('strategy') == 2) {
+
+	
+	if($cont->__get('count_on_page'))
+		$count_per_page = $cont->__get('count_on_page');	
+	else 
+		$count_per_page = 4;
+
+	if($cont->__get('height'))
+		$height = $cont->__get('height');	
+	else 
+		$height = 100;
+	
+$elements = array();
+$i = 0;
+
+foreach ($cont->__get('TsvCarouselImages') as $page){
+	if(isset($elements[$i]) && count($elements[$i])>=$count_per_page)
+		$i++;
+	$elements[$i][] = $page;
+}
+?>
+
+
+<style>
+
+#carousel-<?php echo $cont->__get('id')?>.carousel .item {
+	height: auto;
+	background-color: #fff;
+}
+#carousel-<?php echo $cont->__get('id')?> .carousel-control {
+	width: 50px;
+}
+#carousel-<?php echo $cont->__get('id')?> .carousel-control.left, #carousel-<?php echo $cont->__get('id')?> .carousel-control.right {
+	background: none;
+	color: #000;
+}
+#carousel-<?php echo $cont->__get('id')?> .carousel-control.left{
+	margin-left: 10px;
+}
+#carousel-<?php echo $cont->__get('id')?> .carousel-control.right{
+	margin-right: 10px;
+}
+#carousel-<?php echo $cont->__get('id')?> .carousel-inner .row img {
+	display: inline-block; 
+	max-height: <?php echo $height;?>px;
+	max-width: <?php echo $height*1.5;?>px;
+	vertical-align: middle;
+}
+#carousel-<?php echo $cont->__get('id')?> .carousel-inner .row>div {
+    white-space: nowrap;
+    text-align: center; 
+    margin: 1em 0;
+}
+#carousel-<?php echo $cont->__get('id')?> .strategy-line .carousel-indicators {
+	bottom: -30px;
+}
+#carousel-<?php echo $cont->__get('id')?> .strategy-line .carousel-indicators li{
+ 	border: 1px solid #000;
+	background-color: #fff;
+}
+#carousel-<?php echo $cont->__get('id')?> .strategy-line .carousel-indicators li.active{
+ 	border: 1px solid #fff;
+	background-color: #000;
+}
+	
+	
+</style>
+
+<div id="carousel-<?php echo $cont->__get('id')?>" class="carousel slide strategy-line" data-ride="carousel">
+  <!-- Indicators -->
+  
+  <ol class="carousel-indicators">
+  <?php $i=0; foreach ($elements as $page){?>
+    <li data-target="#carousel-<?php echo $cont->__get('id')?>" data-slide-to="<?php echo $i;?>" class="<?php if($i==0) echo "active";?>"></li>
+  <?php $i++;}?>
+  </ol>
+
+<!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+  <?php $i=0; foreach ($elements as $arr){?>
+  	<div class="item pages<?php if($i==0) echo " active";?>" page-id="<?php echo $arr[0]->__get('id');?>">
+  	  <div class="fill">
+        <div class="c" style="text-align:center;">
+        	<div class="row">
+          <?php foreach ($arr as $k=>$page){?>
+				<div class="col-md-<?php echo floor(12/count($arr));?>">
+					<span class="helper"></span>
+					<img alt="" src="<?php echo $page->__get('url');?>">
+				</div>
+          <?php }?>
+          </div>
+        </div>
+      </div>
+    </div>
+  <?php $i++;}?>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-<?php echo $cont->__get('id')?>" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-<?php echo $cont->__get('id')?>" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+	
+	
+<?php }else{?>
+
+
 <div id="carousel-<?php echo $i?>" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
@@ -28,4 +142,6 @@ foreach ($this->content as $i=>$cont) {
     <span class="sr-only">Следующая</span>
   </a>
 </div>
-<?php }?>
+<?php }
+
+}?>

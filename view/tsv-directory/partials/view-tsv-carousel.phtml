@@ -10,12 +10,17 @@
 		$count_per_page = $content->__get('count_on_page');	
 	else 
 		$count_per_page = 4;
+
+	if($content->__get('height'))
+		$height = $content->__get('height');	
+	else 
+		$height = 100;
 	
 $elements = array();
 $i = 0;
 
 foreach ($content->__get('TsvCarouselImages') as $page){
-	if(count($elements[$i])>=$count_per_page)
+	if(isset($elements[$i]) && count($elements[$i])>=$count_per_page)
 		$i++;
 	
 	$elements[$i][] = $page;
@@ -39,8 +44,8 @@ foreach ($content->__get('TsvCarouselImages') as $page){
 }
 .carousel-inner .row img {
 	display: inline-block; 
-	max-height: 100px;
-	max-width: 150px;
+	max-height: <?php echo $height;?>px;
+	max-width: <?php echo $height*1.5;?>px;
 	vertical-align: middle;
 }
 .carousel-inner .row>div {
@@ -335,8 +340,8 @@ function unsetBack(id)
 
 <h4>Параметры карусели</h4>
 <form method="POST">
-<input type="text" name="entity" value="TsvCarousel">
-<input type="text" name="entity_id" value="<?php echo $content->__get('id');?>">
+<input type="hidden" name="entity" value="TsvCarousel">
+<input type="hidden" name="entity_id" value="<?php echo $content->__get('id');?>">
 <table class="table table-bordered">
 	<thead>
 		<tr>
