@@ -12,10 +12,10 @@
 <div class="panel panel-default">
   <div class="panel-body">
 	    <label class="radio-inline">
-		  <input type="radio" name="strategy" id="s1" value="1" required> Использовать изображения как фон + HTML текст
+		  <input type="radio" name="strategy" id="s1" value="1"<?php if(!isset($content_arr['strategy']) || $content_arr['strategy']!=2) echo " checked";?> required> Использовать изображения как фон + HTML текст
 		</label>
 		<label class="radio-inline">
-		  <input type="radio" name="strategy" id="s2" value="2" required> Использовать изображения как элементы карусели
+		  <input type="radio" name="strategy" id="s2" value="2"<?php if(isset($content_arr['strategy']) && $content_arr['strategy']==2) echo " checked";?> required> Использовать изображения как элементы карусели
 		</label>
 
   </div>

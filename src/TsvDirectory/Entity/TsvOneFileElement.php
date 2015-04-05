@@ -27,8 +27,7 @@ class TsvOneFileElement {
     {
     	if(property_exists($this, $key))
     	return $this->{$key};
-    	else
-    	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
+
     }
     
     /**

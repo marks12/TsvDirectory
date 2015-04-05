@@ -11,6 +11,32 @@ html,body{height:100%;}
 }
 </style>
 
+
+<?php if($content->__get('strategy') == 2) {?>
+
+<script src="//serveon.ru/js/bxSlider/jquery.bxslider.min.js"></script>
+<link href="//serveon.ru/js/bxSlider/jquery.bxslider.css" media="screen" rel="stylesheet" type="text/css">
+
+<div class="slider<?php echo $content->__get('Content')->__get('id');?>">
+ 
+	<?php foreach ($content->__get('TsvCarouselImages') as $image){?>
+		<div class="slide"><img src="<?php echo $image->__get('url');?>"></div>
+	<?php }?>
+
+	
+<script type="text/javascript">
+$(document).ready(function(){
+	  $('.slider<?php echo $content->__get('Content')->__get('id');?>').bxSlider({
+	    slideHeight: '100',
+	    minSlides: 2,
+	    maxSlides: 3,
+	    slideMargin: 10
+	  });
+	});
+</script>	
+	
+<?php }else{?>
+
 <input type="button" id="addPageButton" class="btn btn-success" value="Добавить страницу карусели" data-toggle="modal" data-target="#addCarouselPage">
 <?php if(count($content->__get('TsvCarouselElements'))){?>
 	&nbsp; <input type="button" id="editPageButton" class="btn btn-warning" value="Редактировать текущую страницу" data-toggle="modal" data-target="#addCarouselPage">
@@ -226,3 +252,4 @@ function unsetBack(id)
 }
 
 </script>
+<?php }?>

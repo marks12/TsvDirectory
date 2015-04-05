@@ -42,7 +42,7 @@ class TsvCarousel {
 	 */
 	public function get_vars()
 	{
-		return array("TsvCarousel");
+		return array("TsvCarousel","strategy");
 	}
     /**
      * Magic getter
@@ -53,8 +53,6 @@ class TsvCarousel {
     {
     	if(property_exists($this, $key))
     	return $this->{$key};
-    	else
-    	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
     /**

@@ -33,8 +33,7 @@ class TsvStext {
     {
     	if(property_exists($this, $key))
     	return $this->{$key};
-    	else
-    	die("Requested property {$key} not exists2 in ".__FUNCTION__." ".__CLASS__);
+
     }
     
     /**
