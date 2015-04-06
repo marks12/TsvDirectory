@@ -29,11 +29,17 @@ class TsvCarousel {
 	private $strategy = 1;	// 1 - стратегия элементов карусели с HTML текстом. На фоне используется картинка.
 						// 2 - стратегия использования картинок как элементов каресули.
 						
+	/** @ORM\Column(type="integer", options={"default":500}) */
+	private $height = 500;	// высота карусели в px, 0 - авто
+	
 	/** @ORM\Column(type="integer") */
-	private $height = 0;	// высота карусели в px, 0 - авто
+	private $count_on_page = 1;	// количество картинок на страницу для strategy=2
 	
 	public function __construct() {
 		$this->TsvCarouselElements = new ArrayCollection();
+		$this->height = 500;
+		$this->strategy = 1;
+		$this->count_on_page = 1;
 	}
 	
 	/**
@@ -42,7 +48,7 @@ class TsvCarousel {
 	 */
 	public function get_vars()
 	{
-		return array("TsvCarousel","strategy");
+		return array("TsvCarousel","strategy","height","count_on_page");
 	}
     /**
      * Magic getter
@@ -54,7 +60,7 @@ class TsvCarousel {
     	if(property_exists($this, $key))
     	return $this->{$key};
     }
-    
+
     /**
      * Magic setter
      * @param $key

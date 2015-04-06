@@ -1,6 +1,109 @@
 <script src="//cdn.ckeditor.com/4.4.2/full/ckeditor.js"></script>
 <p><?php echo $content->__get('TsvCarousel');?></p>
 
+
+
+
+<?php if($content->__get('strategy') == 2) {
+
+	if($content->__get('count_on_page'))
+		$count_per_page = $content->__get('count_on_page');	
+	else 
+		$count_per_page = 4;
+	
+$elements = array();
+$i = 0;
+
+foreach ($content->__get('TsvCarouselImages') as $page){
+	if(count($elements[$i])>=$count_per_page)
+		$i++;
+	
+	$elements[$i][] = $page;
+}
+?>
+
+
+<style>
+.carousel-control {
+	width: 50px;
+}
+.carousel-control.left, .carousel-control.right {
+	background: none;
+	color: #000;
+}
+.carousel-control.left{
+	margin-left: -60px;
+}
+.carousel-control.right{
+	margin-right: -60px;
+}
+.carousel-inner .row img {
+	display: inline-block; 
+	max-height: 100px;
+	max-width: 150px;
+	vertical-align: middle;
+}
+.carousel-inner .row>div {
+    white-space: nowrap;
+    text-align: center; 
+    margin: 1em 0;
+}
+.strategy-line .carousel-indicators {
+	bottom: -30px;
+}
+.strategy-line .carousel-indicators li{
+ 	border: 1px solid #000;
+	background-color: #fff;
+}
+.strategy-line .carousel-indicators li.active{
+ 	border: 1px solid #fff;
+	background-color: #000;
+}
+</style>
+
+<div id="carousel-<?php echo $content->__get('id')?>" class="carousel slide strategy-line" data-ride="carousel">
+  <!-- Indicators -->
+  
+  <ol class="carousel-indicators">
+  <?php $i=0; foreach ($elements as $page){?>
+    <li data-target="#carousel-<?php echo $content->__get('id')?>" data-slide-to="<?php echo $i;?>" class="<?php if($i==0) echo "active";?>"></li>
+  <?php $i++;}?>
+  </ol>
+
+<!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+  <?php $i=0; foreach ($elements as $arr){?>
+  	<div class="item pages<?php if($i==0) echo " active";?>" page-id="<?php echo $arr[0]->__get('id');?>">
+  	  <div class="fill">
+        <div class="c" style="text-align:center;">
+        	<div class="row">
+          <?php foreach ($arr as $k=>$page){?>
+				<div class="col-md-<?php echo floor(12/count($arr));?>">
+					<span class="helper"></span>
+					<img alt="" src="<?php echo $page->__get('url');?>">
+				</div>
+          <?php }?>
+          </div>
+        </div>
+      </div>
+    </div>
+  <?php $i++;}?>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" carousel-<?php echo $content->__get('id')?>href="#carousel-<?php echo $content->__get('id')?>" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-<?php echo $content->__get('id')?>" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+	
+	
+<?php }else{?>
+
 <style>
 html,body{height:100%;}
 .carousel,.item,.active{height:100%;}
@@ -11,31 +114,6 @@ html,body{height:100%;}
 }
 </style>
 
-
-<?php if($content->__get('strategy') == 2) {?>
-
-<script src="//serveon.ru/js/bxSlider/jquery.bxslider.min.js"></script>
-<link href="//serveon.ru/js/bxSlider/jquery.bxslider.css" media="screen" rel="stylesheet" type="text/css">
-
-<div class="slider<?php echo $content->__get('Content')->__get('id');?>">
- 
-	<?php foreach ($content->__get('TsvCarouselImages') as $image){?>
-		<div class="slide"><img src="<?php echo $image->__get('url');?>"></div>
-	<?php }?>
-
-	
-<script type="text/javascript">
-$(document).ready(function(){
-	  $('.slider<?php echo $content->__get('Content')->__get('id');?>').bxSlider({
-	    slideHeight: '100',
-	    minSlides: 2,
-	    maxSlides: 3,
-	    slideMargin: 10
-	  });
-	});
-</script>	
-	
-<?php }else{?>
 
 <input type="button" id="addPageButton" class="btn btn-success" value="Добавить страницу карусели" data-toggle="modal" data-target="#addCarouselPage">
 <?php if(count($content->__get('TsvCarouselElements'))){?>
@@ -178,7 +256,8 @@ $(document).ready(function(){
 </form>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+
+</div>
 
 <style>
 <!--
@@ -235,8 +314,6 @@ for (var i in CKEDITOR.instances) {
      });
 }
 
-
-
 function setBack(src,id,image_id)
 {
 	$(id).css('background', 'url('+src+')');
@@ -253,3 +330,40 @@ function unsetBack(id)
 
 </script>
 <?php }?>
+
+
+
+<h4>Параметры карусели</h4>
+<form method="POST">
+<input type="text" name="entity" value="TsvCarousel">
+<input type="text" name="entity_id" value="<?php echo $content->__get('id');?>">
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Параметр настройки</th>
+			<th>Значение параметра</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				Высота карусели (px)
+			</td>
+			<td>
+				<input type="text" name="height" value="<?php echo $content->__get('height');?>">
+			</td>
+		</tr>
+		<?php if($content->__get('strategy')==2){?>
+		<tr>
+			<td>
+				Количество картинок на одной странице (1-12)
+			</td>
+			<td>
+				<input type="text" name="count_on_page" value="<?php echo $content->__get('count_on_page');?>">
+			</td>
+		</tr>
+		<?php }?>
+	</tbody>
+</table>
+<input type="submit" class="btn" value="Сохранить">
+</form>

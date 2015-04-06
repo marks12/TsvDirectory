@@ -97,6 +97,28 @@ class TsvDirectoryController extends AbstractActionController
     {
     	$objectManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
     	
+    	$request = $this->getRequest();
+    	
+    	if($request->isPost())
+    	{
+    		$entity = $request->getPost()->entity;
+    		$entity_id = (int)$request->getPost()->entity_id;
+
+    		$ent = $objectManager->find("TsvDirectory\Entity"."\\"."$entity",$entity_id);
+
+    		if(method_exists($ent, "get_vars"))
+    		{
+    			foreach ($ent->get_vars() as $var)
+    			{
+    				if($request->getPost()->$var)
+    					$ent->__set($var,$request->getPost()->$var);
+    			}
+    			
+    			$objectManager->persist($ent);
+    			$objectManager->flush();
+    		}
+    		
+    	}
     	
     	$section = $objectManager->find('TsvDirectory\Entity\Section', (int)$this->getEvent()->getRouteMatch()->getParam('id'));
     	
@@ -151,6 +173,7 @@ class TsvDirectoryController extends AbstractActionController
     		{
     			foreach ($content->get_vars() as $k=>$v)
     			{
+    				if($request->getPost()->$v)
     				$content->__set($v,$request->getPost()->$v);
     			}
     		}
@@ -201,6 +224,7 @@ class TsvDirectoryController extends AbstractActionController
         // are working when you browse to /tsvDirectory/tsv-directory/foo
         return array();
     }
+    
     public function sectionsAction()
     {
     	$vm =  new ViewModel();
