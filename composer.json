@@ -23,7 +23,7 @@
         "zendframework/zend-cache":	"~2.1",
 	"zf-commons/zfc-admin":		"dev-master",
 	"bjyoungblood/bjy-profiler": 	"*",
-	"doctrine/doctrine-orm-module":	"dev-master",
+	"doctrine/doctrine-orm-module":	"*",
 	"marks12/tsv-users":		"dev-master"
     },
     "suggests": {
