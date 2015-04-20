@@ -79,7 +79,7 @@ return array(
 							'table' => array(
 								'type'    => 'Segment',
 								'options' => array(
-										'route'    => '/table[/:action[/:directory-name]]',
+										'route'    => '/table[/:action[/:id]]',
 										'constraints' => array(
 											'directory-name' => '[a-zA-Z0-9_-]*',
 											'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -90,6 +90,7 @@ return array(
 											'action'		=>	'index',
 										),
 								),
+								'may_terminate' => true,
 							),
 							'uploader' => array(
 								'type'    => 'Segment',

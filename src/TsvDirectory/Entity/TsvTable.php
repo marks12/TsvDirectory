@@ -11,8 +11,11 @@ class TsvTable {
 	 */
 	protected $id;
 
-	/** @ORM\Column(type="text") */
+	/** @ORM\Column(type="string") */
 	protected $name;
+
+	/** @ORM\Column(type="text", nullable=true) */
+	protected $description;
 
     /**
      * Magic getter

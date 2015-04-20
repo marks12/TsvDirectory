@@ -1,0 +1,80 @@
+<style>
+<!--
+td {
+	font-size: 22px;
+}
+-->
+</style>
+
+<h1><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:70%;"></span> Настройка таблицы</h1>
+<div class="panel panel-default">
+  <div class="panel-body">
+   <strong><?php echo $table->__get('name')?></strong>
+   <br>
+   <?php echo $table->__get('description');?>
+  </div>
+</div>
+
+<ol>
+	<li>Создайте поля</li>
+	<li>При необходимости создайте связи</li>
+	<li>Заполните таблицу данными</li>
+</ol>
+
+<table class="table table-bordered big-text">
+	<thead>
+		<th>Наименование поля</th>
+		<th>Тип данных</th>
+		<th>Связи / параметры</th>
+		<th></th>
+	</thead>
+	<tbody>
+		<tr>
+			<td width="40%">id</td>
+			<td width="25%">
+				<select disabled id="" class="form-control">
+					<option value="integer">Integer</option>
+				</select>
+			</td>
+			<td width="25%">Auto-increment</td>
+			<td width="10%" style="text-align:center;">
+				<input type="button" value="Удалить" class="btn btn-danger">
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2>Добавить ещё поле</h2>
+<table class="table table-bordered big-text">
+	<thead>
+		<th>Наименование поля</th>
+		<th>Тип данных</th>
+		<th>Связи / параметры</th>
+		<th></th>
+	</thead>
+	<tbody>
+		<tr>
+			<td width="40%">
+				<input type="text" class="form-control" name="NFN" id="NFN" value="" placeholder="Например: name">
+			</td>
+			<td width="25%">
+				<select id="NFDT" class="form-control">
+					<option value="integer">Integer</option>
+					<option value="string">string (255)</option>
+					<option value="text">text (longtext)</option>
+					<option value="one_image">One image</option>
+					<option value="image_list">Image list</option>
+					<option value="one_file">One file</option>
+					<option value="file_list">File list</option>
+					<option value="enum">Enumt</option>
+					<option value="date">Date</option>
+					<option value="datetime">Date and time</option>
+				</select>
+			</td>
+			<td width="25%">Auto-increment</td>
+			<td width="10%">
+				<input type="button" value="Добавить" class="btn btn-success">
+			</td>
+		</tr>
+	</tbody>
+</table>
+
