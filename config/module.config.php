@@ -6,6 +6,7 @@ return array(
         'invokables' => array(
             'TsvDirectory\Controller\TsvDirectory' 	=> 'TsvDirectory\Controller\TsvDirectoryController',
             'TsvDirectory\Controller\Carousel' 		=> 'TsvDirectory\Controller\CarouselController',
+            'TsvDirectory\Controller\TsvTable' 		=> 'TsvDirectory\Controller\TsvTableController',
         ),
     ),
     'router' => array(
@@ -72,6 +73,21 @@ return array(
 											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
 											'controller'	=>	'TsvDirectory',
 											'action'		=>	'editSection',
+										),
+								),
+							),
+							'table' => array(
+								'type'    => 'Segment',
+								'options' => array(
+										'route'    => '/table[/:action[/:directory-name]]',
+										'constraints' => array(
+											'directory-name' => '[a-zA-Z0-9_-]*',
+											'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+										),
+										'defaults' => array(
+											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
+											'controller'	=>	'TsvTable',
+											'action'		=>	'index',
 										),
 								),
 							),
@@ -289,7 +305,13 @@ return array(
 						'label' => 'Управление данными',
 						'route' => 'zfcadmin/tsv-directory',
 				),
+				'table' => array(
+						'label' => 'Справочники',
+						'route' => 'zfcadmin/tsv-directory/table',
+				),
+					
 			),
+
 			'submenu' => array(
 					'directory' => array(
 							'label' => 'Управление разделами',
@@ -326,6 +348,10 @@ return array(
 						),
 						array(
 								'controller' => 'TsvDirectory\Controller\TsvDirectory',
+								'roles'	=> array('admin'),
+						),
+						array(
+								'controller' => 'TsvDirectory\Controller\TsvTable',
 								'roles'	=> array('admin'),
 						),
 
