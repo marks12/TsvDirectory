@@ -19,7 +19,7 @@
 			    <label for="name">Сущность</label>
 			    <select name="entity" class="form-control">
 			    	<?php foreach ($entities as $ent) {?>
-			    		<option value="<?php echo $ent;?>"><?php echo $ent;?></option>
+			    		<option value="<?php echo $ent->getName();?>"><?php echo $ent->getName();?></option>
 			    	<?php }?>
 			    </select>
 			  </div>

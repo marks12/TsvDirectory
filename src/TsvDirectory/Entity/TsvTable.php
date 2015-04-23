@@ -4,11 +4,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /** @ORM\Entity 
- *  @ORM\Table(options={"comment":"Динамические таблицы"});
  * */
 class TsvTable {
 	/**
-	 * @ORM\Id @ORM\Column(type="integer")
+	 * @ORM\Id 
+	 * @ORM\Column(type="integer", options={"comment":"Dinamic tables"})
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;

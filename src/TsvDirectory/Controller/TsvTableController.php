@@ -219,8 +219,6 @@ class TsvTableController extends AbstractActionController {
 		
 		$entities = $em->getConnection()->getSchemaManager()->listTables();
 		
-		var_dump($entities[20]);
-		
 		$vm->setVariable('entities',$entities);
 		
 		$vm->setVariable("tables", $tables);
