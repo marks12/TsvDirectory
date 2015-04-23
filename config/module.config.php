@@ -298,6 +298,21 @@ return array(
     		'partials/helper/TsvFile'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-file.phtml',
     		'partials/helper/TsvOneFile'	=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-onefile.phtml',
     			
+    		// templates for data type TsvTable structure
+    		'tsv-table/types/enum'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/enum.phtml',
+    		'tsv-table/types/OneToOne'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/OneToOne.phtml',
+    		'tsv-table/types/ManyToOne'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/ManyToOne.phtml',
+    		'tsv-table/types/ManyToMany'	=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/ManyToMany.phtml',
+    		'tsv-table/types/integer'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/integer.phtml',
+    		'tsv-table/types/string'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/string.phtml',
+    		'tsv-table/types/text'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/text.phtml',
+    		'tsv-table/types/one_image'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/one_image.phtml',
+    		'tsv-table/types/image_list'	=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/image_list.phtml',
+    		'tsv-table/types/one_file'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/one_file.phtml',
+    		'tsv-table/types/file_list'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/file_list.phtml',
+    		'tsv-table/types/date'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/date.phtml',
+    		'tsv-table/types/datetime'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/datetime.phtml',
+   			
         ),
     ),
 	'navigation' => array(

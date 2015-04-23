@@ -29,21 +29,20 @@ td {
 		<th></th>
 	</thead>
 	<tbody>
+	<?php foreach ($table->__get('fields') as $f){?>
 		<tr>
-			<td width="40%">id</td>
-			<td width="25%">
-				<select disabled id="" class="form-control">
-					<option value="integer">Integer</option>
-				</select>
-			</td>
-			<td width="25%">Auto-increment</td>
+			<td width="30%"><?php echo $f->__get('name');?></td>
+			<td width="20%"><?php echo $f->__get('type');?></td>
+			<td width="40%">default: <?php echo $f->__get('defaultval');?></td>
 			<td width="10%" style="text-align:center;">
 				<input type="button" value="Удалить" class="btn btn-danger">
 			</td>
 		</tr>
+	<?php }?>
 	</tbody>
 </table>
 <h2>Добавить ещё поле</h2>
+<form method="POST">
 <table class="table table-bordered big-text">
 	<thead>
 		<th>Наименование поля</th>
@@ -51,30 +50,82 @@ td {
 		<th>Связи / параметры</th>
 		<th></th>
 	</thead>
-	<tbody>
-		<tr>
-			<td width="40%">
-				<input type="text" class="form-control" name="NFN" id="NFN" value="" placeholder="Например: name">
-			</td>
-			<td width="25%">
-				<select id="NFDT" class="form-control">
-					<option value="integer">Integer</option>
-					<option value="string">string (255)</option>
-					<option value="text">text (longtext)</option>
-					<option value="one_image">One image</option>
-					<option value="image_list">Image list</option>
-					<option value="one_file">One file</option>
-					<option value="file_list">File list</option>
-					<option value="enum">Enumt</option>
-					<option value="date">Date</option>
-					<option value="datetime">Date and time</option>
-				</select>
-			</td>
-			<td width="25%">Auto-increment</td>
-			<td width="10%">
-				<input type="button" value="Добавить" class="btn btn-success">
-			</td>
-		</tr>
-	</tbody>
+		<tbody>
+			<tr>
+				<td width="30%">
+					<input type="text" class="form-control" name="name" id="NFN" value="" placeholder="Например: Наименование">
+				</td>
+				<td id="tsv-NFDT" width="20%">
+					<select id="NFDT" name="type" class="form-control">
+						<optgroup label="Связи">
+							<option value="OneToOne">Связь OneToOne</option>
+							<option value="ManyToOne">Связь ManyToOne</option>
+							<option value="ManyToMany">Связь ManyToMany</option>
+						</optgroup>
+						<optgroup label="Типы данных">
+							<option value="integer">Integer</option>
+							<option value="float">Float</option>
+							<option value="string">string (255)</option>
+							<option value="text">text (longtext)</option>
+							<option value="one_image">One image</option>
+							<option value="image_list">Image list</option>
+							<option value="one_file">One file</option>
+							<option value="file_list">File list</option>
+							<option value="enum">Enum</option>
+							<option value="date">Date</option>
+							<option value="datetime">Date and time</option>
+						</optgroup>
+					</select>
+				</td>
+				<td id="params-NFDT" width="40%">Загрузка ...</td>
+				<td width="10%">
+					<input type="submit" value="Добавить" class="btn btn-success">
+				</td>
+			</tr>
+		</tbody>
 </table>
+</form>
 
+<script type="text/javascript">
+<!--
+$('#NFDT').change(function(){
+
+	var type =  $( this ).val();
+
+	load_params(type);
+
+});
+
+function load_params(type)
+{
+
+	var request = {};
+	
+	request.type = type;
+	
+	$.ajax({
+	  url: "<?php echo $this->url("zfcadmin/tsv-directory/table",array("action"=>"getDataTypeForm"));?>",
+	  type: "POST",
+	  data: JSON.stringify(request),
+	  processData: false,
+	  dataType: "json",
+	  success:function(a) { 
+		  	if(a.success){
+		  		$('#params-NFDT').html(a.html);
+		  	}else{	
+		  		alert('К сожалению запрос не может быть направлен в данное время'); 
+		  	}  
+	  },
+	  error:function() {
+		  alert('Ошибка отправки сообщения на сервер');
+	  }
+	});
+}
+
+$( document ).ready(function() {
+	load_params('string');
+	$('#NFDT').val('string');
+});
+
+//-->
+</script>

@@ -16,6 +16,14 @@
 			    <input type="text" class="form-control" id="name" name="name" placeholder="Укажите название справочника" required>
 			  </div>
 		      <div class="form-group">
+			    <label for="name">Сущность</label>
+			    <select name="entity" class="form-control">
+			    	<?php foreach ($entities as $ent) {?>
+			    		<option value="<?php echo $ent;?>"><?php echo $ent;?></option>
+			    	<?php }?>
+			    </select>
+			  </div>
+		      <div class="form-group">
 			    <label for="description">Описание</label>
 			    <textarea class="form-control" id="description" name="description" placeholder="Укажите описание к справочнику (не обязательно)"></textarea>
 			  </div>

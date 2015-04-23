@@ -3,7 +3,9 @@ namespace TsvDirectory\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-/** @ORM\Entity */
+/** @ORM\Entity 
+ *  @ORM\Table(options={"comment":"Динамические таблицы"});
+ * */
 class TsvTable {
 	/**
 	 * @ORM\Id @ORM\Column(type="integer")
@@ -17,6 +19,9 @@ class TsvTable {
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $description;
 
+	/** @ORM\OneToMany(targetEntity="TsvTableField", mappedBy="table", cascade={"persist","remove"})*/
+	protected $fields;
+	
     /**
      * Magic getter
      * @param $property
@@ -41,5 +46,8 @@ class TsvTable {
     	die("Requested property {$key} not exists in ".__FUNCTION__." ".__CLASS__);
     }
     
+    public function __construct() {
+    	$this->fields = new ArrayCollection();
+    }
     
 }
