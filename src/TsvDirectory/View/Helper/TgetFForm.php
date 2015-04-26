@@ -17,6 +17,43 @@ class TgetFForm extends AbstractHelper
 		
 		if(isset($table_params->fieldMappings[$field_name]))
 		{
+			$datatype = $table_params->fieldMappings[$field_name]['type'];
+			
+			if($datatype == 'string' && isset($table_params->fieldMappings[$field_name]['columnDefinition']))
+				$datatype = 'enum';
+			
+			switch ($datatype)
+			{
+				case "integer":
+					$htmlObject = $this->getView()->plugin('TdtInteger');
+        			return $htmlObject($table_params, $field_name);
+				break;
+
+				case "float":
+					$htmlObject = $this->getView()->plugin('TdtFloat');
+        			return $htmlObject($table_params, $field_name);
+				break;
+				
+				case "string":
+					$htmlObject = $this->getView()->plugin('TdtString');
+					return $htmlObject($table_params, $field_name);
+				break;
+
+				case "enum":
+					$htmlObject = $this->getView()->plugin('TdtEnum');
+					return $htmlObject($table_params, $field_name);
+				break;
+
+				case "tinyint":
+					
+				break;
+
+				case "text":
+				case "longtext":
+					
+				break;
+			}
+			
 			if(isset($table_params->fieldMappings[$field_name]['options']) && isset($table_params->fieldMappings[$field_name]['options']['comment']))
 			return $table_params->fieldMappings[$field_name]['options']['comment'];
 		}

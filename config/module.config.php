@@ -358,7 +358,10 @@ return array(
 	'view_helpers' => array(
 			'invokables'=> array(
 // 					'TsvdContent' => 'TsvDirectory\View\Helper\TsvdContent',
-// 					'ttGetValue' => 'TsvDirectory\View\Helper\ttGetValue',
+					'TdtInteger'	=> 'TsvDirectory\View\Helper\TdtInteger',
+					'TdtString'		=> 'TsvDirectory\View\Helper\TdtString',
+					'TdtFloat'		=> 'TsvDirectory\View\Helper\TdtFloat',
+					'TdtEnum'		=> 'TsvDirectory\View\Helper\TdtEnum',
 			)
 	),
 	'bjyauthorize' => array(

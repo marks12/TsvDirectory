@@ -67,6 +67,10 @@ class Module
 							$helper = new View\Helper\TgetFTitle($sm);
 							return $helper;
 						},
+						'TgetFForm' => function($sm) {
+							$helper = new View\Helper\TgetFForm($sm);
+							return $helper;
+						},
 				)
 		);
 	}
