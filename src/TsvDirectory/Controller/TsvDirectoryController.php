@@ -73,6 +73,19 @@ class TsvDirectoryController extends AbstractActionController
    			$arr_sec_by_name[$sec->__get('secName')] = $sec->__get('id');
    		}
    		
+   		/**
+   		 * Выбираем подключаемые Entity
+   		 */
+   		
+   		$qb = $em->createQueryBuilder();
+   		$dataManagement = $qb->select('t')
+   			->from('TsvDirectory\Entity\TsvTable', 't')
+   			->where('t.dataManagement = 1')
+   			->getQuery()
+   			->getResult();
+   		$vm->setVariable("dataManagement",$dataManagement);
+   		 
+   		
    		$vm->setVariable("selectedSection", $session->offsetGet('selectedSession'));
    		$vm->setVariable("sections",$sections);
    		$vm->setVariable("need_tepmlate_vars", $need_tepmlate_vars);
@@ -120,13 +133,21 @@ class TsvDirectoryController extends AbstractActionController
     		
     	}
     	
+    	$qb = $objectManager->createQueryBuilder();
+    	$dataManagement = $qb->select('t')
+    	->from('TsvDirectory\Entity\TsvTable', 't')
+    	->where('t.dataManagement = 1')
+    	->getQuery()
+    	->getResult();
+
+    	
     	$section = $objectManager->find('TsvDirectory\Entity\Section', (int)$this->getEvent()->getRouteMatch()->getParam('id'));
     	
     	$session = new Container('tsv');
    	
    		$session->offsetSet('selectedSession',(int)$this->getEvent()->getRouteMatch()->getParam('id'));
     	
-        return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections(),"section"=>$section);
+        return array("selectedSection"=>$session->offsetGet('selectedSession'),"sections"=>$this->getSections(),"section"=>$section,"dataManagement"=>$dataManagement);
     }
     
     public function addContentAction()
@@ -237,7 +258,20 @@ class TsvDirectoryController extends AbstractActionController
     	
     	$page = (int)$this->getEvent()->getRouteMatch()->getParam('page');
     	
-    	if($page) $paginator->setCurrentPageNumber($page);
+    	if($page) 
+    		$paginator->setCurrentPageNumber($page);
+    	
+    	/**
+    	 * Выбираем подключаемые Entity
+    	 */
+    	 
+    	$qb = $entityManager->createQueryBuilder();
+    	$dataManagement = $qb->select('t')
+    	->from('TsvDirectory\Entity\TsvTable', 't')
+    	->where('t.dataManagement = 1')
+    	->getQuery()
+    	->getResult();
+    	$vm->setVariable("dataManagement",$dataManagement);
     	
     	$vm->setVariable('paginator',$paginator);
     	$vm->setVariable('sections',$this->getSections());

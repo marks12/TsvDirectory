@@ -3,7 +3,7 @@
 
 
 <link href="//serveon.ru/css/admin.css" media="screen" rel="stylesheet" type="text/css">
-<?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
+<?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection,'dataManagement'=>$dataManagement));?>
 <?php echo $this->partial('partials/add-content-btn', array('section_id' => $this->selectedSection));?>
 <div style="clear:both;"><br></div>
 

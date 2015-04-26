@@ -18,8 +18,8 @@
 		      <div class="form-group">
 			    <label for="name">Сущность</label>
 			    <select name="entity" class="form-control">
-			    	<?php foreach ($entities as $ent) {?>
-			    		<option value="<?php echo $ent->getName();?>"><?php echo $ent->getName();?></option>
+			    	<?php foreach ($entities as $k=>$ent) {?>
+			    		<option value="<?php echo $ent;?>"><?php echo $ent;?></option>
 			    	<?php }?>
 			    </select>
 			  </div>
@@ -41,11 +41,12 @@
       <div class="caption">
         <h3 style="margin-top: 0px;"><?php echo $table->__get('name');?></h3>
         <p><?php echo $table->__get('description');?></p>
-        <?php if(!count($table->__get('TableFields'))){?>
-        <p><a href="<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"configure","id"=>$table->__get('id')));?>" class="btn btn-warning" role="button">Настроить таблицу</a></p>
-        <?php }else{?>
-        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-        <?php }?>
+        <div class="row">
+        	<div class="col-md-6"><a href="<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"configure","id"=>$table->__get('id')));?>" class="btn btn-warning" role="button">Настроить таблицу</a></div>
+        	<div class="col-md-6 text-right">
+        		<a class="btn btn-danger" onclick="if(confirm('Вы действительно хотите удалить настройки таблицы <?php echo $table->__get('name')?> ?')) window.location.href='<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"delete","id"=>$table->__get('id')));?>'; else return false;"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+        	</div>
+        </div>        
       </div>
     </div>
   </div>

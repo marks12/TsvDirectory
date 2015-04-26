@@ -79,15 +79,18 @@ return array(
 							'table' => array(
 								'type'    => 'Segment',
 								'options' => array(
-										'route'    => '/table[/:action[/:id]]',
+										'route'    => '/table[/:action[/:id]][/:page]',
 										'constraints' => array(
-											'directory-name' => '[a-zA-Z0-9_-]*',
-											'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+											'directory-name'	=>	'[a-zA-Z0-9_-]*',
+											'action'			=>	'[a-zA-Z][a-zA-Z0-9_-]*',
+											'id'				=>	'[0-9]*',
+											'page'				=>	'[0-9]*',
 										),
 										'defaults' => array(
-											'__NAMESPACE__'	=>	'TsvDirectory\Controller',
-											'controller'	=>	'TsvTable',
-											'action'		=>	'index',
+											'__NAMESPACE__'		=>	'TsvDirectory\Controller',
+											'controller'		=>	'TsvTable',
+											'action'			=>	'index',
+											'page'				=>	'0',
 										),
 								),
 								'may_terminate' => true,
@@ -291,6 +294,9 @@ return array(
    			'partials/TsvCarousel'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-carousel.phtml',
     		'partials/TsvOneFile'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-onefile.phtml',
     			 
+    		// pagination
+    		'partials/helper/paginator'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-pagination.phtml',
+    			 
     		// templates for view in FRONT END
     		'partials/helper/TsvStext'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-stext.phtml',
     		'partials/helper/TsvCarousel'	=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-carousel.phtml',
@@ -298,20 +304,20 @@ return array(
     		'partials/helper/TsvFile'		=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-file.phtml',
     		'partials/helper/TsvOneFile'	=> __DIR__ . '/../view/tsv-directory/partials/helper/tsv-onefile.phtml',
     			
-    		// templates for data type TsvTable structure
-    		'tsv-table/types/enum'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/enum.phtml',
-    		'tsv-table/types/OneToOne'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/OneToOne.phtml',
-    		'tsv-table/types/ManyToOne'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/ManyToOne.phtml',
-    		'tsv-table/types/ManyToMany'	=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/ManyToMany.phtml',
-    		'tsv-table/types/integer'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/integer.phtml',
-    		'tsv-table/types/string'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/string.phtml',
-    		'tsv-table/types/text'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/text.phtml',
-    		'tsv-table/types/one_image'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/one_image.phtml',
-    		'tsv-table/types/image_list'	=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/image_list.phtml',
-    		'tsv-table/types/one_file'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/one_file.phtml',
-    		'tsv-table/types/file_list'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/file_list.phtml',
-    		'tsv-table/types/date'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/date.phtml',
-    		'tsv-table/types/datetime'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/datetime.phtml',
+//     		// templates for data type TsvTable structure
+//     		'tsv-table/types/enum'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/enum.phtml',
+//     		'tsv-table/types/OneToOne'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/OneToOne.phtml',
+//     		'tsv-table/types/ManyToOne'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/ManyToOne.phtml',
+//     		'tsv-table/types/ManyToMany'	=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/ManyToMany.phtml',
+//     		'tsv-table/types/integer'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/integer.phtml',
+//     		'tsv-table/types/string'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/string.phtml',
+//     		'tsv-table/types/text'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/text.phtml',
+//     		'tsv-table/types/one_image'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/one_image.phtml',
+//     		'tsv-table/types/image_list'	=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/image_list.phtml',
+//     		'tsv-table/types/one_file'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/one_file.phtml',
+//     		'tsv-table/types/file_list'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/file_list.phtml',
+//     		'tsv-table/types/date'			=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/date.phtml',
+//     		'tsv-table/types/datetime'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/datetime.phtml',
    			
         ),
     ),
@@ -352,6 +358,7 @@ return array(
 	'view_helpers' => array(
 			'invokables'=> array(
 // 					'TsvdContent' => 'TsvDirectory\View\Helper\TsvdContent',
+// 					'ttGetValue' => 'TsvDirectory\View\Helper\ttGetValue',
 			)
 	),
 	'bjyauthorize' => array(

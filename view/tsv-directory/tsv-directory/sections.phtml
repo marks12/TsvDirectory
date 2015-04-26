@@ -10,7 +10,7 @@ Zend\View\Helper\PaginationControl::setDefaultViewPartial('partials/tsv_searchpa
 
 ?>
 
-<?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
+<?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection,'dataManagement'=>$dataManagement));?>
 
 <br>
 <br>

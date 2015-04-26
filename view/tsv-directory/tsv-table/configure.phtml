@@ -1,130 +1,95 @@
-<style>
-<!--
-td {
-	font-size: 22px;
-}
--->
-</style>
+<h1>Настройка таблицы <code><?php echo $table->__get('name');?></code></h1>
 
-<h1><span class="glyphicon glyphicon-cog" aria-hidden="true" style="font-size:70%;"></span> Настройка таблицы</h1>
 <div class="panel panel-default">
+  <div class="panel-heading">Основные параметры</div>
   <div class="panel-body">
-   <strong><?php echo $table->__get('name')?></strong>
-   <br>
-   <?php echo $table->__get('description');?>
+	<div class="form-group">
+		<label for="name">Название таблицы</label>
+	      <input type="text" id="name" value="<?php echo $table->__get('name')?>" class="form-control" placeholder="Название таблицы">
+	</div>
+	<div class="form-group">
+		<label for="description">Описание таблицы</label>
+	      <textarea id="description" placeholder="Описание таблицы" class="form-control"><?php echo $table->__get('description')?></textarea>
+	</div>
+	<div class="form-group">
+		<label for="entity">Класс таблицы</label>
+		<select name="entity" id="entity" class="form-control">
+			<?php foreach ($entities as $k=>$v){?>
+			<option value="<?php echo $v;?>"<?php if($table->__get('entity')==$v) echo " selected";?>><?php echo $v;?></option>
+			<?php }?>
+		</select>
+	</div>
   </div>
 </div>
 
-<ol>
-	<li>Создайте поля</li>
-	<li>При необходимости создайте связи</li>
-	<li>Заполните таблицу данными</li>
-</ol>
+<div class="panel panel-default">
+  <div class="panel-heading">Место отображения</div>
+  <div class="panel-body">
+  
+	 <div class="checkbox">
+	    <label>
+	      <input type="checkbox" id="iMonitor" value="iMonitor" class="adminPlace"<?php if($table->__get('iMonitor')) echo " checked"?>> Я-Монитор (сводка)
+	    </label>
+	    <label>
+	      <input type="checkbox" id="dataManagement" value="dataManagement" class="adminPlace"<?php if($table->__get('dataManagement')) echo " checked"?>> Управление данными
+	    </label>
+	  </div>
+	  
+  </div>
+</div>
 
-<table class="table table-bordered big-text">
-	<thead>
-		<th>Наименование поля</th>
-		<th>Тип данных</th>
-		<th>Связи / параметры</th>
-		<th></th>
-	</thead>
-	<tbody>
-	<?php foreach ($table->__get('fields') as $f){?>
-		<tr>
-			<td width="30%"><?php echo $f->__get('name');?></td>
-			<td width="20%"><?php echo $f->__get('type');?></td>
-			<td width="40%">default: <?php echo $f->__get('defaultval');?></td>
-			<td width="10%" style="text-align:center;">
-				<input type="button" value="Удалить" class="btn btn-danger">
-			</td>
-		</tr>
-	<?php }?>
-	</tbody>
-</table>
-<h2>Добавить ещё поле</h2>
-<form method="POST">
-<table class="table table-bordered big-text">
-	<thead>
-		<th>Наименование поля</th>
-		<th>Тип данных</th>
-		<th>Связи / параметры</th>
-		<th></th>
-	</thead>
-		<tbody>
-			<tr>
-				<td width="30%">
-					<input type="text" class="form-control" name="name" id="NFN" value="" placeholder="Например: Наименование">
-				</td>
-				<td id="tsv-NFDT" width="20%">
-					<select id="NFDT" name="type" class="form-control">
-						<optgroup label="Связи">
-							<option value="OneToOne">Связь OneToOne</option>
-							<option value="ManyToOne">Связь ManyToOne</option>
-							<option value="ManyToMany">Связь ManyToMany</option>
-						</optgroup>
-						<optgroup label="Типы данных">
-							<option value="integer">Integer</option>
-							<option value="float">Float</option>
-							<option value="string">string (255)</option>
-							<option value="text">text (longtext)</option>
-							<option value="one_image">One image</option>
-							<option value="image_list">Image list</option>
-							<option value="one_file">One file</option>
-							<option value="file_list">File list</option>
-							<option value="enum">Enum</option>
-							<option value="date">Date</option>
-							<option value="datetime">Date and time</option>
-						</optgroup>
-					</select>
-				</td>
-				<td id="params-NFDT" width="40%">Загрузка ...</td>
-				<td width="10%">
-					<input type="submit" value="Добавить" class="btn btn-success">
-				</td>
-			</tr>
-		</tbody>
-</table>
-</form>
+<div class="row">
+	<div class="col-md-6">
+		<a href="#" class="saver btn btn-success">Сохранить</a>
+	</div>
+	<div class="col-md-6 text-right">
+		<a href="#" class="canceler btn btn-info">Отмена</a>
+	</div>
+</div>
 
 <script type="text/javascript">
 <!--
-$('#NFDT').change(function(){
 
-	var type =  $( this ).val();
+$(document).ready(function(){
 
-	load_params(type);
+	$('.saver').click(function(){
 
-});
+		var request = {};
+		
+		id = <?php echo $table->__get('id');?>;
+		request.table_id = id;
+		request.iMonitor = $('#iMonitor').prop('checked');
+		request.dataManagement = $('#dataManagement').prop('checked');
+		request.name = $('#name').val();
+		request.description = $('#description').val();
+		request.entity = $('#entity').val();
+			
+		$.ajax({
+			  url: "<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"saveConfigure"))?>",
+			  type: "POST",
+			  data: JSON.stringify(request),
+			  processData: false,
+			  dataType: "json",
+			  success:function(a) { 
 
-function load_params(type)
-{
+				  if(a.error)
+					  alert(a.error);
+				  else
+					  window.location.href='<?php echo $this->url('zfcadmin/tsv-directory/table')?>'
+				  
+			  },
+			  error:function() {
+				  alert('Ошибка отправки сообщения на сервер');
+			  }
+		});
 
-	var request = {};
-	
-	request.type = type;
-	
-	$.ajax({
-	  url: "<?php echo $this->url("zfcadmin/tsv-directory/table",array("action"=>"getDataTypeForm"));?>",
-	  type: "POST",
-	  data: JSON.stringify(request),
-	  processData: false,
-	  dataType: "json",
-	  success:function(a) { 
-		  	if(a.success){
-		  		$('#params-NFDT').html(a.html);
-		  	}else{	
-		  		alert('К сожалению запрос не может быть направлен в данное время'); 
-		  	}  
-	  },
-	  error:function() {
-		  alert('Ошибка отправки сообщения на сервер');
-	  }
+		
 	});
-}
-
-$( document ).ready(function() {
-	load_params('string');
-	$('#NFDT').val('string');
+		
+	$('.canceler').click(function(){
+		window.location.href = '<?php echo $this->url('zfcadmin/tsv-directory/table');?>';
+	});
+		
 });
 
 //-->

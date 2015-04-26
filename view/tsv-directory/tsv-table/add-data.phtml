@@ -1,0 +1,23 @@
+<?php echo $this->partial('partials/section-list', array('sections' => $sections,'selectedSection'=>$this->selectedSection,'dataManagement'=>$dataManagement,"dataManagement_id"=>$dataManagement_id));?>
+
+<h1>Добавить данные в таблицу <code><?php echo $table_config->__get('name')?></code></h1>
+
+<form>
+	<?php foreach ($table_params->reflFields as $k=>$param) {?>
+    <?php echo $this->TgetFForm($table_params,$param->name)?>
+	<?php }?>
+	
+<!--   <div class="form-group"> -->
+<!--     <label for="exampleInputEmail1">Email address</label> -->
+<!--     <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+<!--   </div> -->
+
+  
+  <div class="row">
+  	<div class="col-md-6"><button type="submit" class="btn btn-success">Submit</button></div>
+  	<div class="col-md-6 text-right">
+  		<a class="btn btn-warning" href="<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>'dataManagement','id'=>$table_config->__get('id')));?>">Отмена</a>
+  	</div>
+  </div>
+  
+</form>

@@ -16,11 +16,17 @@ class TsvTable {
 	/** @ORM\Column(type="string") */
 	protected $name;
 
+	/** @ORM\Column(type="string") */
+	protected $entity;
+
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $description;
 
-	/** @ORM\OneToMany(targetEntity="TsvTableField", mappedBy="table", cascade={"persist","remove"})*/
-	protected $fields;
+	/** @ORM\Column(type="boolean", nullable=true, options={"default"="0", "comment"="Отображать справочник в Я-Монитор"}) */
+	protected $iMonitor = 0;
+
+	/** @ORM\Column(type="boolean", nullable=true, options={"default"="1", "comment"="Отображать справочник в управлении данными"}) */
+	protected $dataManagement = 0;
 	
     /**
      * Magic getter
@@ -47,7 +53,7 @@ class TsvTable {
     }
     
     public function __construct() {
-    	$this->fields = new ArrayCollection();
+
     }
     
 }

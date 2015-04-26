@@ -58,7 +58,15 @@ class Module
 						'TsvdContent' => function($sm) {
 							$helper = new View\Helper\TsvdContent($sm);
 							return $helper;
-						}
+						},
+						'TgetValue' => function($sm) {
+							$helper = new View\Helper\TgetValue($sm);
+							return $helper;
+						},
+						'TgetFTitle' => function($sm) {
+							$helper = new View\Helper\TgetFTitle($sm);
+							return $helper;
+						},
 				)
 		);
 	}

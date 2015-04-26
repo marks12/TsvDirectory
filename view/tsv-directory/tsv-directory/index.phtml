@@ -1,4 +1,4 @@
-<?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection));?>
+<?php echo $this->partial('partials/section-list', array('sections' => $this->sections,'selectedSection'=>$this->selectedSection,'dataManagement'=>$dataManagement));?>
 
 <?php if(isset($this->need_db_vars) && count($this->need_db_vars)){?>
 <h3>Добавить в БД</h3>

@@ -1,0 +1,62 @@
+<?php echo $this->partial('partials/section-list', array('sections' => $sections,'selectedSection'=>$this->selectedSection,'dataManagement'=>$dataManagement,"dataManagement_id"=>$dataManagement_id));?>
+
+<h1><code><?php echo $table_config->__get('name')?></code></h1>
+<div>
+	<i>
+		<?php echo $table_config->__get('description');?>
+	</i>
+</div>
+<br>
+<div class="row">
+	<div class="col-md-12">
+		<a class="btn btn-success" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"addData","id"=>$table_config->__get('id')));?>">Добавить</a>
+	</div>
+</div>
+<br>
+<table class="table table-bordered">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAll"></th>
+        <?php foreach ($table_params->reflFields as $k=>$param) {?>
+          <th><?php echo $this->TgetFTitle($table_params,$param->name)?></th>
+        <?php }?>
+        </tr>
+      </thead>
+      <tbody>
+<?php foreach ($table as $row){ 
+
+	?>
+        <tr>
+          <td width="30"><input type="checkbox" class="selectAll"></td>
+        <?php foreach ($table_params->reflFields as $k=>$param) {?>
+          <td><?php echo $this->TgetValue($row->__get($param->name));?></td>
+        <?php }?>
+        </tr>
+<?php }?>
+      </tbody>
+    </table>
+
+<?php 
+echo $this->paginationcontrol(
+			$table,
+			'Sliding',
+			'partials/helper/paginator',
+			array(
+				'route_params' => array(
+					'action'=>'dataManagement',
+					'id'=>$table_config->__get('id'),
+				)
+			)
+);
+?>
+    
+<script type="text/javascript">
+<!--
+
+$('#selectAll').click(function(){
+	$('.selectAll').prop('checked',$(this).prop('checked'));
+}); 
+
+//-->
+</script>
+    

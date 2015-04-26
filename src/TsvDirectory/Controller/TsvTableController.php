@@ -5,9 +5,12 @@ namespace TsvDirectory\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use TsvDirectory\Entity\TsvTable;
-use Zend\Crypt\PublicKey\Rsa\PublicKey;
 use Zend\View\Model\JsonModel;
 use TsvDirectory\Entity\TsvTableField;
+use Zend\Session\Container;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use Zend\Paginator\Paginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 
 /**
  * TableController
@@ -19,174 +22,196 @@ use TsvDirectory\Entity\TsvTableField;
  */
 class TsvTableController extends AbstractActionController {
 
-	/**
-	 * The default action - show the home page
-	 */
+	public function addDataAction()
+	{
+		$vm = new ViewModel();
+		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		
+		$qb = $em->createQueryBuilder();
+		$dataManagement = $qb->select('t')
+		->from('TsvDirectory\Entity\TsvTable', 't')
+		->where('t.dataManagement = 1')
+		->getQuery()
+		->getResult();
+
+		$vm->setVariable("dataManagement",$dataManagement);
+		
+		$sections = $em->getRepository('TsvDirectory\Entity\Section')->findAll();
+		$vm->setVariable("sections",$sections);
+		
+		$table_id = $this->getEvent()->getRouteMatch()->getParam('id');
+		$vm->setVariable("dataManagement_id", $table_id);
+		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
+
+		$table_params = $em->getClassMetadata($table_config->__get('entity'));
+		
+		$vm->setVariable("table_config", $table_config);
+		$vm->setVariable("table_params", $table_params);
+
+		return $vm;
+	}
 	
-	public function getDataTypeFormAction() {
+	public function dataManagementAction()
+	{
+		$vm = new ViewModel();
+		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 		
+		$qb = $em->createQueryBuilder();
+		$dataManagement = $qb->select('t')
+		->from('TsvDirectory\Entity\TsvTable', 't')
+		->where('t.dataManagement = 1')
+		->getQuery()
+		->getResult();
+
+		$vm->setVariable("dataManagement",$dataManagement);
+		
+		$sections = $em->getRepository('TsvDirectory\Entity\Section')->findAll();
+		$vm->setVariable("sections",$sections);
+		
+		$table_id = $this->getEvent()->getRouteMatch()->getParam('id');
+		
+		$vm->setVariable("dataManagement_id", $table_id);
+		
+		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
+
+		$table_params = $em->getClassMetadata($table_config->__get('entity'));
+		
+// 		var_dump($em->getClassMetadata($table_config->__get('entity'))/*->getFieldNames()*/);
+// 		exit();
+		
+		$vm->setVariable("table_config", $table_config);
+		$vm->setVariable("table_params", $table_params);
+		
+		$repository = $em->getRepository($table_config->__get('entity'));
+		$adapter = new DoctrineAdapter(new ORMPaginator($repository->createQueryBuilder($table_config->__get('entity'))));
+		$paginator = new Paginator($adapter);
+		$paginator->setDefaultItemCountPerPage(20);
+
+		$page = (int)$this->getEvent()->getRouteMatch()->getParam('page');
+		if($page)
+		{
+			$paginator->setCurrentPageNumber($page);
+		}
+		else
+			$paginator->setCurrentPageNumber(0);
+		
+		$vm->setVariable('table',$paginator);
+		
+		return $vm;
+	}
+	
+	public function configureAction()
+	{
+		$vm = new ViewModel();
+		
+		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		
+		$id = $this->getEvent()->getRouteMatch()->getParam('id');
+		
+		$tableConfig = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($id);
+		
+		if(!$tableConfig)
+		{
+			$session = new Container("error");
+			$session->offsetSet("error",array("Запрошеные настройки в БД не обнаружены, нечего настраивать"));
+			$vm->terminate();
+			return $this->redirect()->toRoute("zfcadmin/tsv-directory/table");
+		}
+		
+		$cmf = $em->getMetadataFactory();
+		$entities = $cmf->getAllMetadata();
+		
+		$res_ent = array();
+		
+		foreach ($entities as $ent)
+			$res_ent[] = $ent->name;
+		
+		$vm->setVariable('entities',$res_ent);
+		$vm->setVariable("table", $tableConfig);
+		
+		return $vm;
+		
+	}
+	
+	public function saveConfigureAction()
+	{
 		$request_data = json_decode(file_get_contents("php://input"), true);
-
-		if(!isset($request_data['type']))
-		return new JsonModel(array(
-				'success'	=>	true,
-				'html'	=>	'type is not set',
-		));
+		$error = false;
 		
-		$type = strip_tags($request_data['type']);
-
-		if(!in_array($type, array('OneToOne','ManyToOne','ManyToMany','integer','string','text','one_image','image_list','one_file','file_list','enum','date','datetime')))
-			$html = 'Unknown type '.$type;
-		else 
+		if($request_data)
 		{
-			switch ($type)
-			{
-				case "OneToOne":
-				
-				break;
-				
-				case "ManyToOne":
-				
-				break;
-				
-				case "ManyToMany":
-				
-				break;
-				
-				case "float":
-				
-				break;
-				
-				case "integer":
-				
-				break;
-				
-				case "string":
-				
-				break;
-				
-				case "text":
-				
-				break;
-				
-				case "one_image":
-				
-				break;
-				
-				case "image_list":
-				
-				break;
-				
-				case "one_file":
-				
-				break;
-				
-				case "file_list":
-				
-				break;
-				
-				case "date":
-				
-				break;
-				
-				case "datetime":
-				
-				break;
-				
-				case "enum":
-
-				break;
-
-				default:
-					$html = 'error case for data type '.$type;
-				break;
-			}
+			$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 			
-			if(!isset($html) || !mb_strlen($html))
+			if(isset($request_data['table_id']))
 			{
-				if(!isset($template))
-					$template = "tsv-table/types/".$type;
+				$id = $request_data['table_id'];
+				$table = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($id);
 				
-				$messageView = new ViewModel();
-				$viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-
-// 				$TsvdContent = $viewHelperManager->get('TsvdContent');
-// 				$phone_number = $TsvdContent('Главная/Телефон',array("alt"=>"+7 (495) 374-72-94."));
-// 				$main_mail = $TsvdContent('Главная/Главный e-mail',array("alt"=>"tsarevnikov@mail.ru"));
-// 				$messageView->setVariable("phone_number", $phone_number);
-
-				$messageView->setTemplate($template);
-				
-				$renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
-				$htmlPart = new \Zend\Mime\Part($renderer->render($messageView));
-				$html = $htmlPart->getRawContent();
-				
+				if($table)
+				{
+					$params = array("iMonitor"=>null,"dataManagement"=>null,"name"=>"TableName", "entity"=>null,"description"=>null);
+					
+					foreach ($params as $k=>$v)
+					{
+						if(!isset($request_data[$k]))
+							$error .= "Не установлен обязательный параметр $k";
+						else
+							$params[$k] = $request_data[$k];
+					}
+					
+					if(!$error)
+					{
+						foreach ($params as $k=>$v)
+						{
+							$table->__set($k,$v);
+						}
+						
+						$em->persist($table);
+						$em->flush();
+						
+					}
+				}
+				else
+					$error = "В БД не нашлось настроек для таблицы с id=$id. Возможно страница устарела, попробуйте обновить страницу";
 			}
+			else
+				$error = "Ошибка установки id для редактируемой таблицы";
 		}
-		
-		if(!isset($html))
+		else
 		{
-			$html = '';
+			$error = "Сервер не получил данные для сохранения";
 		}
-			
 		
 		$result = new JsonModel(array(
 				'success'	=>	true,
-				'html'	=>	$html,
+				'error'		=>	$error,
 		));
 		
 		
 		return $result;
 	}
-
-	public function configureAction() {
 	
-		$vm = new ViewModel();
-	
+	public function deleteAction()
+	{
 		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-	
-		$id = (int)$this->getEvent()->getRouteMatch()->getParam('id');
-	
-		$table = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($id);
-	
-		$request = $this->getRequest();
 		
-		if($request->isPost())
-		{
-			$fields = $table->__get('fields');
-			
-			$field = new TsvTableField();
-			
-			var_dump($request->getPost());
-			
-			foreach ($request->getPost() as $k=>$v)
-			{
-				$field->__set($k,$v);
-			}
-			
-			$field->__set("table", $table);
-			
-			$em->persist($field);
-			$em->flush();
+		$id = $this->getEvent()->getRouteMatch()->getParam('id');
 
-			
-			return $this->redirect()->toRoute("zfcadmin/tsv-directory/table",array("action"=>"configure","id"=>$id));
+		$tableConfig = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($id);
+		
+		if($tableConfig)
+		{
+			$em->remove($tableConfig);
+			$em->flush();
+		}
+		else 
+		{
+			$session = new Container("error");
+			$session->offsetSet("error",array("Запрошеные настройки в БД не обнаружены, удалять нечего"));
+
 		}
 		
-		if(!$table)
-			return $this->redirect()->toRoute("zfcadmin/tsv-directory/table");
-	
-		$vm->setVariable("table", $table);
-	
-		return $vm;
-	}
-	
-	
-	public function createAction() {
-	
-		$vm = new ViewModel();
-	
-		return $vm;
+		return $this->redirect()->toRoute("zfcadmin/tsv-directory/table");
 	}
 	
 	public function indexAction() {
@@ -200,6 +225,7 @@ class TsvTableController extends AbstractActionController {
 		{
 			$name = $request->getPost()->name;
 			$description = $request->getPost()->description;
+			$entity = $request->getPost()->entity;
 			
 			if($name)
 			{		
@@ -217,14 +243,19 @@ class TsvTableController extends AbstractActionController {
 		
 		$tables = $em->getRepository("TsvDirectory\Entity\TsvTable")->findAll();
 		
-		$entities = $em->getConnection()->getSchemaManager()->listTables();
+		$cmf = $em->getMetadataFactory();
+		$entities = $cmf->getAllMetadata();
+	
+		$res_ent = array();
 		
-		$vm->setVariable('entities',$entities);
+		foreach ($entities as $ent)
+			$res_ent[] = $ent->name;
+		
+		$vm->setVariable('entities',$res_ent);
 		
 		$vm->setVariable("tables", $tables);
 		
 		return $vm;
 	}
-
-
+	
 }
