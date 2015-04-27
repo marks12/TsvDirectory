@@ -126,8 +126,18 @@ class TsvTableController extends AbstractActionController {
 		foreach ($entities as $ent)
 			$res_ent[] = $ent->name;
 		
+		$entity_params = $em->getClassMetadata($tableConfig->__get('entity'));
+		
+		foreach ($entity_params->associationMappings as $k=>$target_ent)
+		{
+			$entity_params->associationMappings[$k]['targetEntityParams'] = $em->getClassMetadata($target_ent['targetEntity']);
+		}
+		
+// 		var_dump($entity_params->associationMappings);
+		
 		$vm->setVariable('entities',$res_ent);
 		$vm->setVariable("table", $tableConfig);
+		$vm->setVariable("entity_params", $entity_params->associationMappings);
 		
 		return $vm;
 		

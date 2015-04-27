@@ -38,6 +38,24 @@
   </div>
 </div>
 
+<div class="panel panel-default">
+  <div class="panel-heading">Связи</div>
+  <div class="panel-body">
+	 <?php foreach ($entity_params as $k=>$ent) {?>
+  	 <div class="row">
+		<div class="col-md-3"><strong><?php echo $ent['targetEntityParams']->table['options']['comment'];?></strong></div>
+		<div class="col-md-3">отображать поля при поиске:</div>
+		<div class="col-md-6">
+			<?php foreach ($ent['targetEntityParams']->fieldMappings as $field_name=>$f_param) {?>
+				
+			<?php }?>
+		</div>
+	 </div>
+	 <?php }?>
+	  
+  </div>
+</div>
+
 <div class="row">
 	<div class="col-md-6">
 		<a href="#" class="saver btn btn-success">Сохранить</a>

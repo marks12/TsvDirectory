@@ -63,6 +63,9 @@ class TgetFForm extends AbstractHelper
 			$em = $getEM->GetEM();
 			
 			$target_params = $em->getClassMetadata($table_params->associationMappings[$field_name]['targetEntity']);
+			
+			var_dump($target_params);
+			
 			if(isset($target_params->table) && isset($target_params->table['options']) && isset($target_params->table['options']['comment']))
 				return $target_params->table['options']['comment'];
 			else 
