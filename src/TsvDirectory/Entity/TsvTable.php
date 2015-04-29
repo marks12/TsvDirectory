@@ -22,6 +22,9 @@ class TsvTable {
 	/** @ORM\Column(type="text", nullable=true) */
 	protected $description;
 
+	/** @ORM\Column(type="text", nullable=true, options={"comment"="Список полей подключенных для связей таблицы"}) */
+	protected $linked_fields;
+
 	/** @ORM\Column(type="boolean", nullable=true, options={"default"="0", "comment"="Отображать справочник в Я-Монитор"}) */
 	protected $iMonitor = 0;
 

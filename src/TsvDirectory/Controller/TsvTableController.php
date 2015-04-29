@@ -22,6 +22,45 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
  */
 class TsvTableController extends AbstractActionController {
 
+	public function setLinkedFieldsAction()
+	{
+		
+		$request_data = json_decode(file_get_contents("php://input"), true);
+		$error = false;
+		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		
+
+		$id = $this->getEvent()->getRouteMatch()->getParam('id');
+		$tableConfig = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($id);
+		
+		if(!$tableConfig)
+		{
+			$error = "Запрошеные настройки в БД не обнаружены, возможно страница устарела, пожалуйста обновите страницу.";
+		}
+		else 
+		{
+			$lf = $tableConfig->__get('linked_fields');
+
+			$lf = str_replace("{$request_data['val']}", "", $lf);
+			
+			if($request_data['checked'] == true)
+				$lf .= $request_data['val'];
+			
+			$tableConfig->__set('linked_fields',$lf);
+			
+			$em->persist($tableConfig);
+			$em->flush();
+		}
+		
+		
+		$result = new JsonModel(array(
+				'success'	=>	true,
+				'error'		=>	$error,
+		));
+		
+		return $result;
+	}
+	
 	public function addDataAction()
 	{
 		$vm = new ViewModel();

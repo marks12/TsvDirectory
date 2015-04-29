@@ -43,11 +43,21 @@
   <div class="panel-body">
 	 <?php foreach ($entity_params as $k=>$ent) {?>
   	 <div class="row">
-		<div class="col-md-3"><strong><?php echo $ent['targetEntityParams']->table['options']['comment'];?></strong></div>
+		<div class="col-md-3"><strong><?php if($ent['targetEntityParams']->table['options']['comment']) echo $ent['targetEntityParams']->table['options']['comment']; else echo $ent['targetEntityParams']->table['name'];?></strong></div>
 		<div class="col-md-3">отображать поля при поиске:</div>
 		<div class="col-md-6">
 			<?php foreach ($ent['targetEntityParams']->fieldMappings as $field_name=>$f_param) {?>
-				
+			<div class="row" style="border-bottom: 1px dotted #CCC;">
+				<div class="col-md-11">
+				  <div class="checkbox">
+				    <label>
+				      <input <?php if(strstr($table->__get('linked_fields'),"#".$k.":".$field_name.";")) echo " checked";?> class="set_linked_fields" type="checkbox" value="<?php  echo "#".$k.":".$field_name.";";?>"> <?php if($f_param['options']['comment']) echo $f_param['options']['comment']; else echo $field_name;?>
+				    </label>
+				  </div>
+				</div>
+				<div class="col-md-1"><i class="fa fa-check fa-2x" style="color: <?php if(strstr($table->__get('linked_fields'),"#".$k.":".$field_name.";")) echo "green"; else echo "LightGray";?>;"></i></div>
+			
+			</div>
 			<?php }?>
 		</div>
 	 </div>
@@ -67,13 +77,9 @@
 
 <script type="text/javascript">
 <!--
-
 $(document).ready(function(){
-
 	$('.saver').click(function(){
-
 		var request = {};
-		
 		id = <?php echo $table->__get('id');?>;
 		request.table_id = id;
 		request.iMonitor = $('#iMonitor').prop('checked');
@@ -81,7 +87,6 @@ $(document).ready(function(){
 		request.name = $('#name').val();
 		request.description = $('#description').val();
 		request.entity = $('#entity').val();
-			
 		$.ajax({
 			  url: "<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"saveConfigure"))?>",
 			  type: "POST",
@@ -89,25 +94,57 @@ $(document).ready(function(){
 			  processData: false,
 			  dataType: "json",
 			  success:function(a) { 
-
 				  if(a.error)
 					  alert(a.error);
 				  else
-					  window.location.href='<?php echo $this->url('zfcadmin/tsv-directory/table')?>'
-				  
+					  window.location.href='<?php echo $this->url('zfcadmin/tsv-directory/table')?>';
 			  },
 			  error:function() {
 				  alert('Ошибка отправки сообщения на сервер');
 			  }
 		});
-
-		
 	});
-		
+	
 	$('.canceler').click(function(){
 		window.location.href = '<?php echo $this->url('zfcadmin/tsv-directory/table');?>';
 	});
-		
+	
+	$('.set_linked_fields').change(function(){
+		set_linked_fields($(this).val(),$(this).prop('checked'));
+	});
+
+	function set_linked_fields(val,checked)
+	{
+		var table_id = <?php echo $table->__get('id');?>;
+		var request = {};
+		request.table_id = table_id;
+		request.val = val;
+		request.checked = checked;
+		$.ajax({
+			  url: "<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"setLinkedFields","id"=>$table->__get('id')))?>",
+			  type: "POST",
+			  data: JSON.stringify(request),
+			  processData: false,
+			  dataType: "json",
+			  success:function(a) { 
+				  if(a.error)
+				  {
+					  alert(a.error);
+					  $('input[value="'+val+'"]').prop('checked',!checked);
+				  }
+				  else
+				  {
+					 if(checked)
+				     	$('input[value="'+val+'"]').parents(".row").first().find( $('.fa-check') ).css('color','green');
+					 else
+						 $('input[value="'+val+'"]').parents(".row").first().find( $('.fa-check') ).css('color','LightGray');
+				  }
+			  },
+			  error:function() {
+				  alert('Ошибка отправки сообщения на сервер');
+			  }
+		});
+	}
 });
 
 //-->
