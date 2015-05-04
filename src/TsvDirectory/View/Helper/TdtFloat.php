@@ -15,7 +15,7 @@ class TdtFloat extends AbstractHelper
 		$html = '
 		<div class="form-group">
 			<label for="tt-'.$field_name.'">'.$name.' (число с плавоющей точкой)</label>
-		    <input type="text" class="form-control" id="tt-'.$field_name.'" placeholder="Укажите '.$name.', например: 10.50518 ">
+		    <input type="text" class="form-control" id="tt-'.$field_name.'" name="tt-'.$field_name.'" placeholder="Укажите '.$name.', например: 10.50518 ">
 		</div>';
 
 		return $html;

@@ -29,7 +29,7 @@
         <tr>
           <td width="30"><input type="checkbox" class="selectAll"></td>
         <?php foreach ($table_params->reflFields as $k=>$param) {?>
-          <td><?php echo $this->TgetValue($row->__get($param->name));?></td>
+          <td><?php echo $this->TgetValue($row,$param->name);?></td>
         <?php }?>
         </tr>
 <?php }?>

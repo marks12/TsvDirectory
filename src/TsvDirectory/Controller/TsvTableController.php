@@ -64,17 +64,132 @@ class TsvTableController extends AbstractActionController {
 	public function addDataAction()
 	{
 		$request = $this->getEvent()->getRequest();
+		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		$table_id = $this->getEvent()->getRouteMatch()->getParam('id');
+		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
+		$vm = new ViewModel();
+		
+		if($table_config)
+		$table_params = $em->getClassMetadata($table_config->__get('entity'));
 		
 		if($request->isPost())
 		{
-			var_dump($request->getPost());
-			exit();
+			if(!isset($table_params) || !$table_params || !$table_params->fieldMappings)
+			{
+				$error[] = "Ошибка сохранения данных. Указанная таблица не имеет конфигурации. Сохраение невозможно.";
+			}
+			else
+			{
+				foreach($table_params->fieldMappings as $field=>$params)
+					if(!isset($request->getPost()->{'tt-'.$field}) && $field!='id')
+						$error[] = "Ошибка. При сохранении не обнаружено поле ".$params['options']['comment'];
+				
+				if(isset($error))
+				{
+					$session = new Container("error");
+					$session->offsetSet("error",$error);
+					$vm->terminate();
+					return $this->redirect()->toRoute("zfcadmin/tsv-directory/table",array("action"=>"addData","id"=>$table_id));
+				}
+				
+				foreach ($table_params->associationMappings as $field=>$params)
+				{
+					$target_array = array();
+					if(isset($request->getPost()->$field) && mb_strlen($request->getPost()->$field)>1)
+					{
+						$target_array = $em->getRepository($params['targetEntity'])->findBy(array("id"=>explode(";", substr(trim($request->getPost()->$field), 1))));
+					}
+					
+					if(count($target_array))
+						$targets_array[$field] = $target_array;
+				}
+				
+				if(!isset($error))
+				{
+// 					var_dump($table_config->__get('entity'));
+					
+					$className = "\\".$table_config->__get('entity');
+					
+					if(class_exists($className))
+						$new = new $className();
+					else 
+						$error[] = "Сохранение данных невозможно, так как отсутствует необходимый для этого класс ".$className;
+					
+					foreach($table_params->fieldMappings as $field=>$params)
+						$new->__set($field,$request->getPost()->{'tt-'.$field});
+					
+// 					foreach ($targets_array as $k=>$v)
+// 					var_dump("$k=".count($v));
+// 					exit();
+					
+					if(isset($targets_array))
+						foreach ($targets_array as $field=>$v)
+							if($table_params->associationMappings[$field]['type']=='2')
+							{
+								if(isset($v[0]) && count($v)==1)
+									$new->__set($field,$v[0]);
+							}
+							else 
+							{
+								
+								
+								if($table_params->associationMappings[$field]['isOwningSide'])
+									foreach ($v as $data)
+										$new->__get($field)->add($data);
+								else 
+									foreach ($v as $data)
+									{
+// 										if($table_params->associationMappings[$field]=='8')
+											$to_add[] = array(
+													$table_params->associationMappings[$field]['mappedBy'],
+													$table_params->associationMappings[$field]['type'],
+													$data
+											);
+// 										else
+// 											$data->__set($table_params->associationMappings[$field]['mappedBy'],$new);
+// 										$em->persist($data);
+									}
+								
+// 								var_dump($table_params->associationMappings[$field]);
+								
+							}
+							
+					$em->persist($new);
+					$em->flush();
+					
+					if(isset($to_add))
+						foreach ($to_add as $data)
+						{
+							if($data[1]==8)
+								$data[2]->__get($data[0])->add($new);
+							else
+								$data[2]->__set($data[0],$new);
+								
+								
+							$em->persist($data[2]);
+							$em->flush();
+						}
+					
+// 					exit('ok');
+					return $this->redirect()->toRoute("zfcadmin/tsv-directory/table",array("action"=>"dataManagement","id"=>$table_id));
+				}
+				
+				
+			}
 		}
 		
+		if(isset($error))
+		{
+			$session = new Container("error");
+			$session->offsetSet("error",$error);
+			$vm->terminate();
+			return $this->redirect()->toRoute("zfcadmin/tsv-directory");
+		}
 		
-		$vm = new ViewModel();
-		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		if($request->isPost())
+		exit('1');
 		
+				
 		$qb = $em->createQueryBuilder();
 		$dataManagement = $qb->select('t')
 		->from('TsvDirectory\Entity\TsvTable', 't')
@@ -87,11 +202,10 @@ class TsvTableController extends AbstractActionController {
 		$sections = $em->getRepository('TsvDirectory\Entity\Section')->findAll();
 		$vm->setVariable("sections",$sections);
 		
-		$table_id = $this->getEvent()->getRouteMatch()->getParam('id');
 		$vm->setVariable("dataManagement_id", $table_id);
-		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
+		
 
-		$table_params = $em->getClassMetadata($table_config->__get('entity'));
+		
 		
 		$vm->setVariable("table_config", $table_config);
 		$vm->setVariable("table_params", $table_params);

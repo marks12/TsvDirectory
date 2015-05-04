@@ -1,1 +1,20 @@
-ENUM
+<?php 
+
+$var_values = explode("', '", substr($field_params['columnDefinition'], 6,mb_strlen($field_params['columnDefinition'])-8));
+$var_names	= explode(":",$field_params['options']['enumNames']);
+
+if(count($var_names) != count($var_values))
+{
+	echo "Ошибка Enum параметров. Перечень возможных значений не соответсвует перечню имен. Проверьте класс";
+}
+else 
+{
+	foreach ($var_values as $k=>$v)
+		$var[$v] = $var_names[$k];
+	
+	if(isset($var) && isset($var[$data->__get($field)]))
+		echo $var[$data->__get($field)];
+}
+	
+
+?>
