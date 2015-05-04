@@ -22,6 +22,9 @@ class TgetFForm extends AbstractHelper
 			if($datatype == 'string' && isset($table_params->fieldMappings[$field_name]['columnDefinition']))
 				$datatype = 'enum';
 			
+			if($field_name=='id')
+				return '';
+			
 			switch ($datatype)
 			{
 				case "integer":
@@ -79,11 +82,14 @@ class TgetFForm extends AbstractHelper
 				if(strstr($v, $field_name))
 				{
 					$linked_error = false;
-					$select_fields[] = explode(":", substr($v, 1))[1];
+					$f = explode(":", substr($v, 1))[1];
+					$select_fields[$f] = $f;
 				}
 				
 			}
 
+			if(isset($select_fields) && !isset($select_fields['id']))
+				array_unshift($select_fields,'id');
 
 			if($linked_error)
 			{
@@ -100,20 +106,59 @@ class TgetFForm extends AbstractHelper
 			{
 				$title = $target_params->table['options']['comment'];
 				
-// 				var_dump($select_fields);
+// 				var_dump($target_params);
+
+				$data_title_th = '';
+				foreach ($select_fields as $k=>$v)
+				{
+					$data_title_th .= '<th>'.$target_params->fieldMappings[$v]['options']['comment'].'</th>';
+				}
 				
 				return '
-				<div class="form-group">
-					<label for="tt-'.$target_params->table['name'].'">'.$target_params->table['options']['comment'].'</label>
-				    <input type="text" class="form-control" id="tt-min_land_size_img" placeholder="Введите данные для поиска по таблице '.$target_params->table['options']['comment'].'">
-				</div>';
+				<input type="text" value="" id="'.$field_name.'">
+				<div class="panel panel-default">
+			      <!-- Default panel contents -->
+			      <div class="panel-heading">
+						  <div class="form-group">
+						    <label class="sr-only" for="tt-'.$field_name.'">'.$target_params->table['options']['comment'].'</label>
+						      <h2>'.$target_params->table['options']['comment'].'</h2>
+						      <div class="input-group">
+						      <input type="text" class="form-control findData" id="tt-'.$field_name.'" placeholder="Введите данные для поиска по таблице '.$target_params->table['options']['comment'].'">
+   				      		  <a class="input-group-addon btn btn-xs btn-primary">Поиск</a>
+						    </div>
+						  </div>
+				  </div>
+			      <div class="panel-body">
+			        <div id="tt-'.$field_name.'-result">Результаты поиска ...</div>
+					<h3>Подключаемые данные</h3>
+			      </div>
+			
+			      <!-- Table -->
+			      <table class="table table-bordered">
+			        <thead>
+			          <tr>
+						  '.$data_title_th.'
+			          </tr>
+			        </thead>
+			        <tbody id="added-rows-'.$field_name.'">
+			          <tr id="no-rows-'.$field_name.'">
+			            <td scope="row" colspan="'.count($select_fields).'">Данные не привязаны</td>
+			          </tr>
+			        </tbody>
+			      </table>
+			    </div>';
 			}
 		}
 		
 // 		$getEM =   $this->sm->getServiceLocator()->get('TsvDirectory\Service\GetEM');
 // 		$em = $getEM->GetEM();
 
-		
+		/*
+		 		<div class="form-group">
+					<label for="tt-'.$field_name.'">'.$target_params->table['options']['comment'].'</label>
+				    <input type="text" class="form-control" id="tt-'.$field_name.'" placeholder="Введите данные для поиска по таблице '.$target_params->table['options']['comment'].'">
+				</div>
+		 */
 
 // 		var_dump($filed_value);
 // 		exit();

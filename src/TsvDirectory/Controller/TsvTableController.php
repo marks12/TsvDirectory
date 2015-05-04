@@ -182,6 +182,89 @@ class TsvTableController extends AbstractActionController {
 		
 	}
 	
+	public function searchValuesAction()
+	{
+		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		$request_data = json_decode(file_get_contents("php://input"), true);
+		$error = false;
+
+		$id = str_replace("tt-","",$request_data['table_id']);
+		$val = str_replace("'", '', $request_data['val']);
+		$table_config_id = $request_data['table_config_id'];
+		
+		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_config_id);
+		$table_params = $em->getClassMetadata($table_config->__get('entity'));
+		$target_entity = $table_params->associationMappings[$id]['targetEntity'];
+		
+		$linked_fields = $table_config->__get('linked_fields');
+		$linked_fields = explode(";", $linked_fields);
+		
+		if(count($linked_fields))
+			unset($linked_fields[count($linked_fields)-1]);
+
+		$target_params = $em->getClassMetadata($target_entity);
+		
+		$linked_error = true;
+		$select_fields = array();
+		$select_fields['id'] = 'd.id';
+		
+		foreach ($linked_fields as $k=>$v)
+		{
+			if(strstr($v, $id))
+			{
+				$linked_error = false;
+				$f = explode(":", substr($v, 1))[1];
+				$select_fields[$f] = "d.".$f;
+				
+				$fields_names[$f] = $target_params->fieldMappings[$f]['options']['comment'];
+			}
+		}
+		
+// 		var_dump($select_fields);
+// 		var_dump($id);
+// 		var_dump($val);
+// 		var_dump($table_config_id);
+		
+		$html = '';
+		
+		if(count($select_fields))
+		{
+			
+			$qb = $em->createQueryBuilder();
+			
+			$expr_arr = array();
+
+			
+			foreach ($select_fields as $k=>$v)
+			{
+				$expr_arr[] = $v.' like \'%'.$val.'%\'';
+ 			}
+
+ 			$q = "select ".implode(",",$select_fields)." from $target_entity d where ".implode(" or ", $expr_arr);
+
+ 			$query = $em->createQuery($q);
+            $data = $query->getResult();
+            
+            $messageView = new ViewModel();
+            $messageView->setVariable("field", $id);
+            $messageView->setVariable("fields", $fields_names);
+            $messageView->setVariable("data", $data);
+            $messageView->setTemplate('tsv-directory/tsv-table/data.phtml');
+            $renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+            $htmlPart = new \Zend\Mime\Part($renderer->render($messageView));
+            $html = $htmlPart->getRawContent();
+            
+		}
+		
+		$result = new JsonModel(array(
+				'success'	=>	true,
+				'error'		=>	$error,
+				'html'		=>	$html,
+		));
+		
+		return $result;
+	}
+	
 	public function saveConfigureAction()
 	{
 		$request_data = json_decode(file_get_contents("php://input"), true);

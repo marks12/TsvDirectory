@@ -2,7 +2,8 @@
 
 <h1>Добавить данные в таблицу <code><?php echo $table_config->__get('name')?></code></h1>
 
-<form>
+<form method="POST">
+	<input type="hidden" id="table_config_id" value="<?php echo $table_config->__get('id')?>">
 	<?php foreach ($table_params->reflFields as $k=>$param) {?>
     <?php echo $this->TgetFForm($table_params,$param->name);?>
 	<?php }?>
@@ -11,13 +12,94 @@
 <!--     <label for="exampleInputEmail1">Email address</label> -->
 <!--     <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
 <!--   </div> -->
-
-  
   <div class="row">
-  	<div class="col-md-6"><button type="submit" class="btn btn-success">Submit</button></div>
+  	<div class="col-md-6">
+  		<button type="submit" class="btn btn-success">Сохранить</button>
+  	</div>
   	<div class="col-md-6 text-right">
   		<a class="btn btn-warning" href="<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>'dataManagement','id'=>$table_config->__get('id')));?>">Отмена</a>
   	</div>
   </div>
   
 </form>
+
+
+<script>
+
+var t;
+
+$( document ).ready(function(){
+	
+	$('.findData').keyup(function(){
+		var id = $(this).prop('id');
+		var val = $(this).val();
+		clearTimeout(t);
+			$('#'+id+'-result').html('<i class="fa fa-cog fa-spin fa-3x"></i>');
+			t = window.setTimeout(function(){
+
+				var request = {};
+				request.table_config_id = $('#table_config_id').val();
+				request.table_id = id;
+				request.val = val;
+				
+				$.ajax({
+					url: "<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"searchValues"))?>",
+					type: "POST",
+					data: JSON.stringify(request),
+					processData: false,
+					dataType: "json",
+					success:function(a) { 
+						if(a.error)
+							alert(a.error);
+						else
+						{
+							$('#'+id+'-result').html(a.html);
+						}
+					},
+					error:function() {
+						alert('Ошибка отправки сообщения на сервер');
+					}
+				});
+				
+			},1000);
+	});
+
+});
+
+function add_data(object){
+	
+	$('#'+$(object).attr('field')).val("");
+
+
+	$('#no-rows-'+$(object).attr('field')).remove();
+
+	var row = $(object).parent().parent();
+
+	// Перемещаем выбранную строку в список добавленных
+	$('#added-rows-'+$(object).attr('field')).append(row);
+
+	// убираем галочки
+	$('#added-rows-'+$(object).attr('field')+' tr input').each(function(){$(this).remove();});
+
+	// добавляем кнопку удаления
+	$('#added-rows-'+$(object).attr('field')+' tr').each(function(){
+		$(this).find('td').first().html('<a class="btn btn-danger btn-xs" onclick="rmRow(this);"><span class="glyphicon glyphicon-trash"></span></a>');
+	});
+};
+
+function rmRow(a)
+{
+	$(a).parent().parent().remove();
+}
+
+function updateSelected()
+{
+	//!!!!!!!!!!!!!!!!
+	$('input[field="'+$(object).attr('field')+'"]').each(function(){
+		if($(this).prop('checked'))
+			$('#'+$(object).attr('field')).val($('#'+$(object).attr('field')).val()+';'+$(this).val())
+	});
+}
+}
+
+</script>
