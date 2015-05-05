@@ -63,6 +63,15 @@ class TsvTableController extends AbstractActionController {
 	
 	public function addDataAction()
 	{
+		$request = $this->getEvent()->getRequest();
+		
+		if($request->isPost())
+		{
+			var_dump($request->getPost());
+			exit();
+		}
+		
+		
 		$vm = new ViewModel();
 		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
 		

@@ -10,7 +10,7 @@
       <tbody>
       <?php foreach ($data as $d) {?>
         <tr>
-          <td width="100"><input onchange="add_data(this);" class="add_data" field="<?php echo $field;?>" type="checkbox" value='<?php echo $d['id']?>'></td>
+          <td width="100" rowId="<?php echo $d['id']?>"><input onchange="add_data(this);" class="add_data" field="<?php echo $field;?>" type="checkbox" value='<?php echo $d['id']?>'></td>
         <?php foreach ($fields as $k=>$v) {?>
           <td><?php 
           echo $d[$k];?></td>

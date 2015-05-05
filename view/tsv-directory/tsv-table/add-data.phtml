@@ -29,8 +29,10 @@
 var t;
 
 $( document ).ready(function(){
+
 	
 	$('.findData').keyup(function(){
+
 		var id = $(this).prop('id');
 		var val = $(this).val();
 		clearTimeout(t);
@@ -70,9 +72,14 @@ function add_data(object){
 	
 	$('#'+$(object).attr('field')).val("");
 
-
 	$('#no-rows-'+$(object).attr('field')).remove();
 
+	//Для связей 2 типа (ManyToOne) удаляем все выбранные до этого данные
+	if($('#'+$(object).attr('field')).attr("assocType")=='2')
+		$('#added-rows-'+$(object).attr('field')+' tr').remove();
+
+
+	
 	var row = $(object).parent().parent();
 
 	// Перемещаем выбранную строку в список добавленных
@@ -83,23 +90,29 @@ function add_data(object){
 
 	// добавляем кнопку удаления
 	$('#added-rows-'+$(object).attr('field')+' tr').each(function(){
-		$(this).find('td').first().html('<a class="btn btn-danger btn-xs" onclick="rmRow(this);"><span class="glyphicon glyphicon-trash"></span></a>');
+		$(this).find('td').first().html('<a class="btn btn-danger btn-xs" onclick="rmRow(this);" field="'+$(object).attr('field')+'"><span class="glyphicon glyphicon-trash"></span></a>');
 	});
-};
+
+	
+	//обновляем результаты добавления
+	updateSelected($(object).attr('field'));
+}
 
 function rmRow(a)
 {
+	var field = $(a).attr('field');
 	$(a).parent().parent().remove();
+	updateSelected(field);
 }
 
-function updateSelected()
+function updateSelected(field)
 {
-	//!!!!!!!!!!!!!!!!
-	$('input[field="'+$(object).attr('field')+'"]').each(function(){
-		if($(this).prop('checked'))
-			$('#'+$(object).attr('field')).val($('#'+$(object).attr('field')).val()+';'+$(this).val())
+	$('#'+field).val("");
+	
+	$('#added-rows-'+field+' tr').each(function(){
+		$('#'+field).val($('#'+field).val()+';'+$(this).find('td').first().attr('rowId'));
 	});
 }
-}
+
 
 </script>

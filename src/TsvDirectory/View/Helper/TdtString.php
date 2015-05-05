@@ -15,11 +15,9 @@ class TdtString extends AbstractHelper
 		$html = '
 		<div class="form-group">
 			<label for="tt-'.$field_name.'">'.$name.' (любые символы не более 255)</label>
-		    <input type="text" class="form-control" id="tt-'.$field_name.'" placeholder="Укажите '.$name.'">
+		    <input type="text" class="form-control" id="tt-'.$field_name.'" name="tt-'.$field_name.'" placeholder="Укажите '.$name.'">
 		</div>';
 
 		return $html;
 	}
-
-	
 }

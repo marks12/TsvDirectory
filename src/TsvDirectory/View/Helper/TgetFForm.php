@@ -88,6 +88,8 @@ class TgetFForm extends AbstractHelper
 				
 			}
 
+// 			var_dump($table_params->associationMappings[$field_name]['type']);
+			
 			if(isset($select_fields) && !isset($select_fields['id']))
 				array_unshift($select_fields,'id');
 
@@ -115,16 +117,16 @@ class TgetFForm extends AbstractHelper
 				}
 				
 				return '
-				<input type="text" value="" id="'.$field_name.'">
+				<input type="text" value="" name="'.$field_name.'" id="'.$field_name.'" assocType="'.$table_params->associationMappings[$field_name]['type'].'">
 				<div class="panel panel-default">
-			      <!-- Default panel contents -->
 			      <div class="panel-heading">
 						  <div class="form-group">
 						    <label class="sr-only" for="tt-'.$field_name.'">'.$target_params->table['options']['comment'].'</label>
 						      <h2>'.$target_params->table['options']['comment'].'</h2>
 						      <div class="input-group">
-						      <input type="text" class="form-control findData" id="tt-'.$field_name.'" placeholder="Введите данные для поиска по таблице '.$target_params->table['options']['comment'].'">
-   				      		  <a class="input-group-addon btn btn-xs btn-primary">Поиск</a>
+						      <input type="text" onkeypress="if(event.keyCode == 13) return false;" class="form-control findData" id="tt-'.$field_name.'" placeholder="Введите данные для поиска по таблице '.$target_params->table['options']['comment'].'">
+   				      		  <a class="input-group-addon btn btn-xs btn-success" onclick="$(\'#tt-'.$field_name.'\').keyup();">Поиск</a>
+   				      		  <a class="input-group-addon btn btn-xs btn-primary" onclick="$(\'#tt-'.$field_name.'-result\').html(\'\');">Стереть</a>
 						    </div>
 						  </div>
 				  </div>
@@ -132,15 +134,13 @@ class TgetFForm extends AbstractHelper
 			        <div id="tt-'.$field_name.'-result">Результаты поиска ...</div>
 					<h3>Подключаемые данные</h3>
 			      </div>
-			
-			      <!-- Table -->
 			      <table class="table table-bordered">
 			        <thead>
 			          <tr>
 						  '.$data_title_th.'
 			          </tr>
 			        </thead>
-			        <tbody id="added-rows-'.$field_name.'">
+			        <tbody id="added-rows-'.$field_name.'" strategy="">
 			          <tr id="no-rows-'.$field_name.'">
 			            <td scope="row" colspan="'.count($select_fields).'">Данные не привязаны</td>
 			          </tr>
@@ -152,17 +152,14 @@ class TgetFForm extends AbstractHelper
 		
 // 		$getEM =   $this->sm->getServiceLocator()->get('TsvDirectory\Service\GetEM');
 // 		$em = $getEM->GetEM();
-
 		/*
 		 		<div class="form-group">
 					<label for="tt-'.$field_name.'">'.$target_params->table['options']['comment'].'</label>
 				    <input type="text" class="form-control" id="tt-'.$field_name.'" placeholder="Введите данные для поиска по таблице '.$target_params->table['options']['comment'].'">
 				</div>
 		 */
-
 // 		var_dump($filed_value);
 // 		exit();
-		
 // 		return $filed_value;
 
 	}

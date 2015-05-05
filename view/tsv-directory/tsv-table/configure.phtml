@@ -51,11 +51,11 @@
 				<div class="col-md-11">
 				  <div class="checkbox">
 				    <label>
-				      <input <?php if(strstr($table->__get('linked_fields'),"#".$k.":".$field_name.";")) echo " checked";?> class="set_linked_fields" type="checkbox" value="<?php  echo "#".$k.":".$field_name.";";?>"> <?php if($f_param['options']['comment']) echo $f_param['options']['comment']; else echo $field_name;?>
+				      <input <?php if(strstr($table->__get('linked_fields'),"#".$k.":".$field_name.";") || $field_name=='id') echo " checked"; if($field_name=='id') echo " disabled";?> class="set_linked_fields" type="checkbox" value="<?php  echo "#".$k.":".$field_name.";";?>"> <?php if($f_param['options']['comment']) echo $f_param['options']['comment']; else echo $field_name;?>
 				    </label>
 				  </div>
 				</div>
-				<div class="col-md-1"><i class="fa fa-check fa-2x" style="color: <?php if(strstr($table->__get('linked_fields'),"#".$k.":".$field_name.";")) echo "green"; else echo "LightGray";?>;"></i></div>
+				<div class="col-md-1"><i class="fa fa-check fa-2x" style="color: <?php if(strstr($table->__get('linked_fields'),"#".$k.":".$field_name.";") || $field_name=='id') echo "green"; else echo "LightGray";?>;"></i></div>
 			
 			</div>
 			<?php }?>
