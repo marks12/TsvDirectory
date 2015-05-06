@@ -117,12 +117,12 @@ class TgetFForm extends AbstractHelper
 				}
 				
 				return '
-				<input type="text" value="" name="'.$field_name.'" id="'.$field_name.'" assocType="'.$table_params->associationMappings[$field_name]['type'].'">
+				<input type="hidden" value="" name="'.$field_name.'" id="'.$field_name.'" assocType="'.$table_params->associationMappings[$field_name]['type'].'">
 				<div class="panel panel-default">
 			      <div class="panel-heading">
 						  <div class="form-group">
 						    <label class="sr-only" for="tt-'.$field_name.'">'.$target_params->table['options']['comment'].'</label>
-						      <h2>'.$target_params->table['options']['comment'].'</h2>
+						      <h5>'.$target_params->table['options']['comment'].'</h5>
 						      <div class="input-group">
 						      <input type="text" onkeypress="if(event.keyCode == 13) return false;" class="form-control findData" id="tt-'.$field_name.'" placeholder="Введите данные для поиска по таблице '.$target_params->table['options']['comment'].'">
    				      		  <a class="input-group-addon btn btn-xs btn-success" onclick="$(\'#tt-'.$field_name.'\').keyup();">Поиск</a>
@@ -130,9 +130,9 @@ class TgetFForm extends AbstractHelper
 						    </div>
 						  </div>
 				  </div>
-			      <div class="panel-body">
-			        <div id="tt-'.$field_name.'-result">Результаты поиска ...</div>
-					<h3>Подключаемые данные</h3>
+			        <div id="tt-'.$field_name.'-result"></div>
+   				  <div class="panel-body hidden">
+					<strong>Выбранные данные</strong>
 			      </div>
 			      <table class="table table-bordered">
 			        <thead>

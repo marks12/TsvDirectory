@@ -1,7 +1,9 @@
+<?php if(count($data)){?>
+<div class="panel-body">
 	<table class="table table-bordered">
       <thead>
         <tr>
-          <th>Выберете</th>
+          <th>Выберите</th>
         <?php foreach ($fields as $k=>$v) {?>
           <th><?php echo $v;?></th>
         <?php }?>
@@ -19,3 +21,9 @@
       <?php }?>
       </tbody>
     </table>
+</div>
+<?php }else{?>
+<div class="panel-body">
+ничего не найдено
+</div>
+<?php }?>
