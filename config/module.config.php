@@ -79,12 +79,13 @@ return array(
 							'table' => array(
 								'type'    => 'Segment',
 								'options' => array(
-										'route'    => '/table[/:action[/:id]][/:page]',
+										'route'    => '/table[/:action[/:id]][/:idr][/:page]',
 										'constraints' => array(
 											'directory-name'	=>	'[a-zA-Z0-9_-]*',
 											'action'			=>	'[a-zA-Z][a-zA-Z0-9_-]*',
 											'id'				=>	'[0-9]*',
 											'page'				=>	'[0-9]*',
+											'idr'				=>	'[0-9]*',
 										),
 										'defaults' => array(
 											'__NAMESPACE__'		=>	'TsvDirectory\Controller',

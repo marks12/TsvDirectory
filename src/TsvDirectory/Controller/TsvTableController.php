@@ -61,14 +61,56 @@ class TsvTableController extends AbstractActionController {
 		return $result;
 	}
 	
-	public function addDataAction()
+	public function deleteDataAction()
+	{
+		$request = $this->getEvent()->getRequest();
+                $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+                $table_id = $this->getEvent()->getRouteMatch()->getParam('id');
+                $record_id = $this->getEvent()->getRouteMatch()->getParam('idr');
+                $table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
+                $className = "\\".$table_config->__get('entity');
+                $obj = $em->getRepository($className)->find($record_id);
+		$em->remove($obj);
+		$em->flush();
+		return $this->redirect()->toRoute("zfcadmin/tsv-directory/table",array("action"=>"dataManagement","id"=>$table_id));
+			
+	}
+	
+	public function changeViewTypeAction()
+	{
+		$$request = $this->getEvent()->getRequest();
+                $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+                $table_id = $this->getEvent()->getRouteMatch()->getParam('id');
+		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
+		if($table_config->viewType==0)
+			$table_config->viewType=1;
+		else
+			$table_config->viewType=0;
+		$em->persist($table_config);
+		$em->flush();
+		return $this->redirect()->toRoute("zfcadmin/tsv-directory/table",array("action"=>"dataManagement","id"=>$table_id));
+		
+	}
+	public function editDataAction()
+	{
+		$request = $this->getEvent()->getRequest();
+                $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		$table_id = $this->getEvent()->getRouteMatch()->getParam('id');
+		$record_id = $this->getEvent()->getRouteMatch()->getParam('idr');
+		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
+		$className = "\\".$table_config->__get('entity');	    
+		$obj = $em->getRepository($className)->find($record_id);
+		return $this->addDataAction($obj,$table_id);
+	}
+	
+	public function addDataAction($obj = null,$table_id = null)
 	{
 		$request = $this->getEvent()->getRequest();
 		$em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
-		$table_id = $this->getEvent()->getRouteMatch()->getParam('id');
+		if($table_id==null) ($table_id = $this->getEvent()->getRouteMatch()->getParam('id'));
 		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
 		$vm = new ViewModel();
-		
+		$vm->setTemplate('tsv-directory/tsv-table/add-data');
 		if($table_config)
 		$table_params = $em->getClassMetadata($table_config->__get('entity'));
 		
@@ -110,18 +152,23 @@ class TsvTableController extends AbstractActionController {
 					
 					$className = "\\".$table_config->__get('entity');
 					
-					if(class_exists($className))
-						$new = new $className();
+					if(class_exists($className)){
+						if($obj==null)
+    						    $new = new $className();
+    						else 
+    						    $new=$obj;
+    					}
 					else 
 						$error[] = "Сохранение данных невозможно, так как отсутствует необходимый для этого класс ".$className;
 					
 					foreach($table_params->fieldMappings as $field=>$params)
 						$new->__set($field,$request->getPost()->{'tt-'.$field});
 					
+										
 // 					foreach ($targets_array as $k=>$v)
 // 					var_dump("$k=".count($v));
 // 					exit();
-					
+				
 					if(isset($targets_array))
 						foreach ($targets_array as $field=>$v)
 							if($table_params->associationMappings[$field]['type']=='2')
@@ -189,7 +236,6 @@ class TsvTableController extends AbstractActionController {
 		if($request->isPost())
 		exit('1');
 		
-				
 		$qb = $em->createQueryBuilder();
 		$dataManagement = $qb->select('t')
 		->from('TsvDirectory\Entity\TsvTable', 't')
@@ -206,10 +252,10 @@ class TsvTableController extends AbstractActionController {
 		
 
 		
-		
 		$vm->setVariable("table_config", $table_config);
 		$vm->setVariable("table_params", $table_params);
-
+		$vm->setVariable("obj",$obj);
+		
 		return $vm;
 	}
 	
@@ -235,7 +281,9 @@ class TsvTableController extends AbstractActionController {
 		$vm->setVariable("dataManagement_id", $table_id);
 		
 		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
-
+		
+		$viewType=$table_config->viewType;
+	
 		$table_params = $em->getClassMetadata($table_config->__get('entity'));
 		
 // 		var_dump($em->getClassMetadata($table_config->__get('entity'))/*->getFieldNames()*/);
@@ -247,8 +295,12 @@ class TsvTableController extends AbstractActionController {
 		$repository = $em->getRepository($table_config->__get('entity'));
 		$adapter = new DoctrineAdapter(new ORMPaginator($repository->createQueryBuilder($table_config->__get('entity'))));
 		$paginator = new Paginator($adapter);
-		$paginator->setDefaultItemCountPerPage(20);
-
+		if($viewType==0)
+		    $nPage=20;
+		else
+		    $nPage=1;
+		$paginator->setDefaultItemCountPerPage($nPage);
+	    
 		$page = (int)$this->getEvent()->getRouteMatch()->getParam('page');
 		if($page)
 		{

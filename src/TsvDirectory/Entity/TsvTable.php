@@ -31,6 +31,9 @@ class TsvTable {
 	/** @ORM\Column(type="boolean", nullable=true, options={"default"="1", "comment"="Отображать справочник в управлении данными"}) */
 	protected $dataManagement = 0;
 	
+	/** @ORM\Column(type="integer", options={"default"=0}) */
+	protected $viewType = 0;
+	
     /**
      * Magic getter
      * @param $property

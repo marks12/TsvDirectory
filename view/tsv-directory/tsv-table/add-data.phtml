@@ -1,11 +1,55 @@
 <?php echo $this->partial('partials/section-list', array('sections' => $sections,'selectedSection'=>$this->selectedSection,'dataManagement'=>$dataManagement,"dataManagement_id"=>$dataManagement_id));?>
 
 <h1>Добавить данные в таблицу <code><?php echo $table_config->__get('name')?></code></h1>
+<script>
+function load_data(row){
+	$('#no-rows-'+$(object).attr('field')).remove();	
+	$('#added-rows-'+$(object).attr('field'));
+	
+}
+function add_data(object){
 
+        $('#'+$(object).attr('field')).val("");
+
+        $('#no-rows-'+$(object).attr('field')).remove();
+
+        //Для связей 2 типа (ManyToOne) удаляем все выбранные до этого данные
+        if($('#'+$(object).attr('field')).attr("assocType")=='2')
+                $('#added-rows-'+$(object).attr('field')+' tr').remove();
+
+
+
+        var row = $(object).parent().parent();
+
+        // Перемещаем выбранную строку в список добавленных
+        $('#added-rows-'+$(object).attr('field')).append(row);
+
+        // убираем галочки
+        $('#added-rows-'+$(object).attr('field')+' tr input').each(function(){$(this).remove();});
+
+        // добавляем кнопку удаления
+        $('#added-rows-'+$(object).attr('field')+' tr').each(function(){
+                $(this).find('td').first().html('<a class="btn btn-danger btn-xs" onclick="rmRow(this);" field="'+$(object).attr('field')+'"><span class="glyphicon glyphicon-trash"></span></a>');
+        });
+
+
+        //обновляем результаты добавления
+        updateSelected($(object).attr('field'));
+}
+function updateSelected(field)
+{
+        $('#'+field).val("");
+
+        $('#added-rows-'+field+' tr').each(function(){
+                $('#'+field).val($('#'+field).val()+';'+$(this).find('td').first().attr('rowId'));
+        });
+}
+
+</script>
 <form method="POST">
 	<input type="hidden" id="table_config_id" value="<?php echo $table_config->__get('id')?>">
 	<?php foreach ($table_params->reflFields as $k=>$param) {?>
-    <?php echo $this->TgetFForm($table_params,$param->name);?>
+    <?php echo $this->TgetFForm($table_params,$param->name,$obj);?>
 	<?php }?>
 	
 <!--   <div class="form-group"> -->
@@ -68,50 +112,11 @@ $( document ).ready(function(){
 
 });
 
-function add_data(object){
-	
-	$('#'+$(object).attr('field')).val("");
-
-	$('#no-rows-'+$(object).attr('field')).remove();
-
-	//Для связей 2 типа (ManyToOne) удаляем все выбранные до этого данные
-	if($('#'+$(object).attr('field')).attr("assocType")=='2')
-		$('#added-rows-'+$(object).attr('field')+' tr').remove();
-
-
-	
-	var row = $(object).parent().parent();
-
-	// Перемещаем выбранную строку в список добавленных
-	$('#added-rows-'+$(object).attr('field')).append(row);
-
-	// убираем галочки
-	$('#added-rows-'+$(object).attr('field')+' tr input').each(function(){$(this).remove();});
-
-	// добавляем кнопку удаления
-	$('#added-rows-'+$(object).attr('field')+' tr').each(function(){
-		$(this).find('td').first().html('<a class="btn btn-danger btn-xs" onclick="rmRow(this);" field="'+$(object).attr('field')+'"><span class="glyphicon glyphicon-trash"></span></a>');
-	});
-
-	
-	//обновляем результаты добавления
-	updateSelected($(object).attr('field'));
-}
-
 function rmRow(a)
 {
 	var field = $(a).attr('field');
 	$(a).parent().parent().remove();
 	updateSelected(field);
-}
-
-function updateSelected(field)
-{
-	$('#'+field).val("");
-	
-	$('#added-rows-'+field+' tr').each(function(){
-		$('#'+field).val($('#'+field).val()+';'+$(this).find('td').first().attr('rowId'));
-	});
 }
 
 

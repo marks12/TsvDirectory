@@ -6,6 +6,9 @@
 		<?php echo $table_config->__get('description');?>
 	</i>
 </div>
+<div>
+	<a class="btn btn-link" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"changeViewType","id"=>$table_config->__get('id')));?>">Изменить вид</a>
+</div>
 <br>
 <div class="row">
 	<div class="col-md-12">
@@ -13,6 +16,18 @@
 	</div>
 </div>
 <br>
+<?php if($table->getItemCountPerPage()==1){?>
+<table class="table table-bordered">
+    <?php foreach($table as $row){ ?>
+	    <a class="btn btn-info" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"editData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>"/>Редактировать</a>
+	    <a class="btn btn-danger" onClick="if(confirm('Are you sure?')){document.location=this.href} return false;" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"deleteData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>"/>Удалить</a>
+	<?php foreach($table_params->reflFields as $k=>$param){ ?>
+		<tr>
+		    <td><?php echo $this->TgetFTitle($table_params,$param->name)?></td><td><?php echo $this->TgetValue($row,$param->name)?></td>
+		</tr>
+    <?php }}?>
+</table>
+<?php } else{ ?>
 <table class="table table-bordered">
       <thead>
         <tr>
@@ -23,20 +38,22 @@
         </tr>
       </thead>
       <tbody>
-<?php foreach ($table as $row){ 
-
+<?php foreach ($table as $row){
 	?>
         <tr>
           <td width="30"><input type="checkbox" class="selectAll"></td>
         <?php foreach ($table_params->reflFields as $k=>$param) {?>
           <td><?php echo $this->TgetValue($row,$param->name);?></td>
         <?php }?>
+    	  <td><a href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"editData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>" class="glyphicon glyphicon-edit"></td>
+    	  <td><a onClick="if(confirm('Are you sure?')){document.location=this.href} return false;" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"deleteData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>" class="glyphicon glyphicon-trash"></td>
         </tr>
 <?php }?>
       </tbody>
     </table>
-
-<?php 
+<?php } ?>
+<?php
+ 
 echo $this->paginationcontrol(
 			$table,
 			'Sliding',
@@ -45,6 +62,7 @@ echo $this->paginationcontrol(
 				'route_params' => array(
 					'action'=>'dataManagement',
 					'id'=>$table_config->__get('id'),
+					'idr'=>0,
 				)
 			)
 );
