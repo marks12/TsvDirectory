@@ -1,6 +1,6 @@
 <?php 
 
-@preg_match_all("/['\"]([a-zA-Z0-9\s]+)['\"]/", $field_params['columnDefinition'],$match);
+@preg_match_all("/['\"]([a-zA-Z0-9\+\.\,\s]+)['\"]/", $field_params['columnDefinition'],$match);
 
 if(isset($match[1]))
 {
