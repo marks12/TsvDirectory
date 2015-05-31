@@ -166,11 +166,12 @@ class TsvTableController extends AbstractActionController {
 						foreach ($new->__get($field) as $old_data)
 						{
 							$new->__get($field)->removeElement($old_data);
+							var_dump("deleted ".$old_data->__get('id'));
 						}
-						$em->persist($new);
-						$em->flush();
 					}
-					
+					$em->persist($new);
+					$em->flush();
+					exit();
 					foreach($table_params->fieldMappings as $field=>$params)
 						if($field!='id')
 						$new->__set($field,$request->getPost()->{'tt-'.$field});
