@@ -21,6 +21,53 @@
   </div>
 </div>
 
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Параметр настройки</th>
+			<th>Значение параметра</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				Высота карусели (px)
+			</td>
+			<td>
+				<input type="text" name="height" value="<?php if(isset($content_arr['height'])) echo $content_arr['height'];?>">
+			</td>
+		</tr>
+		<tr class="hidden" id='strategys2'>
+			<td>
+				Количество картинок на одной странице (1-12)
+			</td>
+			<td>
+				<input type="text" name="count_on_page" id="count_on_page" value="<?php if(isset($content_arr['count_on_page'])) echo $content_arr['count_on_page'];?>">
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<script>
+function set_fields_s2()
+{
+	if($('#s2').prop('checked')==true)
+	{
+		$('#strategys2').removeClass('hidden');
+		$('#count_on_page').prop('disabled',false);
+	}
+	else
+	{
+		$('#strategys2').addClass('hidden');
+		$('#count_on_page').prop('disabled',true);
+	}
+	
+}
+
+$("input[name='strategy']").change(function(){set_fields_s2();});
+set_fields_s2();
+</script>
+
 <h2>Загрузите изображения для последующего использования</h2>
 (вы также можете сделать это позже или не выполнять загрузку файлов вообще)
 <?php 

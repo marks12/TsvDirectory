@@ -36,10 +36,13 @@ function add_data(object){
         //обновляем результаты добавления
         updateSelected($(object).attr('field'));
 }
+
 function updateSelected(field)
 {
         $('#'+field).val("");
 
+//         alert(field);
+        
         $('#added-rows-'+field+' tr').each(function(){
                 $('#'+field).val($('#'+field).val()+';'+$(this).find('td').first().attr('rowId'));
         });

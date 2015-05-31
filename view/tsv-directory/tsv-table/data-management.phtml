@@ -19,8 +19,12 @@
 <?php if($table->getItemCountPerPage()==1){?>
 <table class="table table-bordered">
     <?php foreach($table as $row){ ?>
-	    <a class="btn btn-info" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"editData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>"/>Редактировать</a>
-	    <a class="btn btn-danger" onClick="if(confirm('Are you sure?')){document.location=this.href} return false;" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"deleteData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>"/>Удалить</a>
+    <tr>
+    	<td colspan='2'>
+	    	<a class="btn btn-info" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"editData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>"/>Редактировать</a>
+	    	<a class="btn btn-danger" onClick="if(confirm('Вы уверены?')){document.location=this.href} return false;" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"deleteData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>"/>Удалить</a>
+		</td>
+	</tr>
 	<?php foreach($table_params->reflFields as $k=>$param){ ?>
 		<tr>
 		    <td><?php echo $this->TgetFTitle($table_params,$param->name)?></td><td><?php echo $this->TgetValue($row,$param->name)?></td>
@@ -35,6 +39,8 @@
         <?php foreach ($table_params->reflFields as $k=>$param) {?>
           <th><?php echo $this->TgetFTitle($table_params,$param->name)?></th>
         <?php }?>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
         </tr>
       </thead>
       <tbody>

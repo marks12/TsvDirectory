@@ -100,6 +100,7 @@ class TsvTableController extends AbstractActionController {
 		$table_config = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($table_id);
 		$className = "\\".$table_config->__get('entity');	    
 		$obj = $em->getRepository($className)->find($record_id);
+		
 		return $this->addDataAction($obj,$table_id);
 	}
 	
@@ -142,7 +143,7 @@ class TsvTableController extends AbstractActionController {
 						$target_array = $em->getRepository($params['targetEntity'])->findBy(array("id"=>explode(";", substr(trim($request->getPost()->$field), 1))));
 					}
 					
-					if(count($target_array))
+// 					if(count($target_array))
 						$targets_array[$field] = $target_array;
 				}
 				
@@ -152,23 +153,22 @@ class TsvTableController extends AbstractActionController {
 					
 					$className = "\\".$table_config->__get('entity');
 					
-					if(class_exists($className)){
+					
+					
+					if(class_exists($className))
+					{
 						if($obj==null)
     						    $new = new $className();
     						else 
     						    $new=$obj;
-    					}
+    				}
 					else 
 						$error[] = "Сохранение данных невозможно, так как отсутствует необходимый для этого класс ".$className;
 					
 					foreach($table_params->fieldMappings as $field=>$params)
+						if($field!='id')
 						$new->__set($field,$request->getPost()->{'tt-'.$field});
 					
-										
-// 					foreach ($targets_array as $k=>$v)
-// 					var_dump("$k=".count($v));
-// 					exit();
-				
 					if(isset($targets_array))
 						foreach ($targets_array as $field=>$v)
 							if($table_params->associationMappings[$field]['type']=='2')
@@ -176,13 +176,23 @@ class TsvTableController extends AbstractActionController {
 								if(isset($v[0]) && count($v)==1)
 									$new->__set($field,$v[0]);
 							}
-							else 
+							else
 							{
-								
+								foreach ($new->__get($field) as $old_data)
+								{
+									$new->__get($field)->removeElement($old_data);
+								}
+								$em->persist($new);
+								$em->flush();
 								
 								if($table_params->associationMappings[$field]['isOwningSide'])
+								{	
 									foreach ($v as $data)
+									{
 										$new->__get($field)->add($data);
+									}
+									
+								}
 								else 
 									foreach ($v as $data)
 									{

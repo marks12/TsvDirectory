@@ -116,20 +116,24 @@ class TgetFForm extends AbstractHelper
 					$data_title_th .= '<th>'.$target_params->fieldMappings[$v]['options']['comment'].'</th>';
 				}
 				$sObj='';
-	                        if($obj!=null){
-                            		foreach($obj->$field_name as $lObj){
-						$i=1;
-						$cells='var cell = row.insertCell(0);
-                                                	cell.appendChild(checkbox);';
-						foreach ($select_fields as $k=>$v){
-							if($v=='id') continue;
+				
+				if($obj!=null){
+                foreach($obj->$field_name as $lObj){
+					$i=1;
+					$cells='var cell = row.insertCell(0);
+                    		cell.appendChild(checkbox);
+							cell.setAttribute("rowId","'.$lObj->__get('id').'");
+							';
+					foreach ($select_fields as $k=>$v){
+						if($v=='id') continue;
+					
 							$cells.='cell'.$i.' = row.insertCell('.$i.');
-                                                		cell'.$i.'.innerHTML="'.str_replace("\r\n",' ',rtrim($lObj->$v)).'";';
-                                            		$i++;
+                        	cell'.$i.'.innerHTML="'.str_replace("\r\n",' ',rtrim($lObj->$v)).'";';
+                        	$i++;
 						}
 		
-                                		$sObj.='<script>
-                                		var row = document.createElement("tr");
+                        $sObj.='<script>
+                        var row = document.createElement("tr");
 						var checkbox = document.createElement("input");
 						checkbox.type = "checkbox";
 						checkbox.value = "value";
@@ -143,7 +147,7 @@ class TgetFForm extends AbstractHelper
                         	}
 		
 				return '
-				<input type="hidden" value="" name="'.$field_name.'" id="'.$field_name.'" assocType="'.$table_params->associationMappings[$field_name]['type'].'">
+				<input type="text" value="" name="'.$field_name.'" id="'.$field_name.'" assocType="'.$table_params->associationMappings[$field_name]['type'].'">
 				<div class="panel panel-default">
 			      <div class="panel-heading">
 						  <div class="form-group">
