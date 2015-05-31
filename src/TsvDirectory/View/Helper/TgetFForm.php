@@ -147,7 +147,7 @@ class TgetFForm extends AbstractHelper
                         	}
 		
 				return '
-				<input type="text" value="" name="'.$field_name.'" id="'.$field_name.'" assocType="'.$table_params->associationMappings[$field_name]['type'].'">
+				<input type="hidden" value="" name="'.$field_name.'" id="'.$field_name.'" assocType="'.$table_params->associationMappings[$field_name]['type'].'">
 				<div class="panel panel-default">
 			      <div class="panel-heading">
 						  <div class="form-group">

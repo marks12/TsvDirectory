@@ -149,12 +149,7 @@ class TsvTableController extends AbstractActionController {
 				
 				if(!isset($error))
 				{
-// 					var_dump($table_config->__get('entity'));
-					
 					$className = "\\".$table_config->__get('entity');
-					
-					
-					
 					if(class_exists($className))
 					{
 						if($obj==null)
@@ -164,6 +159,17 @@ class TsvTableController extends AbstractActionController {
     				}
 					else 
 						$error[] = "Сохранение данных невозможно, так как отсутствует необходимый для этого класс ".$className;
+					
+
+					foreach ($table_params->associationMappings as $field=>$arr)
+					{
+						foreach ($new->__get($field) as $old_data)
+						{
+							$new->__get($field)->removeElement($old_data);
+						}
+						$em->persist($new);
+						$em->flush();
+					}
 					
 					foreach($table_params->fieldMappings as $field=>$params)
 						if($field!='id')
@@ -178,12 +184,7 @@ class TsvTableController extends AbstractActionController {
 							}
 							else
 							{
-								foreach ($new->__get($field) as $old_data)
-								{
-									$new->__get($field)->removeElement($old_data);
-								}
-								$em->persist($new);
-								$em->flush();
+
 								
 								if($table_params->associationMappings[$field]['isOwningSide'])
 								{	
