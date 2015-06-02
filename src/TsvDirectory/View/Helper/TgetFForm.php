@@ -131,7 +131,7 @@ class TgetFForm extends AbstractHelper
     						    
     							if($v=='id') 
     							    continue;
-    							var_dump(get_class($obj->__get($field_name)));
+//     							var_dump(get_class($obj->__get($field_name)));
     							
     							$cells.='cell'.$i.' = row.insertCell('.$i.'); cell'.$i.'.innerHTML="'.str_replace("\r\n",' ',rtrim($lObj->$v)).'";';
                                 $i++;
@@ -150,7 +150,7 @@ class TgetFForm extends AbstractHelper
                             {
                                 if($v=='id')
                                     continue;
-                                var_dump(get_class($obj->__get($field_name)));
+//                                 var_dump(get_class($obj->__get($field_name)));
                                 	
                                 $cells.='cell'.$i.' = row.insertCell('.$i.'); cell'.$i.'.innerHTML="'.str_replace("\r\n",' ',rtrim($lObj->$v)).'";';
                                 $i++;
