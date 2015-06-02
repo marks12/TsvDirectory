@@ -44,7 +44,11 @@ class TgetValue extends AbstractHelper
 			
 			return $type = get_class($row->__get($filed_name));
 		}
-		else 
+		elseif($row->__get($filed_name)==NULL) 
+		{
+		    return "Не привязано";
+		}
+		else
 			return "unsupported data type ".gettype($row->__get($filed_name));
 // 		var_dump($filed_value);
 // 		exit();

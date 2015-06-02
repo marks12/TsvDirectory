@@ -163,15 +163,48 @@ class TsvTableController extends AbstractActionController {
 
 					foreach ($table_params->associationMappings as $field=>$arr)
 					{
-// 						var_dump($arr);
+					    echo "<br>field=";
+						var_dump($field);
+					    echo "<br>isOwningSide=";
+						var_dump($arr['isOwningSide']);
+					    echo "<br>mappedBy=";
+						var_dump($arr['mappedBy']);
+					    echo "<br>type=";
+						var_dump($arr['type']);
+						echo "<br>arr=";
+						var_dump($arr);
+						echo("<br>"); 
+// 						exit();
 						foreach ($new->__get($field) as $old_data)
 						{
-							$new->__get($field)->removeElement($old_data);
-// 							var_dump($field." deleted ".$old_data->__get('id'));
+                            if(($arr['isOwningSide'] && $arr['type']=='8') || $arr['type']=='4')
+                            {
+                                $new->__get($field)->removeElement($old_data);
+                                $em->persist($new);
+                                $em->flush();
+                            }
+                            elseif($arr['type']=='8')
+                            {
+                                $old_data->__get($arr['mappedBy'])->removeElement($new);
+                                $em->persist($old_data);
+                                $em->flush();
+                            }
+                            elseif($arr['type']=='2')
+                            {
+                                $new->__set($field,null);
+//                                 $em->persist($old_data);
+//                                 $em->flush();
+                            }
+                            
+						    
 						}
 					}
-					$em->persist($new);
-					$em->flush();
+					
+					if($obj)
+					{
+    					$em->persist($new);
+    					$em->flush();
+					}
 // 					exit();
 					foreach($table_params->fieldMappings as $field=>$params)
 						if($field!='id')
@@ -192,7 +225,10 @@ class TsvTableController extends AbstractActionController {
 								{	
 									foreach ($v as $data)
 									{
-										$new->__get($field)->add($data);
+									    if($table_params->associationMappings[$field]['type']==2)
+                                            $new->__set($field,$data);
+									    else
+    										$new->__get($field)->add($data);
 									}
 									
 								}

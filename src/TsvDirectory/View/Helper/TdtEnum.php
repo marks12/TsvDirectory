@@ -24,11 +24,12 @@ class TdtEnum extends AbstractHelper
 		foreach ($enum_names as $k=>$v)
 		{
 			$checked='';
-			
-			if(trim($enum_values[$k])==trim($value)){
+			if(isset($value) && trim($enum_values[$k])==trim($value))
+			{
 			    $checked='checked';
 			    $flag=true;
 			}
+			
 			
 			$radio .= '
 					<div class="radio">
