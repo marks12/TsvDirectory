@@ -127,8 +127,6 @@ class TgetFForm extends AbstractHelper
     					
     						foreach ($select_fields as $k=>$v)
     						{
-    
-    						    
     							if($v=='id') 
     							    continue;
 //     							var_dump(get_class($obj->__get($field_name)));
@@ -148,7 +146,7 @@ class TgetFForm extends AbstractHelper
                             	
                             foreach ($select_fields as $k=>$v)
                             {
-                                if($v=='id')
+                                if($v=='id' || !$lObj)
                                     continue;
 //                                 var_dump(get_class($obj->__get($field_name)));
                                 	

@@ -34,6 +34,19 @@ class TsvTable {
 	/** @ORM\Column(type="integer", options={"default"=0}) */
 	protected $viewType = 0;
 	
+	/**
+	 * Необходимо в случае применения в сущности данных зависящих от других
+	 * таблиц и справочников. Например: есть таблица товаров и у товаров может быть
+	 * динамическое количество цен. Для этого создается отдельный справочник типов
+	 * цен а таблица цен становится перекрестной. Для этого таблица цен должна
+	 * содержать ManyToOne связь с типом цены и ManyToOne связь с таблицей товаров.
+	 * При этом таблица типов цен должна содержать поле name которое будет являться
+	 * заголовком для цены и отражать ее тип.
+	 * 
+	 * @ORM\OneToMany(targetEntity="TsvDirectory\Entity\TsvSubtable", mappedBy="tsv_table")
+	 */
+	private $subtables;
+	
     /**
      * Magic getter
      * @param $property
@@ -59,7 +72,43 @@ class TsvTable {
     }
     
     public function __construct() {
-
+        
+        $this->subtables = new ArrayCollection();
+    }
+    
+    /**
+     * Try to find subtablse data class in subtables ArrayCollection
+     * @param string $class_name
+     * @return boolean
+     */
+    public function is_subtable($class_name) {
+        
+        foreach ($this->subtables as $st)
+            if($st->__get('data_class')==$class_name)
+                return true;
+        return false;
+    }
+    
+    /**
+     * Try to find subtablse data class in subtables ArrayCollection
+     * @param string $class_name
+     * @return boolean
+     */
+    public function is_subtableTitle($class_name) {
+        
+        foreach ($this->subtables as $st)
+            if($st->__get('title_class')==$class_name)
+                return true;
+        return false;
+    }
+    
+    public function getTitleSubtableByData($subtable_class)
+    {
+        foreach ($this->subtables as $sub)
+            if($sub->__get('data_class') == $subtable_class)
+                return $sub->__get('title_class');
+            
+            return false;
     }
     
 }

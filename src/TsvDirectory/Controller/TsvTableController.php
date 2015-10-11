@@ -11,6 +11,7 @@ use Zend\Session\Container;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use Zend\Paginator\Paginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
+use TsvDirectory\Entity\TsvSubtable;
 
 /**
  * TableController
@@ -175,6 +176,7 @@ class TsvTableController extends AbstractActionController {
 						var_dump($arr);
 						echo("<br>"); 
 // 						exit();
+                        if($new->__get($field))
 						foreach ($new->__get($field) as $old_data)
 						{
                             if(($arr['isOwningSide'] && $arr['type']=='8') || $arr['type']=='4')
@@ -195,8 +197,6 @@ class TsvTableController extends AbstractActionController {
 //                                 $em->persist($old_data);
 //                                 $em->flush();
                             }
-                            
-						    
 						}
 					}
 					
@@ -225,7 +225,7 @@ class TsvTableController extends AbstractActionController {
 								{	
 									foreach ($v as $data)
 									{
-									    if($table_params->associationMappings[$field]['type']==2)
+									    if(in_array($table_params->associationMappings[$field]['type'], [1,2]))
                                             $new->__set($field,$data);
 									    else
     										$new->__get($field)->add($data);
@@ -487,6 +487,63 @@ class TsvTableController extends AbstractActionController {
 		));
 		
 		return $result;
+	}
+	
+	public function subtableAction()
+	{
+	    $this->removesubtableAction();
+	    
+	    $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		$request_data = json_decode(file_get_contents("php://input"), true);
+		$error = false;
+		
+		$table = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($request_data['table_id']);
+		
+		$subtable = new TsvSubtable();
+		$subtable->__set('title_class', $request_data['subtable_title']);
+		$subtable->__set('data_class', $request_data['subtable_data']);
+		$subtable->__set('tsv_table',$table);
+		
+		$em->persist($subtable);
+		$em->flush();
+		
+// 		var_dump($request_data);
+	    
+	    $result = new JsonModel(array(
+	        'success'	=>	true,
+	        'error'		=>	$error,
+	        'html'		=>	'',
+	    ));
+	    
+	    return $result;
+	}
+	
+	public function removesubtableAction()
+	{
+	    $em = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+		$request_data = json_decode(file_get_contents("php://input"), true);
+		$error = false;
+		
+		$table = $em->getRepository('TsvDirectory\Entity\TsvTable')->find($request_data['table_id']);
+
+		foreach ($table->__get('subtables') as $sub)
+		{
+		    if($sub->__get('data_class')==$request_data['subtable_data'])
+		    $em->remove($sub);
+		}
+		
+		$em->persist($table);
+		$em->flush();
+		
+// 		var_dump($request_data);
+	    
+	    $result = new JsonModel(array(
+	        'success'	=>	true,
+	        'error'		=>	$error,
+	        'html'		=>	'',
+	    ));
+	    
+	    return $result;
 	}
 	
 	public function saveConfigureAction()

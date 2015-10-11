@@ -39,11 +39,46 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading">Связи (сохранение указанных ниже параметров проивзодится без нажатия кнопки сохранить)</div>
+  <div class="panel-heading">Связи (сохранение указанных ниже параметров производится без нажатия кнопки сохранить)</div>
   <div class="panel-body">
 	 <?php foreach ($entity_params as $k=>$ent) {?>
   	 <div class="row">
-		<div class="col-md-3"><strong><?php if($ent['targetEntityParams']->table['options']['comment']) echo $ent['targetEntityParams']->table['options']['comment']; else echo $ent['targetEntityParams']->table['name'];?></strong></div>
+		<div class="col-md-3">    
+		  <strong>
+		      <?php if($ent['targetEntityParams']->table['options']['comment']) 
+		                  echo $ent['targetEntityParams']->table['options']['comment']; 
+		              else 
+		                  echo $ent['targetEntityParams']->table['name'];?>
+          </strong>
+          <br>
+          <div class="checkbox">
+            <label>
+              <input id="subtable_<?php echo $ent['targetEntityParams']->table['name']?>_selector" <?php if($table->is_subtable($ent['targetEntityParams']->name)) echo " checked";?> 
+              type="checkbox" class="subtable" entity="<?php echo $ent['targetEntityParams']->name;?>" 
+              value="<?php echo $ent['targetEntityParams']->table['name']?>"> Вложенная таблица
+              <a data-toggle="tooltip" class="mytooltip btn btn-xs btn-default" data-placement="top" 
+title="Необходимо в случае применения в сущности данных зависящих от других 
+таблиц и справочников. Например: есть таблица товаров и у товаров может быть 
+динамическое количество цен. Для этого создается отдельный справочник типов 
+цен а таблица цен становится перекрестной. Для этого таблица цен должна 
+содержать ManyToOne связь с типом цены и ManyToOne связь с таблицей товаров. 
+При этом таблица типов цен должна содержать поле name которое будет являться 
+заголовком для цены и отражать ее тип.">?</a>
+            </label>
+          </div>
+          <select onchange="save_subtable($('#subtable_<?php echo $ent['targetEntityParams']->table['name']?>_selector'));" id="subtable_<?php echo $ent['targetEntityParams']->table['name'];?>" class="form-control<?php if(!$table->is_subtable($ent['targetEntityParams']->name)) echo " hidden";?>">
+        	<?php foreach ($ent['targetEntityParams']->associationMappings as $v){ 
+        	       if(in_array($v['targetEntity'], [$ent['targetEntityParams']->name,$table->__get('entity')])) continue;?>
+			<option value="<?php echo $v['targetEntity'];?>"<?php if($table->is_subtableTitle($v['targetEntity'])) echo " selected";?>>
+			<?php echo $v['fieldName'].' :: '.$v['targetEntity'];?></option>
+			<?php }?>
+          </select>
+          
+          <?php //var_dump($ent['targetEntityParams']->name);?>
+			
+          
+          
+         </div>
 		<div class="col-md-3">отображать поля при поиске:</div>
 		<div class="col-md-6">
 			<?php foreach ($ent['targetEntityParams']->fieldMappings as $field_name=>$f_param) {?>
@@ -56,7 +91,6 @@
 				  </div>
 				</div>
 				<div class="col-md-1"><i class="fa fa-check fa-2x" style="color: <?php if(strstr($table->__get('linked_fields'),"#".$k.":".$field_name.";") || $field_name=='id') echo "green"; else echo "LightGray";?>;"></i></div>
-			
 			</div>
 			<?php }?>
 		</div>
@@ -77,6 +111,86 @@
 
 <script type="text/javascript">
 <!--
+
+function save_subtable(check_obj)
+{
+	$('#subtable_'+check_obj.val()).removeClass('hidden');
+	var request = {};
+    id = <?php echo $table->__get('id');?>;
+    request.table_id = id;
+    request.subtable_title = $('#subtable_'+check_obj.val()).val();
+    request.subtable_data = check_obj.attr('entity');
+    $.ajax({
+	  url: "<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"subtable"))?>",
+	  type: "POST",
+	  data: JSON.stringify(request),
+	  processData: false,
+	  dataType: "json",
+	  success:function(a) { 
+		  if(a.error)
+			  alert(a.error);
+		  else
+		  {
+// 			  alert('Success!!:@');
+		  }
+	  },
+	  error:function(e) {
+		  alert('Ошибка отправки сообщения на сервер');
+		  console.log(e);
+	  }
+    });
+}
+
+function remove_subtable(check_obj)
+{
+	$('#subtable_'+check_obj.val()).removeClass('hidden');
+	var request = {};
+    id = <?php echo $table->__get('id');?>;
+    request.table_id = id;
+    request.subtable_title = $('#subtable_'+check_obj.val()).val();
+    request.subtable_data = check_obj.attr('entity');
+    $.ajax({
+	  url: "<?php echo $this->url('zfcadmin/tsv-directory/table',array("action"=>"removesubtable"))?>",
+	  type: "POST",
+	  data: JSON.stringify(request),
+	  processData: false,
+	  dataType: "json",
+	  success:function(a) { 
+		  if(a.error)
+			  alert(a.error);
+		  else
+		  {
+// 			  alert('Success!!:@');
+		  }
+	  },
+	  error:function(e) {
+		  alert('Ошибка отправки сообщения на сервер');
+		  console.log(e);
+	  }
+    });
+}
+
+$('.subtable').click(function(){
+
+	if($(this).is(":checked")){
+
+		if(!$('#subtable_'+$(this).val()).find('option').length){
+			alert('Выбранная таблица не может расширить текущую, так как не имеемт элементов позволяющих типизировать данные этой таблицы. См. справку.');
+			$(this).removeAttr("checked");
+		}
+		else
+		{
+	 		save_subtable($(this));
+		}
+    }
+    else if($(this).is(":not(:checked)")){
+    	remove_subtable($(this));
+    	$('#subtable_'+$(this).val()).addClass('hidden');
+    }
+});
+
+$('.mytooltip').tooltip();
+
 $(document).ready(function(){
 	$('.saver').click(function(){
 		var request = {};
@@ -99,8 +213,9 @@ $(document).ready(function(){
 				  else
 					  window.location.href='<?php echo $this->url('zfcadmin/tsv-directory/table')?>';
 			  },
-			  error:function() {
+			  error:function(e) {
 				  alert('Ошибка отправки сообщения на сервер');
+				  console.log(e);
 			  }
 		});
 	});
@@ -140,8 +255,9 @@ $(document).ready(function(){
 						 $('input[value="'+val+'"]').parents(".row").first().find( $('.fa-check') ).css('color','LightGray');
 				  }
 			  },
-			  error:function() {
-				  alert('Ошибка отправки сообщения на сервер');
+			  error:function(e) {
+				 alert('Ошибка отправки сообщения на сервер');
+			     console.log(e);
 			  }
 		});
 	}

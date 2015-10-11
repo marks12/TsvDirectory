@@ -44,6 +44,11 @@ class TgetValue extends AbstractHelper
 			
 			return $type = get_class($row->__get($filed_name));
 		}
+		elseif(gettype($row->__get($filed_name))=="object" && class_exists(get_class($row->__get($filed_name))))
+		{
+		    if(property_exists(get_class($row->__get($filed_name)), 'name'))
+		        return $row->__get($filed_name)->__get('name');
+		}
 		elseif($row->__get($filed_name)==NULL) 
 		{
 		    return "Не привязано";

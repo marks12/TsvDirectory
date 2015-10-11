@@ -105,9 +105,11 @@ $( document ).ready(function(){
 							$('#'+id+'-result').html(a.html);
 						}
 					},
-					error:function() {
-						alert('Ошибка отправки сообщения на сервер');
-					}
+					  error:function(e) {
+						  if(e.statusText != 'OK')
+							    alert('Ошибка отправки сообщения на сервер');
+		 				  console.log(e);
+					  }
 				});
 				
 			},1000);

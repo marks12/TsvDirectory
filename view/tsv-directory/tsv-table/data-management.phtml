@@ -31,17 +31,32 @@
 		</tr>
     <?php }}?>
 </table>
-<?php } else{ ?>
+<?php } else{ 
+
+//     var_dump($table_params);
+    
+    ?>
 <table class="table table-bordered">
       <thead>
         <tr>
-          <th><input type="checkbox" id="selectAll"></th>
+          <th rowspan=2><input type="checkbox" id="selectAll"></th>
         <?php foreach ($table_params->reflFields as $k=>$param) {?>
-          <th><?php echo $this->TgetFTitle($table_params,$param->name)?></th>
+          <th rowspan=<?php if(
+              isset($table_params->associationMappings[$k]) && 
+              $table_config->is_subtable($table_params->associationMappings[$k]['targetEntity'])) 
+          { echo 1; echo " colspan=".$this->TgetSubtitlesCount($table_config->getTitleSubtableByData($table_params->associationMappings[$k]['targetEntity']));} else echo 2;?>><?php echo $this->TgetFTitle($table_params,$param->name);?></th>
         <?php }?>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
+          <th rowspan=2>&nbsp;</th>
+          <th rowspan=2>&nbsp;</th>
         </tr>
+        <?php if(count($table_config->__get('subtables'))){?>
+        <tr>
+          <?php foreach ($table_config->__get('subtables') as $sub)
+                    foreach ($this->TgetSubtitles($sub->__get('title_class')) as $title){?>
+              <th><?php echo $title->__get('name');?></th>
+          <?php }?>
+          </tr>
+        <?php }?>
       </thead>
       <tbody>
 <?php foreach ($table as $row){
@@ -49,7 +64,10 @@
         <tr>
           <td width="30"><input type="checkbox" class="selectAll"></td>
         <?php foreach ($table_params->reflFields as $k=>$param) {?>
-          <td><?php echo $this->TgetValue($row,$param->name);?></td>
+          <td<?php if(
+              isset($table_params->associationMappings[$k]) && 
+              $table_config->is_subtable($table_params->associationMappings[$k]['targetEntity'])) 
+          { echo " colspan=".$this->TgetSubtitlesCount($table_config->getTitleSubtableByData($table_params->associationMappings[$k]['targetEntity']));} ?>><?php echo $this->TgetValue($row,$param->name);?></td>
         <?php }?>
     	  <td><a href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"editData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>" class="glyphicon glyphicon-edit"></td>
     	  <td><a onClick="if(confirm('Are you sure?')){document.location=this.href} return false;" href="<?php echo $this->url("zfcadmin/tsv-directory/table",array('action'=>"deleteData","id"=>$table_config->__get('id'),"idr"=>$this->TgetValue($row,'id')));?>" class="glyphicon glyphicon-trash"></td>

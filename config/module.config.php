@@ -323,6 +323,9 @@ return array(
      		'tsv-table/types/datetime'		=> __DIR__ . '/../view/tsv-directory/partials/tsv-table/types/datetime.phtml',
    			
         ),
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
     ),
 	'navigation' => array(
 			'admin' => array(
@@ -358,6 +361,7 @@ return array(
 			),
 		),
 	),
+
 	'view_helpers' => array(
 			'invokables'=> array(
 // 					'TsvdContent' => 'TsvDirectory\View\Helper\TsvdContent',
@@ -365,6 +369,7 @@ return array(
 					'TdtString'		=> 'TsvDirectory\View\Helper\TdtString',
 					'TdtFloat'		=> 'TsvDirectory\View\Helper\TdtFloat',
 					'TdtEnum'		=> 'TsvDirectory\View\Helper\TdtEnum',
+// 					'TgetSubtitles'		=> 'TsvDirectory\View\Helper\TgetSubtitles',
 			)
 	),
 	'bjyauthorize' => array(

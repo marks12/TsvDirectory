@@ -71,6 +71,14 @@ class Module
 							$helper = new View\Helper\TgetFForm($sm);
 							return $helper;
 						},
+						'TgetSubtitles' => function($sm) {
+							$helper = new View\Helper\TgetSubtitles($sm);
+							return $helper;
+						},
+						'TgetSubtitlesCount' => function($sm) {
+							$helper = new View\Helper\TgetSubtitlesCount($sm);
+							return $helper;
+						},
 				)
 		);
 	}
