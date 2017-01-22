@@ -488,6 +488,10 @@ class TsvDirectoryController extends AbstractActionController
      */
     public function findSection($name)
     {
+	if(!isset($this)) {
+            return false;
+        }
+	    
     	$objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     	
     	$section = $objectManager
