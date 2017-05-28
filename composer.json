@@ -24,7 +24,7 @@
 	"zf-commons/zfc-admin":		"dev-master",
 	"bjyoungblood/bjy-profiler": 	"*",
 	"doctrine/doctrine-orm-module":	"*",
-	"marks12/tsv-users":		"dev-master"
+	"marks12/tsv-users":		"*"
     },
     "suggests": {
         "zendframework/zend-developer-tools": "if you need to see current authorization details while developing",
